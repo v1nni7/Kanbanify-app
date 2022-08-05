@@ -1,0 +1,73 @@
+.home-navbar {
+  display: flex;
+  padding: 12px;
+  align-items: center;
+  background-color: #444;
+
+  .navbar-brand {
+    margin: 0 16px 0 0;
+
+    h1 {
+      font-size: 2rem;
+      color: #444;
+      text-shadow:
+        -1px -1px 0 #a555ff,
+        1px -1px 0 #a555ff,
+        -1px 1px 0 #a555ff,
+        1px 1px 0 #a555ff;
+    }
+  }
+
+  .navbar-nav {
+    display: flex;
+    margin: 0 auto 0 0;
+    align-items: center;
+
+    .nav-item {
+      padding: 8px;
+
+      .nav-link {
+        color: #ccc;
+        font-size: 1rem;
+        transition: 0.2s;
+        text-decoration: none;
+
+        &:hover {
+          color: #fff;
+        }
+      }
+    }
+  }
+
+  .navbar-actions {
+    display: flex;
+
+    .btn-redirect-login,
+    .btn-redirect-register {
+      color: #fff;
+      font-size: 1.2rem;
+      text-decoration: none;
+      border-radius: 4px;
+      transition: 0.2s;
+    }
+
+    .btn-redirect-login {
+      padding: 8px 12px;
+      background-color: #a555ff;
+
+      &:hover {
+        background-color: #9b44ff;
+      }
+    }
+
+    .btn-redirect-register {
+      margin: 0 0 0 12px;
+      padding: 8px 24px;
+      background-color: #7a7a7a;
+
+      &:hover {
+        background-color: #646464;
+      }
+    }
+  }
+}
