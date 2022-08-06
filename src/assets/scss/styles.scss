@@ -42,7 +42,29 @@ button {
       }
     }
 
-    .form-control-select {
+    .form-control-select-options {
+      z-index: 1;
+      width: 100%;
+      color: #000;
+      display: none;
+      margin: 16px 0 0 0;
+      position: absolute;
+      border-radius: 4px;
+      background-color: #fff;
+
+      .select-option {
+        height: 50px;
+        padding: 12px;
+        display: flex;
+        align-items: center;
+      }
+
+      &.show {
+        display: block;
+      }
+    }
+
+    .form-control-select-button {
       width: 100%;
       height: 50px;
       padding: 12px;
@@ -53,10 +75,6 @@ button {
       align-items: center;
       justify-content: space-between;
       border-radius: 4px;
-
-      option {
-        border-radius: 4px;
-      }
     }
 
     .form-label-anim {

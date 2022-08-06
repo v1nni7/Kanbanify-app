@@ -1,5 +1,5 @@
 import { Form, Formik } from "formik";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { IoCheckmarkCircleSharp, IoAlertCircleSharp, IoCaretDown } from "react-icons/io5";
 
 import './styles.scss';
@@ -8,9 +8,15 @@ const Register = () => {
 
   const [stepper, setStepper] = useState(0);
   const [isOptionOpen, setIsOptionOpen] = useState(false);
-  const [selectedOption, setSelectedOption] = useState(0);
+  const [selectedOption, setSelectedOption] = useState<string>('');
 
-  const handleRegister = (data: any) => {
+  // Alterar Any
+  const genderSelectOption: any = useRef();
+
+  console.log(selectedOption)
+
+  // Alterar Any
+  const handleRegister = (data: TypeInitialValues) => {
     console.log(data)
   }
 
@@ -20,21 +26,18 @@ const Register = () => {
     setIsOptionOpen(!isOptionOpen);
   }
 
-  const handleKeyDown = (index: any) => (e: any) => {
-    switch (e.key) {
-      case " ":
-      case "SpaceBar":
-      case "Enter":
-        e.preventDefault();
-        setSelectedOption(index);
-        setIsOptionOpen(false);
-        break;
-      default:
-        break;
-    }
+  interface TypeInitialValues {
+    email: string,
+    password: string,
+    confirmPassword: string,
+    fname: string,
+    lname: string,
+    username: string,
+    gender: string,
+    birthday: string,
   }
 
-  const formInitialValues = {
+  const formInitialValues: TypeInitialValues = {
     email: '',
     password: '',
     confirmPassword: '',
@@ -47,7 +50,7 @@ const Register = () => {
 
   return (
     <>
-      <section className="register">
+      <section className="register" onClick={toggleOptions}>
         <Formik
           enableReinitialize
           onSubmit={handleRegister}
@@ -98,36 +101,35 @@ const Register = () => {
                         <label htmlFor="lname" className={`form-label-anim ${values.lname ? 'focused' : 'unfocused'}`}>Sobrenome</label>
                       </div>
                       <div className="form-group">
-                        <input type="text" id="birthday" className="form-control" value={values.birthday} onChange={handleChange('birthday')} />
-                        <label htmlFor="birthday" className={`form-label-anim ${values.birthday ? 'focused' : 'unfocused'}`}>Aniversário</label>
-                      </div>
-                      <div className="form-group">
                         {/* <input type="text" id="lname" className="form-control" value={values.lname} onChange={handleChange('lname')} /> */}
                         <button
                           type="button"
                           onClick={toggleOptions}
-                          className="form-control-select"
+                          className="form-control-select-button"
                           aria-haspopup="listbox"
                           aria-expanded={isOptionOpen}
                         >
-                          Gênero <IoCaretDown />
+                          {selectedOption ?
+                            selectedOption
+                            :
+                            'Gênero'
+                          }
+                          <IoCaretDown />
                         </button>
                         <ul
-                          className={`options ${isOptionOpen ? 'show' : ''}`}
+                          ref={genderSelectOption}
+                          className={`form-control-select-options ${isOptionOpen ? 'show' : ''}`}
                           role="listbox"
-                          aria-activedescendant={optionList[selectedOption]}
                           tabIndex={-1}
                         >
                           {optionList.map((option, index) => (
                             <li
-                              id={option}
+                              className="select-option"
                               key={index}
                               role="option"
-                              onKeyDown={handleKeyDown(index)}
-                              aria-selected={selectedOption == index}
                               tabIndex={0}
-                              onClick={() => {
-                                setSelectedOption(index);
+                              onClick={(e) => {
+                                setSelectedOption(option);
                                 setIsOptionOpen(false);
                               }}
                             >
@@ -136,6 +138,10 @@ const Register = () => {
                           ))}
                         </ul>
                         {/* <label htmlFor="lname" className={`form-label-anim ${values.lname ? 'focused' : 'unfocused'}`}>Sobrenome</label> */}
+                      </div>
+                      <div className="form-group">
+                        <input type="text" id="birthday" className="form-control" value={values.birthday} onChange={handleChange('birthday')} />
+                        <label htmlFor="birthday" className={`form-label-anim ${values.birthday ? 'focused' : 'unfocused'}`}>Aniversário</label>
                       </div>
                     </div>
                     <div className="form-group flex justify-content-end">
