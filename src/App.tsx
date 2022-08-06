@@ -2,10 +2,11 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 import './assets/scss/reset.scss';
 import './assets/scss/styles.scss';
+import 'react-toastify/dist/ReactToastify.css';
 
 import Home from './pages/home';
 import Login from './pages/login';
-import Register from './pages/register';
+import Test from './pages/test';
 
 const App = () => {
 
@@ -14,7 +15,7 @@ const App = () => {
       <Routes>
         <Route index element={<Home />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
+        <Route path="/testes" element={<Test />} />
       </Routes>
     </BrowserRouter>
   )

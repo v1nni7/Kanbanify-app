@@ -40,47 +40,10 @@ button {
         font-size: 1rem;
         font-weight: 500;
       }
-    }
-
-    .form-control-select-options {
-      z-index: 1;
-      width: 100%;
-      color: #000;
-      display: none;
-      margin: 16px 0 0 0;
-      position: absolute;
-      border-radius: 4px;
-      overflow: hidden;
-      background-color: #fff;
-
-      .select-option {
-        height: 50px;
-        padding: 12px;
-        display: flex;
-        cursor: pointer;
-        align-items: center;
-
-        &:hover {
-          background-color: #eee;
-        }
-      }
 
       &.show {
         display: block;
       }
-    }
-
-    .form-control-select-button {
-      width: 100%;
-      height: 50px;
-      padding: 12px;
-      border: none;
-      text-align: start;
-      font-size: 1.2rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      border-radius: 4px;
     }
 
     .form-label-anim {
@@ -114,27 +77,27 @@ button {
       }
     }
 
-    .form-stay-connected {
-      margin: 0 0 36px 0;
+    .form-action-link {
+      border: none;
+      color: #9575cd;
+      transition: 0.2s;
+      font-size: 1rem;
+      text-decoration: underline;
+      background-color: transparent;
+
+      &:hover {
+        color: #7e57c2;
+      }
+
     }
 
-    .form-flex-wrap {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-
-      .form-action {
-        width: 132px;
-
-        .form-action-link {
-          color: #9575cd;
-          transition: 0.2s;
-
-          &:hover {
-            color: #7e57c2;
-          }
-        }
-      }
+    .form-divisor-circle {
+      width: 10px;
+      height: 10px;
+      margin: 0 12px;
+      border: none;
+      border-radius: 50%;
+      background-color: #fff;
     }
 
     .form-divisor {
@@ -144,35 +107,11 @@ button {
       width: 100%;
     }
 
-    .form-divisor-circle {
-      padding: 4px;
-      margin: 0 12px;
-      border: none;
-      border-radius: 50%;
-      background-color: #fff;
+    .form-stay-connected {
+      display: flex;
+      align-items: center;
     }
   }
-
-  .form-flex {
-    .form-group {
-      width: 50%;
-    }
-  }
-
-  &.form-horizontal-large {
-    padding: 0;
-    width: 100%;
-  }
-
-  .form-layout-flex {
-    display: flex;
-    flex-wrap: wrap;
-
-    &>.form-group {
-      width: 100%;
-    }
-  }
-
 }
 
 .stepper {
@@ -223,8 +162,42 @@ button {
   }
 }
 
+.flip-form {
+  width: 400px;
+  height: 100%;
+  display: flex;
+  position: relative;
+  align-items: center;
+
+  .form-front,
+  .form-back {
+    position: absolute;
+    backface-visibility: hidden;
+    transition: all .6s;
+    transform-style: preserve-3d;
+  }
+
+  .form-back {
+    transform: rotateY(180deg);
+  }
+
+  &.active {
+    .form-front {
+      transform: rotateY(-180deg);
+    }
+
+    .form-back {
+      transform: rotateY(0deg);
+    }
+  }
+}
+
 .flex {
   display: flex;
+
+  &.flex-column {
+    flex-direction: column;
+  }
 
   &.flex-wrap {
     flex-wrap: wrap;

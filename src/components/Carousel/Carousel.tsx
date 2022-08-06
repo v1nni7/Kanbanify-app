@@ -1,12 +1,16 @@
-import { ReactNode, useCallback, useEffect, useRef, useState } from "react"
+import { ReactNode, useCallback, useEffect, useRef, useState } from "react";
 
-import './styles.scss'
+import './styles.scss';
 
 interface AuxProps {
   children: ReactNode
 }
 
-export const Carousel = ({ children }: AuxProps) => {
+interface AuxPropsCarousel extends AuxProps {
+  showButtons: boolean | any
+}
+
+export const Carousel = ({ children, showButtons }: AuxPropsCarousel) => {
 
   const carousel = useRef<HTMLDivElement>(null);
   const carouselContent = useRef<HTMLDivElement>(null);
@@ -27,7 +31,7 @@ export const Carousel = ({ children }: AuxProps) => {
     if (carouselTransform === 0) {
       return;
     }
-    
+
     setCarouselTransform(carouselTransform + carouselWidth);
   }, [carouselTransform, carouselWidth, totalChildrenContent])
 
@@ -43,11 +47,15 @@ export const Carousel = ({ children }: AuxProps) => {
       <div className="carousel-content" style={{ transform: `translateX(${carouselTransform}px)` }} ref={carouselContent}>
         {children}
       </div>
+      {showButtons ?
+        <div className="carousel-buttons">
+          <button type="button" onClick={prevSlideCarousel}>Prev</button>
+          <button type="button" onClick={nextSlideCarousel}>Next</button>
+        </div>
+        :
+        <></>
+      }
 
-      <div className="carousel-buttons">
-        <button type="button" onClick={prevSlideCarousel}>Prev</button>
-        <button type="button" onClick={nextSlideCarousel}>Next</button>
-      </div>
     </div>
   )
 }
