@@ -1,0 +1,45 @@
+.test {
+  width: 1200px;
+  margin: 0 auto;
+
+  .carousel {
+    width: 100%;
+    display: flex;
+    overflow: hidden;
+
+    .carousel-content {
+      width: 100%;
+      height: 500px;
+      display: flex;
+      transition: 1s;
+      
+      .carousel-item {
+        width: 100%;
+        height: 500px;
+        flex-shrink: 0;
+      }
+    }
+  }
+
+  button {
+    border: none;
+    margin: 12px 0 0;
+    padding: 10px 16px;
+    border-radius: 4px;
+    font-size: 1.2rem;
+    color: #fff;
+    background-color: #6f89ff;
+  }
+}
+
+/* &.red {
+  background-color: #ff6f6f;
+}
+
+&.blue {
+  background-color: #6f89ff;
+}
+
+&.green {
+  background-color: #74ff6f;
+} */
