@@ -50,13 +50,19 @@ button {
       margin: 16px 0 0 0;
       position: absolute;
       border-radius: 4px;
+      overflow: hidden;
       background-color: #fff;
 
       .select-option {
         height: 50px;
         padding: 12px;
         display: flex;
+        cursor: pointer;
         align-items: center;
+
+        &:hover {
+          background-color: #eee;
+        }
       }
 
       &.show {
