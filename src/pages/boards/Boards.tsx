@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import { IoAddCircleOutline } from 'react-icons/io5';
 import backgroundImage from '../../assets/images/backgrounds/codebackground.jpg';
 
@@ -14,14 +15,14 @@ const Boards = () => {
                 <h2>Criar novo quadro</h2>
               </div>
             </div>
-            <div className="board">
+            <Link to="/board/1" className="board">
               <div className="board-background">
                 <img src={backgroundImage} alt="" />
               </div>
               <div className="board-background-gradient flex align-items-end">
                 <h2>Meu primeiro quadro</h2>
               </div>
-            </div>
+            </Link>
           </div>
         </div>
       </section>

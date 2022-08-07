@@ -1,0 +1,64 @@
+.workspace {
+  padding: 24px 48px;
+  display: flex;
+  color: #ccc;
+
+  .board {
+    width: 300px;
+    margin: 0 16px 0 0;
+    border-radius: 4px;
+    background-color: #3a3a3a;
+
+    .board-name {
+      display: flex;
+      padding: 12px;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .board-icon {
+      font-size: 1.4rem;
+    }
+
+    .board-item {
+      padding: 6px;
+
+      .board-item-content {
+        color: #fff;
+        overflow: hidden;
+        border-radius: 4px;
+        background-color: #757575;
+
+        .board-item-name {
+          padding: 8px;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+
+          .board-item-name-editable {
+            resize: none;
+            height: 26px;
+            color: #fff;
+            font-size: 1rem;
+            background-color: transparent;
+          }
+        }
+
+        .board-item-checked {
+          display: flex;
+          align-items: center;
+          padding: 6px 12px;
+
+          .board-icon-checked {
+            font-size: 1rem;
+            margin: 0 6px 0 0;
+          }
+          
+          .board-number-checked {
+            font-size: .8rem;
+          }
+        }
+      }
+    }
+  }
+}

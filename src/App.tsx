@@ -7,6 +7,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import Home from './pages/home';
 import Login from './pages/login';
 import Test from './pages/test';
+import Board from './pages/board';
 import Boards from './pages/boards';
 import Navbar from './components/Navbar/Navbar';
 
@@ -19,6 +20,7 @@ const App = () => {
         <Route index element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/boards" element={<Boards />} />
+        <Route path="/board/:idBoard" element={<Board />} />
         <Route path="/testes" element={<Test />} />
       </Routes>
     </BrowserRouter>
