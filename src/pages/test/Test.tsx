@@ -1,12 +1,12 @@
+import {DragDropContext, DragDropContextProps} from 'react-beautiful-dnd';
+
 import './styles.scss';
 
 const Test = () => {
   
   return (
     <>
-      <div className="test">
-
-      </div>
+    
     </>
   )
 }
