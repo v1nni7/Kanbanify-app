@@ -31,6 +31,19 @@ const Login = () => {
       });
       await schema.validate(data);
       console.log('Requisição sendo enviada para API...')
+      if (data.email === 'vini@gmail.com' && data.password === '123456789') {
+        console.log('Login feito com sucesso!');
+      } else if (data.email !== 'vini@gmail.com' || data.password !== '123456789') {
+        toast.error(`Email ou senha inválidos`, {
+          position: "bottom-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      }
     } catch (error) {
       if (error instanceof Yup.ValidationError) {
         toast.error(`${error.message}`, {

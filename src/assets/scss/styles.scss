@@ -79,6 +79,7 @@ button {
 
     .form-action-link {
       border: none;
+      padding: 0;
       color: #9575cd;
       transition: 0.2s;
       font-size: 1rem;
@@ -94,7 +95,7 @@ button {
     .form-divisor-circle {
       width: 10px;
       height: 10px;
-      margin: 0 12px;
+      margin: 0 10px;
       border: none;
       border-radius: 50%;
       background-color: #fff;
@@ -211,7 +212,7 @@ button {
     align-items: center;
   }
 
-  &.aling-items-end {
+  &.align-items-end {
     align-items: end;
   }
 
@@ -230,6 +231,75 @@ button {
   &.justify-content-between {
     justify-content: space-between;
   }
+}
+
+.dropdown {
+  position: relative;
+
+  .dropdown-items {
+    top: 60px;
+    right: -35px;
+    position: absolute;
+    border-radius: 4px;
+    overflow: hidden;
+    z-index: 2;
+    color: #000;
+    background-color: #fff;
+
+    .dropdown-item {
+      cursor: pointer;
+      user-select: none;
+      padding: 4px 18px;
+      display: flex;
+      min-height: 50px;
+      align-items: center;
+      transition: .4s;
+      animation: dropdownAnim .4s;
+
+      &:hover {
+        background-color: #ccc;
+      }
+    }
+  }
+
+  .dropdown-button {
+    cursor: pointer;
+  }
+
+  &.dropdown-open {
+    .dropdown-items {
+      display: block;
+    }
+  }
+
+  &.dropdown-close {
+    .dropdown-items {
+      display: none;
+    }
+  }
+
+  @keyframes dropdownAnim {
+    from {
+      opacity: 0;
+      min-height: 0px;
+      padding: 0 18px;
+    }
+
+    to {
+      opacity: 1;
+      min-height: 50px;
+      padding: 4px 18px;
+    }
+  }
+}
+
+.dropdown-backdrop {
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  background-color: transparent;
 }
 
 .container {

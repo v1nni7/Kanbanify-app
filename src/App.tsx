@@ -8,11 +8,13 @@ import Home from './pages/home';
 import Login from './pages/login';
 import Test from './pages/test';
 import Boards from './pages/boards';
+import Navbar from './components/Navbar/Navbar';
 
 const App = () => {
 
   return (
     <BrowserRouter>
+      <Navbar />
       <Routes>
         <Route index element={<Home />} />
         <Route path="/login" element={<Login />} />

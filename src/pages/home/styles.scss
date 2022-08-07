@@ -8,35 +8,14 @@
     margin: 0 16px 0 0;
 
     h1 {
-      font-size: 2rem;
-      color: #444;
-      text-shadow:
-        -1px -1px 0 #a555ff,
-        1px -1px 0 #a555ff,
-        -1px 1px 0 #a555ff,
-        1px 1px 0 #a555ff;
+      
     }
   }
 
   .navbar-nav {
-    display: flex;
-    margin: 0 auto 0 0;
-    align-items: center;
 
-    .nav-item {
-      padding: 8px;
 
-      .nav-link {
-        color: #ccc;
-        font-size: 1rem;
-        transition: 0.2s;
-        text-decoration: none;
-
-        &:hover {
-          color: #fff;
-        }
-      }
-    }
+    
   }
 
   .navbar-actions {
