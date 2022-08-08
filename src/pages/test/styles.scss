@@ -1,0 +1,50 @@
+.test-section {
+  padding: 42px;
+}
+
+.board {
+  width: 300px;
+  margin: 0 16px 0 0;
+  border-radius: 4px;
+  background-color: #3a3a3a;
+
+  .board-title {
+    display: flex;
+    padding: 12px;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .board-item {
+    padding: 6px;
+
+    .board-content {
+      color: #fff;
+      overflow: hidden;
+      border-radius: 4px;
+      background-color: #757575;
+
+      .board-item-title {
+        padding: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .board-item-checked {
+        display: flex;
+        align-items: center;
+        padding: 6px 12px;
+
+        .board-icon-checked {
+          font-size: 1rem;
+          margin: 0 6px 0 0;
+        }
+        
+        .board-number-checked {
+          font-size: .8rem;
+        }
+      }
+    }
+  }
+}
