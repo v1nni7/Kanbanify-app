@@ -9,7 +9,8 @@ const Test = () => {
 
   const [boardData, setBoardData] = useState<TypeData>();
 
-  const onDragEnd: any = useCallback(({destination, source, draggableId}: any) => {
+  // Código aprendido na https://egghead.io/lessons/
+  const onDragEnd: any = useCallback(({ destination, source, draggableId }: any) => {
     // Reorganizar as colunas
     if (!destination) {
       return;
@@ -22,25 +23,56 @@ const Test = () => {
       return;
     }
 
-    const column = boardData?.columns[source.droppableId];
-    const newTaskIds = Array.from(column.taskIds);
-    newTaskIds.splice(source.index, 1);
-    newTaskIds.splice(destination.index, 0, draggableId);
+    const start = boardData?.columns[source.droppableId];
+    const finish = boardData?.columns[destination.droppableId];
 
-    const newColumn = {
-      ...column,
-      taskIds: newTaskIds
+    if (start === finish) {
+      const newTaskIds = Array.from(start.taskIds);
+      newTaskIds.splice(source.index, 1);
+      newTaskIds.splice(destination.index, 0, draggableId);
+
+      const newColumn = {
+        ...start,
+        taskIds: newTaskIds
+      };
+
+      const newBoardData: any = {
+        ...boardData,
+        columns: {
+          ...boardData?.columns,
+          [newColumn.id]: newColumn,
+        }
+      };
+
+      setBoardData(newBoardData);
+      return;
+    }
+
+    // Movendo de uma lista para outra
+    const startTaskIds = Array.from(start.taskIds);
+    startTaskIds.splice(source.index, 1);
+    const newStart = {
+      ...start,
+      taskIds: startTaskIds,
     };
 
-    const newBoardData: any = {
+    const finishTaskIds = Array.from(finish.taskIds);
+    finishTaskIds.splice(destination.index, 0, draggableId);
+    const newFinish = {
+      ...finish,
+      taskIds: finishTaskIds,
+    };
+
+    const newState = {
       ...boardData,
       columns: {
         ...boardData?.columns,
-        [newColumn.id]: newColumn,
+        [newStart.id]: newStart,
+        [newFinish.id]: newFinish,
       }
-    };
+    }
+    setBoardData(newState)
 
-    setBoardData(newBoardData);
   }, [boardData])
 
   useEffect(() => {
@@ -51,29 +83,32 @@ const Test = () => {
     <>
       <div className="test-section">
         <DragDropContext onDragEnd={onDragEnd} >
-          {boardData?.columnOrder.map((columnId: any) => {
-            const column = boardData.columns[columnId];
-            const tasks = column.taskIds.map((taskId: any) => boardData.tasks[taskId]);
+          <div className="flex">
+            {boardData?.columnOrder.map((columnId: any) => {
+              const start = boardData.columns[columnId];
+              const tasks = start.taskIds.map((taskId: any) => boardData.tasks[taskId]);
 
-            return <Column key={column.id} column={column} tasks={tasks} />
-          })}
+              return <Column key={start.id} start={start} tasks={tasks} />
+            })}
+          </div>
         </DragDropContext>
       </div>
     </>
   )
 }
 
-const Column = ({ column, tasks }: any) => {
+const Column = ({ start, tasks }: any) => {
 
   return (
     <>
       <div className="board">
         <div className="board-title">
-          {column.title}
+          {start.title}
         </div>
-        <Droppable droppableId={column.id}>
+        <Droppable droppableId={start.id}>
           {(provided) => (
             <div
+              className="tasklist"
               ref={provided.innerRef}
               {...provided.droppableProps}
             >

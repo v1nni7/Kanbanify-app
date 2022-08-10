@@ -15,6 +15,11 @@
     justify-content: space-between;
   }
 
+  .tasklist {
+    flex-grow: 1;
+    min-height: 100px;
+  }
+
   .board-item {
     padding: 6px;
 
