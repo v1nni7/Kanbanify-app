@@ -35,7 +35,7 @@ const Test = () => {
         const newState = {
           ...boardData,
           columnOrder: newColumnOrder,
-        }
+        };
 
         setBoardData(newState);
         return;

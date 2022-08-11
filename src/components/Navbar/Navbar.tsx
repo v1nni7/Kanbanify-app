@@ -1,11 +1,10 @@
-import { useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { IoCaretDownOutline } from 'react-icons/io5'
+import { useRef, useState } from "react";
+import { Link } from "react-router-dom";
+import { IoCaretDownOutline } from "react-icons/io5";
 
-import './styles.scss';
+import "./styles.scss";
 
 const Navbar = () => {
-
   const [isAuthenticated, setIsAuthenticated] = useState(true);
   const [dropdownIsOpen, setDropdownIsOpen] = useState(false);
 
@@ -21,49 +20,70 @@ const Navbar = () => {
             </div>
             <ul className="navbar-nav">
               <li className="navbar-item">
-                <Link className="navbar-link" to="/">Inicio</Link>
+                <Link className="navbar-link" to="/">
+                  Inicio
+                </Link>
               </li>
               <li className="navbar-item">
-                <Link className="navbar-link" to="/boards">Meus quadros</Link>
+                <Link className="navbar-link" to="/boards">
+                  Meus quadros
+                </Link>
               </li>
               <li className="navbar-item">
-                <Link className="navbar-link" to="/">Contate-nos</Link>
+                <Link className="navbar-link" to="/">
+                  Contate-nos
+                </Link>
               </li>
               <li className="navbar-item">
-                <Link className="navbar-link" to="/">Suporte</Link>
+                <Link className="navbar-link" to="/">
+                  Suporte
+                </Link>
+              </li>
+              <li>
+                <Link className="navbar-link" to="/testes">
+                  Testes
+                </Link>
               </li>
             </ul>
           </div>
-          <div className={`navbar-account ${isAuthenticated ? 'dropdown' : ''} ${dropdownIsOpen ? 'dropdown-open' : 'dropdown-close'}`}>
-            {isAuthenticated ?
+          <div
+            className={`navbar-account ${isAuthenticated ? "dropdown" : ""} ${
+              dropdownIsOpen ? "dropdown-open" : "dropdown-close"
+            }`}
+          >
+            {isAuthenticated ? (
               <>
-                <div className="navbar-my-account dropdown-button" onClick={() => setDropdownIsOpen(!dropdownIsOpen)}>
+                <div
+                  className="navbar-my-account dropdown-button"
+                  onClick={() => setDropdownIsOpen(!dropdownIsOpen)}
+                >
                   <div className="account-image"></div>
                   <IoCaretDownOutline />
                 </div>
                 <ul className="dropdown-items" ref={dropdownMenu}>
-                  <li className="dropdown-item">
-                    Minha conta
-                  </li>
-                  <li className="dropdown-item">
-                    Trocar senha
-                  </li>
-                  <li className="dropdown-item">
-                    Configurações
-                  </li>
+                  <li className="dropdown-item">Minha conta</li>
+                  <li className="dropdown-item">Trocar senha</li>
+                  <li className="dropdown-item">Configurações</li>
                 </ul>
               </>
-              :
-              <Link className="navbar-account-login" to="/login">Entrar</Link>
-            }
+            ) : (
+              <Link className="navbar-account-login" to="/login">
+                Entrar
+              </Link>
+            )}
           </div>
         </div>
       </nav>
-      {dropdownIsOpen ?
-        <div className="dropdown-backdrop" onClick={() => setDropdownIsOpen(!dropdownIsOpen)}></div>
-        : <></>}
+      {dropdownIsOpen ? (
+        <div
+          className="dropdown-backdrop"
+          onClick={() => setDropdownIsOpen(!dropdownIsOpen)}
+        ></div>
+      ) : (
+        <></>
+      )}
     </>
-  )
-}
+  );
+};
 
 export default Navbar;
