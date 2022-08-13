@@ -44,7 +44,7 @@ export const initialData: TypeData = {
     },
     "column-3": {
       id: "column-3",
-      title: "Em progresso",
+      title: "Finalizado",
       taskIds: [],
     },
   },

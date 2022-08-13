@@ -38,6 +38,7 @@ const Test = () => {
         };
 
         setBoardData(newState);
+        localStorage.setItem("boardData", JSON.stringify(newState));
         return;
       }
 
@@ -63,6 +64,7 @@ const Test = () => {
         };
 
         setBoardData(newBoardData);
+        localStorage.setItem("boardData", JSON.stringify(newBoardData));
         return;
       }
 
@@ -89,7 +91,9 @@ const Test = () => {
           [newFinish.id]: newFinish,
         },
       };
+
       setBoardData(newState);
+      localStorage.setItem("boardData", JSON.stringify(newState));
     },
     [boardData]
   );
