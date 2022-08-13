@@ -4,6 +4,7 @@ import {
   IoEllipsisHorizontalSharp,
   IoPencil,
   IoCheckboxOutline,
+  IoAddSharp,
 } from "react-icons/io5";
 import { initialData, TypeData } from "./initial-data";
 
@@ -11,6 +12,8 @@ import "./styles.scss";
 
 const Test = () => {
   const [boardData, setBoardData] = useState<any>();
+  const [isCreatedData, setIsCreatedData] = useState<any>();
+  const [modalIsOpen, setModalIsOpen] = useState<any>(false);
 
   // Código aprendido na https://egghead.io/lessons/
   const onDragEnd: any = useCallback(
@@ -98,8 +101,14 @@ const Test = () => {
     [boardData]
   );
 
+  const createData = useCallback(() => {
+    console.log("Hello Create");
+  }, []);
+
   useEffect(() => {
-    setBoardData(initialData);
+    const getBoardDataLocalStorage: any = localStorage.getItem("boardData");
+
+    setBoardData(JSON.parse(getBoardDataLocalStorage));
   }, []);
 
   return (
@@ -117,26 +126,54 @@ const Test = () => {
                 {...provided.droppableProps}
                 ref={provided.innerRef}
               >
-                {boardData?.columnOrder.map((columnId: any, index: any) => {
-                  const column = boardData.columns[columnId];
-                  const tasks = column.taskIds.map(
-                    (taskId: any) => boardData.tasks[taskId]
-                  );
+                {isCreatedData ? (
+                  //Existe
+                  boardData?.columnOrder.map((columnId: any, index: any) => {
+                    const column = boardData.columns[columnId];
+                    const tasks = column.taskIds.map(
+                      (taskId: any) => boardData.tasks[taskId]
+                    );
 
-                  return (
-                    <Column
-                      key={column.id}
-                      column={column}
-                      tasks={tasks}
-                      index={index}
-                    />
-                  );
-                })}
+                    return (
+                      <Column
+                        key={column.id}
+                        column={column}
+                        tasks={tasks}
+                        index={index}
+                      />
+                    );
+                  })
+                ) : (
+                  // Não existe
+                  <div className="board">
+                    <div
+                      className="add-new-column"
+                      onClick={() => setModalIsOpen(!modalIsOpen)}
+                    ></div>
+                  </div>
+                )}
+
                 {provided.placeholder}
               </div>
             )}
           </Droppable>
         </DragDropContext>
+      </div>
+
+      <div className="modal">
+        <div className="modal-content">
+          <div className="modal-dialog">
+            <div className="modal-header">
+              
+            </div>
+            <div className="modal-body">
+
+            </div>
+            <div className="modal-footer">
+              
+            </div>
+          </div>
+        </div>
       </div>
     </>
   );
