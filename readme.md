@@ -37,7 +37,9 @@ npm start
 
 **Atenção:** **A lógica para a criação dos cards arrastaveis foram criadas acompanhando o seguinte tutorial do site <a href="https://egghead.io/lessons/react-course-introduction-beautiful-and-accessible-drag-and-drop-with-react-beautiful-dnd">Egg Head</a> e ainda estou estudando essa lógica e como ela funciona!**
 
-**Não sou muito bom no inglês, então pode ser que algum commit tenha uma descrição meio estranha xD**
+<h2>Branchs</h2>
+<code>main</code>: Branch utilizada para fazer deploy de versões estáveis do projeto <br />
+<code>development</code>: Branch utilizada para desenvolver e testar novas features do projeto
 
 <h2>Algumas informações</h2>
 
