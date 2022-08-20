@@ -1,4 +1,4 @@
-import { SetStateAction } from "react";
+import { Dispatch, SetStateAction } from "react";
 import { Draggable, Droppable } from "react-beautiful-dnd";
 import Task from "./Task";
 
@@ -7,10 +7,22 @@ interface TypeColumn {
   tasks: any;
   index: number;
   board: object;
+  inputTaskValue: string;
+  setInputTaskValue: Dispatch<SetStateAction<string>>;
+  createNewTask: Function;
   setBoard: SetStateAction<object>;
 }
 
-const Column = ({ column, tasks, index, board, setBoard }: TypeColumn) => {
+const Column = ({
+  column,
+  tasks,
+  index,
+  board,
+  setBoard,
+  createNewTask,
+  inputTaskValue,
+  setInputTaskValue,
+}: TypeColumn) => {
   return (
     <>
       <Draggable draggableId={column.id} index={index}>
@@ -31,8 +43,15 @@ const Column = ({ column, tasks, index, board, setBoard }: TypeColumn) => {
                   {...provided.droppableProps}
                 >
                   {tasks ? (
-                    tasks.map((task: object, index: number) => (
-                      <Task key={index} index={index} task={task} />
+                    tasks.map((task: any, index: number) => (
+                      <Task
+                        key={task.id}
+                        index={index}
+                        task={task}
+                        createNewTask={createNewTask}
+                        inputTaskValue={inputTaskValue}
+                        setInputTaskValue={setInputTaskValue}
+                      />
                     ))
                   ) : (
                     <></>

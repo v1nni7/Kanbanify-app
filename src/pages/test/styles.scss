@@ -1,25 +1,7 @@
 .test-section {
   padding: 42px;
-}
-
-.board-actions {
   display: flex;
-  margin: 0 0 24px 0;
 
-  .btn-add-column {
-    border: none;
-    padding: 12px;
-    font-size: 1rem;
-    display: flex;
-    align-items: center;
-    border-radius: 4px;
-    color: #fff;
-    background-color: #3a3a3a;
-
-    .icon {
-      font-size: 1.2rem;
-    }
-  }
 }
 
 .board {
@@ -31,6 +13,7 @@
   .board-title {
     display: flex;
     padding: 12px;
+    font-size: 1.2rem;
     align-items: flex-start;
     flex-direction: column;
     justify-content: space-between;
@@ -80,6 +63,13 @@
         justify-content: space-between;
       }
 
+      .input-task-name {
+        color: #fff;
+        border: none;
+        font-size: 1.2rem;
+        background-color: transparent;
+      }
+
       .board-item-checked {
         display: flex;
         align-items: center;
@@ -93,6 +83,104 @@
         .board-number-checked {
           font-size: .8rem;
         }
+      }
+    }
+  }
+}
+
+.board-create-task {
+  padding: 8px;
+
+  form {
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    position: relative;
+    border-radius: 4px;
+    background-color: #757575;
+
+    input {
+      width: 100%;
+      height: 25px;
+      border: none;
+      height: 40px;
+      color: #fff;
+      outline: none;
+      margin: 0 6px 0 0;
+      font-size: 1.2rem;
+      padding: 0 0 0 8px;
+      border-radius: 4px;
+      transition: .2s;
+      border: 2px #757575 solid;
+      background-color: transparent;
+
+      &:focus {
+        border: 2px #ccc solid;
+      }
+    }
+
+    .btn-submit {
+      display: flex;
+      border: none;
+      color: #fff;
+      font-size: 1.2rem;
+      padding: 10px 12px;
+      border-radius: 4px;
+      background-color: #7e57c2;
+      align-items: center;
+      justify-content: center;
+
+      &:hover {
+        background-color: #673ab7;
+      }
+    }
+  }
+}
+
+.board-create-column {
+  padding: 8px;
+  max-height: 56px;
+  border-radius: 4px;
+  background-color: #3a3a3a;
+
+  form {
+    display: flex;
+    align-items: center;
+    position: relative;
+
+    input {
+      width: 200px;
+      height: 25px;
+      border: none;
+      height: 40px;
+      color: #fff;
+      outline: none;
+      margin: 0 6px 0 0;
+      font-size: 1.2rem;
+      padding: 0 0 0 8px;
+      border-radius: 4px;
+      transition: .2s;
+      border: 2px #3a3a3a solid;
+      background-color: transparent;
+
+      &:focus {
+        border: 2px #ccc solid;
+      }
+    }
+
+    .btn-submit {
+      display: flex;
+      border: none;
+      color: #fff;
+      font-size: 1rem;
+      padding: 10px 12px;
+      border-radius: 4px;
+      background-color: #7e57c2;
+      align-items: center;
+      justify-content: center;
+
+      &:hover {
+        background-color: #673ab7;
       }
     }
   }

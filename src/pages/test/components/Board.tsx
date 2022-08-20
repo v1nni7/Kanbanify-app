@@ -1,7 +1,14 @@
-import { SetStateAction, useCallback, useEffect, useState } from "react";
+import {
+  FormEvent,
+  SetStateAction,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 import { ThreeCircles } from "react-loader-spinner";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
 import { initialData } from "./data";
+import { IoSaveOutline } from "react-icons/io5";
 
 import Column from "./Column";
 
@@ -12,7 +19,16 @@ interface TypeColumns {
 }
 
 const DroppableArea = () => {
-  const [board, setBoard] = useState<SetStateAction<TypeColumns> | any>();
+  const [board, setBoard] = useState<SetStateAction<TypeColumns> | any>({
+    tasks: {},
+    columns: {},
+    columnOrder: [],
+  });
+  const [loading, setLoading] = useState(false);
+  const [inputValue, setInputValue] = useState<string>("Nova coluna");
+  const [inputTaskValue, setInputTaskValue] = useState<string>("Nova tarefa");
+  const [column, setColumn] = useState<any>();
+  const [isOpen, setIsOpen] = useState(false);
 
   const handleDragEnd: any = useCallback(
     ({ destination, source, draggableId, type }: any) => {
@@ -99,12 +115,75 @@ const DroppableArea = () => {
     [board]
   );
 
+  const createNewTask: any = (e: HTMLFormElement) => {
+    e.preventDefault();
+    
+
+    /* setBoard({
+      tasks: {
+        ...board.tasks,
+        [newIndexTask]: {
+          id: newIndexTask,
+          content: "Adicionar tarefa",
+          isAction: true,
+          totalCheckbox: undefined,
+          completedCheckbox: undefined,
+        },
+      },
+      columns: {},
+      columnOrder: [...board.columnOrder, newIndexTask],
+    }); */
+  };
+
+  const createNewColumn: any = (e: HTMLFormElement) => {
+    e.preventDefault();
+    const newInputValue = inputValue.replace(" ", "-").toLowerCase();
+    const newIndexTaskValue = `task-${newInputValue}`;
+
+    console.log(newIndexTaskValue);
+
+    setBoard({
+      tasks: {
+        ...board.tasks,
+        [newIndexTaskValue]: {
+          id: newIndexTaskValue,
+          content: "Adicionar tarefa",
+          isAction: true,
+          totalCheckbox: undefined,
+          completedCheckbox: undefined,
+        },
+      },
+      columns: {
+        ...board.columns,
+        [newInputValue]: {
+          id: newInputValue,
+          title: inputValue,
+          taskIds: [newIndexTaskValue],
+        },
+      },
+      columnOrder: [...board.columnOrder, newInputValue],
+    });
+
+    setIsOpen(false);
+    setInputValue("Nova coluna");
+  };
+
   useEffect(() => {
-    setBoard(initialData);
+    if (!initialData) {
+      setLoading(true);
+      return;
+    }
   }, []);
 
   return (
     <>
+      {loading ? (
+        <div className="modal-load">
+          <ThreeCircles height={80} width={80} color="#7e57c2" />
+        </div>
+      ) : (
+        <></>
+      )}
       <DragDropContext onDragEnd={handleDragEnd}>
         <Droppable
           droppableId="all-columns"
@@ -121,30 +200,43 @@ const DroppableArea = () => {
                 board?.columnOrder.map((columnId: number, index: number) => {
                   const column = board.columns[columnId];
                   const tasks = column.taskIds.map(
-                    (tasksId: number) => board.tasks[tasksId]
+                    (taskId: number) => board.tasks[taskId]
                   );
 
                   return (
                     <Column
-                      key={index}
+                      key={column.id}
                       column={column}
                       tasks={tasks}
                       index={index}
                       board={board}
                       setBoard={setBoard}
+                      createNewTask={createNewTask}
+                      inputTaskValue={inputTaskValue}
+                      setInputTaskValue={setInputTaskValue}
                     />
                   );
                 })
               ) : (
-                <div className="modal-load">
-                  <ThreeCircles height={80} width={80} color="#7e57c2" />
-                </div>
+                <></>
               )}
               {provided.placeholder}
             </div>
           )}
         </Droppable>
       </DragDropContext>
+      <div className="board-create-column hide">
+        <form onSubmit={createNewColumn}>
+          <input
+            type="text"
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+          />
+          <button type="submit" className="btn-submit">
+            <IoSaveOutline />
+          </button>
+        </form>
+      </div>
     </>
   );
 };
