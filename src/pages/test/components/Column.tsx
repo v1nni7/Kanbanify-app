@@ -6,22 +6,12 @@ interface TypeColumn {
   column: { id: string; title: string; taskIds: string };
   tasks: any;
   index: number;
-  board: object;
-  inputTaskValue: string;
-  setInputTaskValue: Dispatch<SetStateAction<string>>;
-  createNewTask: Function;
-  setBoard: SetStateAction<object>;
 }
 
 const Column = ({
   column,
   tasks,
   index,
-  board,
-  setBoard,
-  createNewTask,
-  inputTaskValue,
-  setInputTaskValue,
 }: TypeColumn) => {
   return (
     <>
@@ -48,9 +38,6 @@ const Column = ({
                         key={task.id}
                         index={index}
                         task={task}
-                        createNewTask={createNewTask}
-                        inputTaskValue={inputTaskValue}
-                        setInputTaskValue={setInputTaskValue}
                       />
                     ))
                   ) : (

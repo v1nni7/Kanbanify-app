@@ -10,18 +10,21 @@ import Test from "./pages/test";
 import Board from "./pages/board";
 import Boards from "./pages/boards";
 import Navbar from "./components/Navbar/Navbar";
+import BoardContextProvider from "./hooks/context/BoardContext/BoardContext";
 
 const App = () => {
   return (
     <BrowserRouter>
       <Navbar />
-      <Routes>
-        <Route index element={<Home />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/boards" element={<Boards />} />
-        <Route path="/board/:idBoard" element={<Board />} />
-        <Route path="/testes" element={<Test />} />
-      </Routes>
+      <BoardContextProvider>
+        <Routes>
+          <Route index element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/boards" element={<Boards />} />
+          <Route path="/board/:idBoard" element={<Board />} />
+          <Route path="/testes" element={<Test />} />
+        </Routes>
+      </BoardContextProvider>
     </BrowserRouter>
   );
 };

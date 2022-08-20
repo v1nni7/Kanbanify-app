@@ -1,22 +1,49 @@
 import { IoCheckboxOutline, IoAdd } from "react-icons/io5";
 import { Draggable } from "react-beautiful-dnd";
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useContext, useState } from "react";
+import { BoardContext } from "../../../hooks/context/BoardContext/BoardContext";
 
 interface TypeTask {
   index: number;
   task: any;
-  createNewTask: any;
-  inputTaskValue: string;
-  setInputTaskValue: Dispatch<SetStateAction<string>>;
 }
 
-const Task = ({
-  task,
-  index,
-  createNewTask,
-  inputTaskValue,
-  setInputTaskValue,
-}: TypeTask) => {
+const Task = ({ task, index }: TypeTask) => {
+  const { board, setBoard } = useContext(BoardContext);
+
+  const [inputTaskValue, setInputTaskValue] =
+    useState<string>("Adicionar tarefa");
+
+  const createNewTask: any = (e: HTMLFormElement) => {
+    e.preventDefault();
+
+    const newTaskId = `task-${inputTaskValue.replace(" ", "-").toLowerCase()}`;
+
+    const newColumnValue = {
+      ...board.columns[task.column],
+      taskIds: [...board.columns[task.column].taskIds, newTaskId],
+    };
+
+    setBoard({
+      tasks: {
+        ...board.tasks,
+        [newTaskId]: {
+          id: newTaskId,
+          content: inputTaskValue,
+          isAction: false,
+          column: task.column,
+          totalCheckbox: undefined,
+          completedCheckbox: undefined,
+        },
+      },
+      columns: {
+        ...board.columns,
+        [task.column]: newColumnValue,
+      },
+      columnOrder: [board.columnOrder],
+    });
+  };
+
   return (
     <>
       {task.isAction ? (

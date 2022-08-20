@@ -2,13 +2,15 @@ import {
   FormEvent,
   SetStateAction,
   useCallback,
+  useContext,
   useEffect,
   useState,
 } from "react";
 import { ThreeCircles } from "react-loader-spinner";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
 import { initialData } from "./data";
-import { IoSaveOutline } from "react-icons/io5";
+import { IoCheckmarkSharp } from "react-icons/io5";
+import { BoardContext } from "../../../hooks/context/BoardContext/BoardContext";
 
 import Column from "./Column";
 
@@ -19,15 +21,11 @@ interface TypeColumns {
 }
 
 const DroppableArea = () => {
-  const [board, setBoard] = useState<SetStateAction<TypeColumns> | any>({
-    tasks: {},
-    columns: {},
-    columnOrder: [],
-  });
+  const { board, setBoard } = useContext(BoardContext);
+
   const [loading, setLoading] = useState(false);
-  const [inputValue, setInputValue] = useState<string>("Nova coluna");
-  const [inputTaskValue, setInputTaskValue] = useState<string>("Nova tarefa");
-  const [column, setColumn] = useState<any>();
+  const [inputColumnValue, setInputColumnValue] =
+    useState<string>("Nova coluna");
   const [isOpen, setIsOpen] = useState(false);
 
   const handleDragEnd: any = useCallback(
@@ -115,32 +113,10 @@ const DroppableArea = () => {
     [board]
   );
 
-  const createNewTask: any = (e: HTMLFormElement) => {
-    e.preventDefault();
-    
-
-    /* setBoard({
-      tasks: {
-        ...board.tasks,
-        [newIndexTask]: {
-          id: newIndexTask,
-          content: "Adicionar tarefa",
-          isAction: true,
-          totalCheckbox: undefined,
-          completedCheckbox: undefined,
-        },
-      },
-      columns: {},
-      columnOrder: [...board.columnOrder, newIndexTask],
-    }); */
-  };
-
   const createNewColumn: any = (e: HTMLFormElement) => {
     e.preventDefault();
-    const newInputValue = inputValue.replace(" ", "-").toLowerCase();
+    const newInputValue = inputColumnValue.replace(" ", "-").toLowerCase();
     const newIndexTaskValue = `task-${newInputValue}`;
-
-    console.log(newIndexTaskValue);
 
     setBoard({
       tasks: {
@@ -149,6 +125,7 @@ const DroppableArea = () => {
           id: newIndexTaskValue,
           content: "Adicionar tarefa",
           isAction: true,
+          column: newInputValue,
           totalCheckbox: undefined,
           completedCheckbox: undefined,
         },
@@ -157,7 +134,7 @@ const DroppableArea = () => {
         ...board.columns,
         [newInputValue]: {
           id: newInputValue,
-          title: inputValue,
+          title: inputColumnValue,
           taskIds: [newIndexTaskValue],
         },
       },
@@ -165,7 +142,7 @@ const DroppableArea = () => {
     });
 
     setIsOpen(false);
-    setInputValue("Nova coluna");
+    setInputColumnValue("Nova coluna");
   };
 
   useEffect(() => {
@@ -209,11 +186,6 @@ const DroppableArea = () => {
                       column={column}
                       tasks={tasks}
                       index={index}
-                      board={board}
-                      setBoard={setBoard}
-                      createNewTask={createNewTask}
-                      inputTaskValue={inputTaskValue}
-                      setInputTaskValue={setInputTaskValue}
                     />
                   );
                 })
@@ -229,11 +201,11 @@ const DroppableArea = () => {
         <form onSubmit={createNewColumn}>
           <input
             type="text"
-            value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
+            value={inputColumnValue}
+            onChange={(e) => setInputColumnValue(e.target.value)}
           />
           <button type="submit" className="btn-submit">
-            <IoSaveOutline />
+            <IoCheckmarkSharp />
           </button>
         </form>
       </div>
