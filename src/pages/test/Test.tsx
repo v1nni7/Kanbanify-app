@@ -1,3 +1,5 @@
+import { useContext, useEffect } from "react";
+import { BoardContext } from "../../hooks/context/BoardContext/BoardContext";
 import Board from "./components/Board";
 
 import "./styles.scss";

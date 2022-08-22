@@ -14,16 +14,9 @@ import { BoardContext } from "../../../hooks/context/BoardContext/BoardContext";
 
 import Column from "./Column";
 
-interface TypeColumns {
-  tasks: object;
-  columns: object;
-  columnOrder: TemplateStringsArray;
-}
-
 const DroppableArea = () => {
   const { board, setBoard } = useContext(BoardContext);
 
-  const [loading, setLoading] = useState(false);
   const [inputColumnValue, setInputColumnValue] =
     useState<string>("Nova coluna");
   const [isOpen, setIsOpen] = useState(false);
@@ -115,27 +108,19 @@ const DroppableArea = () => {
 
   const createNewColumn: any = (e: HTMLFormElement) => {
     e.preventDefault();
-    const newInputValue = inputColumnValue.replace(" ", "-").toLowerCase();
+    const newInputValue = inputColumnValue.replace(/[" "]/g, "-").toLowerCase();
     const newIndexTaskValue = `task-${newInputValue}`;
 
     setBoard({
       tasks: {
         ...board.tasks,
-        [newIndexTaskValue]: {
-          id: newIndexTaskValue,
-          content: "Adicionar tarefa",
-          isAction: true,
-          column: newInputValue,
-          totalCheckbox: undefined,
-          completedCheckbox: undefined,
-        },
       },
       columns: {
         ...board.columns,
         [newInputValue]: {
           id: newInputValue,
           title: inputColumnValue,
-          taskIds: [newIndexTaskValue],
+          taskIds: [],
         },
       },
       columnOrder: [...board.columnOrder, newInputValue],
@@ -146,21 +131,11 @@ const DroppableArea = () => {
   };
 
   useEffect(() => {
-    if (!initialData) {
-      setLoading(true);
-      return;
-    }
+    //setBoard(initialData);
   }, []);
 
   return (
     <>
-      {loading ? (
-        <div className="modal-load">
-          <ThreeCircles height={80} width={80} color="#7e57c2" />
-        </div>
-      ) : (
-        <></>
-      )}
       <DragDropContext onDragEnd={handleDragEnd}>
         <Droppable
           droppableId="all-columns"
@@ -173,31 +148,29 @@ const DroppableArea = () => {
               {...provided.droppableProps}
               ref={provided.innerRef}
             >
-              {board ? (
-                board?.columnOrder.map((columnId: number, index: number) => {
-                  const column = board.columns[columnId];
-                  const tasks = column.taskIds.map(
-                    (taskId: number) => board.tasks[taskId]
-                  );
+              {board.columnOrder.map((columnId: any, index: number) => {
+                //console.log(columnId + ' :' + index);
+                const column = board.columns[columnId];
+                //console.log(column);
+                const tasks = column.taskIds.map(
+                  (taskId: number) => board.tasks[taskId]
+                );
 
-                  return (
-                    <Column
-                      key={column.id}
-                      column={column}
-                      tasks={tasks}
-                      index={index}
-                    />
-                  );
-                })
-              ) : (
-                <></>
-              )}
+                return (
+                  <Column
+                    key={column.id}
+                    column={column}
+                    tasks={tasks}
+                    index={index}
+                  />
+                );
+              })}
               {provided.placeholder}
             </div>
           )}
         </Droppable>
       </DragDropContext>
-      <div className="board-create-column hide">
+      <div className="board-create-column">
         <form onSubmit={createNewColumn}>
           <input
             type="text"
