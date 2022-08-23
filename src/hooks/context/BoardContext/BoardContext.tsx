@@ -1,4 +1,4 @@
-import { createContext, SetStateAction, useState } from "react";
+import { createContext, SetStateAction, useEffect, useState } from "react";
 
 interface TypeColumns {
   tasks: object;
@@ -14,8 +14,17 @@ const BoardContextProvider = ({ children }: any) => {
     columns: {},
     columnOrder: [],
   });
-  const [inputTaskValue, setInputTaskValue] = useState<string>("Adicionar tarefa");
-  const [inputColumnValue, setInputColumnValue] = useState<string>("Adicionar coluna");
+  const [inputColumnValue, setInputColumnValue] =
+    useState<string>("Adicionar coluna");
+
+  const getBoardStorage = JSON.parse(localStorage.getItem("board-1") as any);
+
+  useEffect(() => {
+    if (!getBoardStorage) {
+      return;
+    }
+    setBoard(getBoardStorage);
+  }, []);
 
   return (
     <>
@@ -23,8 +32,6 @@ const BoardContextProvider = ({ children }: any) => {
         value={{
           board,
           setBoard,
-          inputTaskValue,
-          setInputTaskValue,
           inputColumnValue,
           setInputColumnValue,
         }}

@@ -17,7 +17,11 @@ const Task = ({ task, index }: TypeTask) => {
             {...provided.draggableProps}
             {...provided.dragHandleProps}
           >
-            <div className="board-content">
+            <div
+              className={`board-content ${
+                task.completedCheckbox ? null : "board-without-checklist"
+              }`}
+            >
               <div className="board-item-title">{task.content}</div>
               <div className="board-item-checked">
                 <div className="board-icon-checked">

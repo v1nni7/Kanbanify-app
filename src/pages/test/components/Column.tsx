@@ -11,8 +11,10 @@ interface TypeColumn {
 }
 
 const Column = ({ column, tasks, index }: TypeColumn) => {
-  const { board, setBoard, inputTaskValue, setInputTaskValue } =
-    useContext(BoardContext);
+  const { board, setBoard } = useContext(BoardContext);
+
+  const [inputTaskValue, setInputTaskValue] =
+    useState<string>("Adicionar tarefa");
 
   const createNewTask: any = (e: HTMLFormElement) => {
     e.preventDefault();
@@ -21,12 +23,7 @@ const Column = ({ column, tasks, index }: TypeColumn) => {
       .replace(/[" "]/g, "-")
       .toLowerCase()}`;
 
-    const newColumnValue = {
-      ...board.columns[column.id],
-      taskIds: [...board.columns[column.id].taskIds, newTaskId],
-    };
-
-    setBoard({
+    const newBoardData = {
       ...board,
       tasks: {
         ...board.tasks,
@@ -41,9 +38,17 @@ const Column = ({ column, tasks, index }: TypeColumn) => {
       },
       columns: {
         ...board.columns,
-        [column.id]: newColumnValue,
+        [column.id]: {
+          ...board.columns[column.id],
+          taskIds: [...board.columns[column.id].taskIds, newTaskId],
+        },
       },
-    });
+    };
+
+    setBoard(newBoardData);
+    localStorage.setItem("board-1", JSON.stringify(newBoardData));
+
+    setInputTaskValue("Adicionar tarefa");
   };
 
   return (

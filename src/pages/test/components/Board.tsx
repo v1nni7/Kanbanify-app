@@ -46,7 +46,7 @@ const DroppableArea = () => {
         };
 
         setBoard(newState);
-        localStorage.setItem("board", JSON.stringify(newState));
+        localStorage.setItem("board-1", JSON.stringify(newState));
         return;
       }
 
@@ -72,7 +72,7 @@ const DroppableArea = () => {
         };
 
         setBoard(newBoardData);
-        localStorage.setItem("board", JSON.stringify(newBoardData));
+        localStorage.setItem("board-1", JSON.stringify(newBoardData));
         return;
       }
 
@@ -101,7 +101,7 @@ const DroppableArea = () => {
       };
 
       setBoard(newState);
-      localStorage.setItem("board", JSON.stringify(newState));
+      localStorage.setItem("board-1", JSON.stringify(newState));
     },
     [board]
   );
@@ -109,9 +109,8 @@ const DroppableArea = () => {
   const createNewColumn: any = (e: HTMLFormElement) => {
     e.preventDefault();
     const newInputValue = inputColumnValue.replace(/[" "]/g, "-").toLowerCase();
-    const newIndexTaskValue = `task-${newInputValue}`;
 
-    setBoard({
+    const newBoardData = {
       tasks: {
         ...board.tasks,
       },
@@ -124,15 +123,14 @@ const DroppableArea = () => {
         },
       },
       columnOrder: [...board.columnOrder, newInputValue],
-    });
+    };
+
+    setBoard(newBoardData);
+    localStorage.setItem("board-1", JSON.stringify(newBoardData));
 
     setIsOpen(false);
     setInputColumnValue("Nova coluna");
   };
-
-  useEffect(() => {
-    //setBoard(initialData);
-  }, []);
 
   return (
     <>
