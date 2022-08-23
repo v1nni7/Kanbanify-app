@@ -3,6 +3,24 @@
   display: flex;
 }
 
+.wrap-remove-storage {
+  padding: 12px 42px;
+
+  button {
+    border: none;
+    padding: 10px 24px;
+    border-radius: 6px;
+    transition: .2s;
+    font-size: 1.2rem;
+    color: #fff;
+    background-color: #ff6e6e;
+
+    &:hover {
+      background-color: #ff4d4d;
+    }
+  }
+}
+
 .board-column {
   height: 83vh;
 
