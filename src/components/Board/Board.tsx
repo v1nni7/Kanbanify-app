@@ -1,16 +1,7 @@
-import {
-  FormEvent,
-  SetStateAction,
-  useCallback,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
-import { ThreeCircles } from "react-loader-spinner";
+import { useCallback, useContext, useState } from "react";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
-import { initialData } from "./data";
 import { IoCheckmarkSharp } from "react-icons/io5";
-import { BoardContext } from "../../../hooks/context/BoardContext";
+import { BoardContext } from "../../hooks/context/BoardContext";
 
 import Column from "./Column";
 

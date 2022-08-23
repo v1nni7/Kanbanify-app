@@ -10,7 +10,7 @@ import Test from "./pages/test";
 import Board from "./pages/board";
 import Boards from "./pages/boards";
 import Navbar from "./components/Navbar/Navbar";
-import BoardContextProvider from "./hooks/context/BoardContext/BoardContext";
+import BoardContextProvider from "./hooks/context/BoardContext";
 
 const App = () => {
   return (

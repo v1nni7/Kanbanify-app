@@ -1,7 +1,7 @@
 import { useContext, useState } from "react";
 import { IoAdd } from "react-icons/io5";
 import { Draggable, Droppable } from "react-beautiful-dnd";
-import { BoardContext } from "../../../hooks/context/BoardContext";
+import { BoardContext } from "../../hooks/context/BoardContext";
 import Task from "./Task";
 
 interface TypeColumn {
