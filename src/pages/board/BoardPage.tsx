@@ -1,21 +1,25 @@
-import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useContext } from "react";
 import Board from "../../components/Board/Board";
+import { BoardContext } from "../../hooks/context/BoardContext";
 
 import "./styles.scss";
 
 const BoardPage = () => {
-  let navigate = useNavigate();
+  const { setBoard } = useContext(BoardContext);
 
   const handleClearStorage = () => {
     localStorage.clear();
-    navigate(0);
+    setBoard({
+      tasks: {},
+      columns: {},
+      columnOrder: [],
+    });
   };
 
   return (
     <>
       <div className="flex clear-button">
-        <button onClick={handleClearStorage}>Limpar</button>
+        <button type="button" onClick={handleClearStorage}>Limpar</button>
       </div>
       <div className="workspace">
         <Board />

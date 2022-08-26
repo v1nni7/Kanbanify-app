@@ -13,15 +13,12 @@ interface TypeColumn {
 const Column = ({ column, tasks, index }: TypeColumn) => {
   const { board, setBoard } = useContext(BoardContext);
 
-  const [inputTaskValue, setInputTaskValue] =
-    useState<string>("Adicionar tarefa");
+  const [taskValue, setTaskValue] = useState<string>("Adicionar tarefa");
 
   const createNewTask: any = (e: HTMLFormElement) => {
     e.preventDefault();
 
-    const newTaskId = `task-${inputTaskValue
-      .replace(/[" "]/g, "-")
-      .toLowerCase()}`;
+    const newTaskId = `task-${taskValue.replace(/[" "]/g, "-").toLowerCase()}`;
 
     const newBoardData = {
       ...board,
@@ -29,7 +26,7 @@ const Column = ({ column, tasks, index }: TypeColumn) => {
         ...board.tasks,
         [newTaskId]: {
           id: newTaskId,
-          content: inputTaskValue,
+          content: taskValue,
           isAction: false,
           column: column.id,
           totalCheckbox: undefined,
@@ -48,7 +45,7 @@ const Column = ({ column, tasks, index }: TypeColumn) => {
     setBoard(newBoardData);
     localStorage.setItem("board-1", JSON.stringify(newBoardData));
 
-    setInputTaskValue("Adicionar tarefa");
+    setTaskValue("Adicionar tarefa");
   };
 
   return (
@@ -85,8 +82,8 @@ const Column = ({ column, tasks, index }: TypeColumn) => {
                   <form onSubmit={createNewTask}>
                     <input
                       type="text"
-                      value={inputTaskValue}
-                      onChange={(e) => setInputTaskValue(e.target.value)}
+                      value={taskValue}
+                      onChange={(e) => setTaskValue(e.target.value)}
                     />
                     <button className="btn-submit">
                       <IoAdd />

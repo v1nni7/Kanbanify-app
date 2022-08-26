@@ -181,30 +181,6 @@ const Test = () => {
           </Droppable>
         </DragDropContext>
       </div>
-
-      {/* <div className={`modal ${modalIsOpen ? "show" : "hidden"}`}>
-        <div className="modal-content">
-          <div className="modal-dialog">
-            <div className="modal-body">
-              <textarea
-                name=""
-                id=""
-                className="editable-textarea"
-                value={valueTextArea}
-                onChange={(e) => setValueTextArea(e.target.value)}
-              ></textarea>
-
-              <IoClose
-                className="icon-close"
-                onClick={() => setModalIsOpen(!modalIsOpen)}
-              />
-            </div>
-            <div className="modal-footer">
-              <button className="btn-add-column">Adicionar coluna</button>
-            </div>
-          </div>
-        </div>
-      </div> */}
     </>
   );
 };
