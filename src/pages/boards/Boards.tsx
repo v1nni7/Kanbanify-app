@@ -3,12 +3,7 @@ import { IoAddCircleOutline } from "react-icons/io5";
 import backgroundImage from "../../assets/images/backgrounds/codebackground.jpg";
 
 import "./styles.scss";
-import {
-  FormEvent,
-  useCallback,
-  useEffect,
-  useState,
-} from "react";
+import { FormEvent, useCallback, useEffect, useState } from "react";
 import Modal from "../../components/Modal";
 
 interface ValuesFormType {
@@ -75,6 +70,10 @@ const Boards = () => {
     [modalForm]
   );
 
+  useEffect(() => {
+    setWorkspaces(JSON.parse(localStorage.getItem("userBoards") as any));
+  }, []);
+
   return (
     <>
       <section className="boards-section">
@@ -85,14 +84,32 @@ const Boards = () => {
                 <h2>Criar novo quadro</h2>
               </div>
             </div>
-            <Link to="/board/1" className="board">
+            {workspaces ? (
+              workspaces.map((workspace: any, index) => (
+                <Link
+                  key={index}
+                  to={`/board/${workspace.id}`}
+                  className="board"
+                >
+                  <div className="board-background">
+                    <img src={backgroundImage} alt="" />
+                  </div>
+                  <div className="board-background-gradient flex align-items-end">
+                    <h2>{workspace.name}</h2>
+                  </div>
+                </Link>
+              ))
+            ) : (
+              <></>
+            )}
+            {/* <Link to="/board/1" className="board">
               <div className="board-background">
                 <img src={backgroundImage} alt="" />
               </div>
               <div className="board-background-gradient flex align-items-end">
                 <h2>Meu primeiro quadro</h2>
               </div>
-            </Link>
+            </Link> */}
           </div>
         </div>
       </section>

@@ -1,4 +1,4 @@
-import { useCallback, useContext, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
 import { IoCheckmarkSharp } from "react-icons/io5";
 import { useParams } from "react-router-dom";
@@ -8,7 +8,7 @@ import Column from "./Column";
 
 const DroppableArea = () => {
   let { idBoard } = useParams();
-  const { board, setBoard } = useContext(BoardContext);
+  const { board, setBoard, setUrl } = useContext(BoardContext);
 
   const [inputColumnValue, setInputColumnValue] =
     useState<string>("Nova coluna");
@@ -124,6 +124,10 @@ const DroppableArea = () => {
     setIsOpen(false);
     setInputColumnValue("Nova coluna");
   };
+
+  useEffect(() => {
+    setUrl(idBoard);
+  }, [idBoard]);
 
   return (
     <>
