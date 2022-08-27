@@ -19,7 +19,18 @@
       padding: 12px;
       border-radius: 12px;
       color: #fff;
+      animation: opening .4s;
       background-color: #444;
+    }
+  }
+
+  @keyframes opening {
+    from {
+      transform: translateY(-80px);
+    }
+
+    to {
+      transform: translateY(0px);
     }
   }
 

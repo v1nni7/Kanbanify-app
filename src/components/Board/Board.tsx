@@ -1,11 +1,13 @@
 import { useCallback, useContext, useState } from "react";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
 import { IoCheckmarkSharp } from "react-icons/io5";
+import { useParams } from "react-router-dom";
 import { BoardContext } from "../../hooks/context/BoardContext";
 
 import Column from "./Column";
 
 const DroppableArea = () => {
+  let { idBoard } = useParams();
   const { board, setBoard } = useContext(BoardContext);
 
   const [inputColumnValue, setInputColumnValue] =
@@ -37,7 +39,7 @@ const DroppableArea = () => {
         };
 
         setBoard(newState);
-        localStorage.setItem("board-1", JSON.stringify(newState));
+        localStorage.setItem(`${idBoard}`, JSON.stringify(newState));
         return;
       }
 
@@ -63,7 +65,7 @@ const DroppableArea = () => {
         };
 
         setBoard(newBoardData);
-        localStorage.setItem("board-1", JSON.stringify(newBoardData));
+        localStorage.setItem(`${idBoard}`, JSON.stringify(newBoardData));
         return;
       }
 
@@ -92,7 +94,7 @@ const DroppableArea = () => {
       };
 
       setBoard(newState);
-      localStorage.setItem("board-1", JSON.stringify(newState));
+      localStorage.setItem(`${idBoard}`, JSON.stringify(newState));
     },
     [board]
   );
@@ -117,7 +119,7 @@ const DroppableArea = () => {
     };
 
     setBoard(newBoardData);
-    localStorage.setItem("board-1", JSON.stringify(newBoardData));
+    localStorage.setItem(`${idBoard}`, JSON.stringify(newBoardData));
 
     setIsOpen(false);
     setInputColumnValue("Nova coluna");
@@ -138,9 +140,7 @@ const DroppableArea = () => {
               ref={provided.innerRef}
             >
               {board.columnOrder.map((columnId: any, index: number) => {
-                //console.log(columnId + ' :' + index);
                 const column = board.columns[columnId];
-                //console.log(column);
                 const tasks = column.taskIds.map(
                   (taskId: number) => board.tasks[taskId]
                 );

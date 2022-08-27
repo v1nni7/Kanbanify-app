@@ -3,6 +3,7 @@ import { IoAdd } from "react-icons/io5";
 import { Draggable, Droppable } from "react-beautiful-dnd";
 import { BoardContext } from "../../hooks/context/BoardContext";
 import Task from "./Task";
+import { useParams } from "react-router-dom";
 
 interface TypeColumn {
   column: { id: string; title: string; taskIds: string };
@@ -11,6 +12,7 @@ interface TypeColumn {
 }
 
 const Column = ({ column, tasks, index }: TypeColumn) => {
+  let { idBoard } = useParams();
   const { board, setBoard } = useContext(BoardContext);
 
   const [taskValue, setTaskValue] = useState<string>("Adicionar tarefa");
@@ -43,7 +45,7 @@ const Column = ({ column, tasks, index }: TypeColumn) => {
     };
 
     setBoard(newBoardData);
-    localStorage.setItem("board-1", JSON.stringify(newBoardData));
+    localStorage.setItem(`${idBoard}`, JSON.stringify(newBoardData));
 
     setTaskValue("Adicionar tarefa");
   };
