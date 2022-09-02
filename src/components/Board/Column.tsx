@@ -9,11 +9,12 @@ interface TypeColumn {
   column: { id: string; title: string; taskIds: string };
   tasks: any;
   index: number;
+  board: any;
+  setBoard: Function;
 }
 
-const Column = ({ column, tasks, index }: TypeColumn) => {
+const Column = ({ column, tasks, index, board, setBoard }: TypeColumn) => {
   let { idBoard } = useParams();
-  const { board, setBoard } = useContext(BoardContext);
 
   const [taskValue, setTaskValue] = useState<string>("Adicionar tarefa");
 

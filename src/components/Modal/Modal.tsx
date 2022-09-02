@@ -7,7 +7,7 @@ interface ModalTypes {
   modalOpen: boolean;
 }
 
-const Modal = ({ onHide, children, modalOpen }: ModalTypes) => {
+const Modal = ({ onHide, children, modalOpen }: ModalTypes | any) => {
   const modal: any = useRef();
   const modalContent: any = useRef();
 

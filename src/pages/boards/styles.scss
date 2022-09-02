@@ -1,5 +1,5 @@
 .boards-section {
-  padding: 36px 0;
+  padding: 36px 48px;
 
   .boards {
     border-radius: 12px;
@@ -14,11 +14,6 @@
       border-radius: 12px;
       cursor: pointer;
       color: #fff;
-
-      h2 {
-        z-index: 3;
-        position: absolute;
-      }
 
       .board-background {
         top: 0;

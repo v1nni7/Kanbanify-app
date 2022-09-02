@@ -1,18 +1,40 @@
-import { useCallback, useContext, useEffect, useState } from "react";
+import { SetStateAction, useCallback, useEffect, useState } from "react";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
 import { IoCheckmarkSharp } from "react-icons/io5";
 import { useParams } from "react-router-dom";
-import { BoardContext } from "../../hooks/context/BoardContext";
+import { ThreeCircles } from "react-loader-spinner";
+import api from "../../services/api";
 
 import Column from "./Column";
 
+interface TypeColumns {
+  tasks: object;
+  columns: object;
+  columnOrder: TemplateStringsArray;
+}
+
 const DroppableArea = () => {
-  let { idBoard } = useParams();
-  const { board, setBoard, setUrl } = useContext(BoardContext);
+  const [board, setBoard] = useState<SetStateAction<TypeColumns> | any>();
+
+  console.log(board);
+
+  const { idWorkspace } = useParams();
+
+  const loadingBoard = useCallback(async () => {
+    try {
+      const response = await api.getWorkspaceData(idWorkspace as string);
+      setBoard(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  }, [idWorkspace]);
+
+  useEffect(() => {
+    loadingBoard();
+  }, [loadingBoard]);
 
   const [inputColumnValue, setInputColumnValue] =
     useState<string>("Nova coluna");
-  const [isOpen, setIsOpen] = useState(false);
 
   const handleDragEnd: any = useCallback(
     ({ destination, source, draggableId, type }: any) => {
@@ -39,7 +61,6 @@ const DroppableArea = () => {
         };
 
         setBoard(newState);
-        localStorage.setItem(`${idBoard}`, JSON.stringify(newState));
         return;
       }
 
@@ -65,7 +86,6 @@ const DroppableArea = () => {
         };
 
         setBoard(newBoardData);
-        localStorage.setItem(`${idBoard}`, JSON.stringify(newBoardData));
         return;
       }
 
@@ -94,7 +114,6 @@ const DroppableArea = () => {
       };
 
       setBoard(newState);
-      localStorage.setItem(`${idBoard}`, JSON.stringify(newState));
     },
     [board]
   );
@@ -119,62 +138,76 @@ const DroppableArea = () => {
     };
 
     setBoard(newBoardData);
-    localStorage.setItem(`${idBoard}`, JSON.stringify(newBoardData));
-
-    setIsOpen(false);
     setInputColumnValue("Nova coluna");
   };
 
-  useEffect(() => {
-    setUrl(idBoard);
-  }, [idBoard]);
-
   return (
     <>
-      <DragDropContext onDragEnd={handleDragEnd}>
-        <Droppable
-          droppableId="all-columns"
-          direction="horizontal"
-          type="column"
-        >
-          {(provided) => (
-            <div
-              className="flex"
-              {...provided.droppableProps}
-              ref={provided.innerRef}
+      {board ? (
+        <>
+          <DragDropContext onDragEnd={handleDragEnd}>
+            <Droppable
+              droppableId="all-columns"
+              direction="horizontal"
+              type="column"
             >
-              {board.columnOrder.map((columnId: any, index: number) => {
-                const column = board.columns[columnId];
-                const tasks = column.taskIds.map(
-                  (taskId: number) => board.tasks[taskId]
-                );
+              {(provided) => (
+                <div
+                  className="flex"
+                  {...provided.droppableProps}
+                  ref={provided.innerRef}
+                >
+                  {board.columnOrder.map((columnId: any, index: number) => {
+                    const column = board.columns[columnId];
+                    const tasks = column.taskIds.map(
+                      (taskId: number) => board.tasks[taskId]
+                    );
 
-                return (
-                  <Column
-                    key={column.id}
-                    column={column}
-                    tasks={tasks}
-                    index={index}
-                  />
-                );
-              })}
-              {provided.placeholder}
-            </div>
-          )}
-        </Droppable>
-      </DragDropContext>
-      <div className="board-create-column">
-        <form onSubmit={createNewColumn}>
-          <input
-            type="text"
-            value={inputColumnValue}
-            onChange={(e) => setInputColumnValue(e.target.value)}
+                    return (
+                      <Column
+                        key={column.id}
+                        column={column}
+                        tasks={tasks}
+                        index={index}
+                        board={board}
+                        setBoard={setBoard}
+                      />
+                    );
+                  })}
+                  {provided.placeholder}
+                </div>
+              )}
+            </Droppable>
+          </DragDropContext>
+          <div className="board-create-column">
+            <form onSubmit={createNewColumn}>
+              <input
+                type="text"
+                value={inputColumnValue}
+                onChange={(e) => setInputColumnValue(e.target.value)}
+              />
+              <button type="submit" className="btn-submit">
+                <IoCheckmarkSharp />
+              </button>
+            </form>
+          </div>
+        </>
+      ) : (
+        <div className="loading">
+          <ThreeCircles
+            height="100"
+            width="100"
+            color="#7e57c2"
+            wrapperStyle={{}}
+            wrapperClass=""
+            visible={true}
+            ariaLabel="three-circles-rotating"
+            outerCircleColor=""
+            innerCircleColor=""
+            middleCircleColor=""
           />
-          <button type="submit" className="btn-submit">
-            <IoCheckmarkSharp />
-          </button>
-        </form>
-      </div>
+        </div>
+      )}
     </>
   );
 };

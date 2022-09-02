@@ -1,11 +1,11 @@
 import { useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { IoCaretDownOutline } from "react-icons/io5";
 
 import "./styles.scss";
 
 const Navbar = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(true);
+  const { pathname } = useLocation();
   const [dropdownIsOpen, setDropdownIsOpen] = useState(false);
 
   const dropdownMenu = useRef<HTMLUListElement>(null);
@@ -47,11 +47,11 @@ const Navbar = () => {
             </ul>
           </div>
           <div
-            className={`navbar-account ${isAuthenticated ? "dropdown" : ""} ${
-              dropdownIsOpen ? "dropdown-open" : "dropdown-close"
-            }`}
+            className={`navbar-account ${
+              pathname !== "/login" ? "dropdown" : ""
+            } ${dropdownIsOpen ? "dropdown-open" : "dropdown-close"}`}
           >
-            {isAuthenticated ? (
+            {pathname !== "/login" ? (
               <>
                 <div
                   className="navbar-my-account dropdown-button"
