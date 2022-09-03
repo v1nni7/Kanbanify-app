@@ -6,20 +6,28 @@ const Login = () => {
   interface SignInType {
     email: string;
     password: string;
+    stayConnected: boolean;
   }
 
   const signInValues: SignInType = {
     email: "",
     password: "",
+    stayConnected: false,
   };
 
-  const handleSubmit = (signIn: SignInType) => {};
+  const handleSubmit = (signIn: SignInType) => {
+    try {
+      
+    } catch (error) {
+      
+    }
+  };
 
   return (
     <>
       <Centered>
         <Formik onSubmit={handleSubmit} initialValues={signInValues}>
-          {({ handleBlur, handleChange, handleSubmit, touched }) => (
+          {({ handleBlur, handleChange, values }) => (
             <>
               <Form.Horizontal>
                 <Form.Title>Entrar</Form.Title>
@@ -27,30 +35,51 @@ const Login = () => {
                 <Form.Group>
                   <Form.Control
                     id="email"
-                    onBlur={handleBlur("email")}
                     onChange={handleChange("email")}
+                    value={values.email}
                   />
                   <Form.Label
                     htmlFor="email"
-                    filled={signInValues.email !== undefined ? true : false}
+                    filled={values.email ? false : true}
                   >
                     Email
                   </Form.Label>
                 </Form.Group>
 
                 <Form.Group>
-                  <Form.Control />
+                  <Form.Control
+                    id="password"
+                    onChange={handleChange("password")}
+                    value={values.password}
+                  />
                   <Form.Label
                     htmlFor="email"
-                    filled={signInValues.password !== undefined ? true : false}
+                    filled={values.password ? false : true}
                   >
                     Senha
                   </Form.Label>
                 </Form.Group>
 
                 <Form.Group>
-                  <Form.Submit>Enviar</Form.Submit>
+                  <Form.Checkbox>
+                    <input id="connected" type="checkbox" />
+                    <label htmlFor="connected">Mantenha-se conectado</label>
+                  </Form.Checkbox>
                 </Form.Group>
+
+                <Form.Group>
+                  <Form.Submit type="submit">Enviar</Form.Submit>
+                </Form.Group>
+
+                <Form.FlexGroup>
+                  <Form.Action to="/recover-password">
+                    Recuperar senha
+                  </Form.Action>
+
+                  <hr />
+
+                  <Form.Action to="/register">Criar nova conta</Form.Action>
+                </Form.FlexGroup>
               </Form.Horizontal>
             </>
           )}

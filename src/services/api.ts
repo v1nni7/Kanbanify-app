@@ -4,7 +4,7 @@ const api = axios.create({
   baseURL: "http://localhost:5000",
 });
 
-interface signUpTypes {
+interface userDataTypes {
   email: string;
   password: string;
 }
@@ -19,8 +19,13 @@ const getWorkspaceData = async (id: string) => {
   return promise;
 };
 
-const signUp = async (data: signUpTypes) => {
+const signUp = async (data: userDataTypes) => {
   const promise = await api.post("/sign-up");
+  return promise;
+};
+
+const signIn = async (data: userDataTypes) => {
+  const promise = await api.post("/sign-in");
   return promise;
 };
 

@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { Form } from "formik";
+import { Link } from "react-router-dom";
 
 const Horizontal = styled(Form)`
   margin: 0 auto;
@@ -19,6 +20,21 @@ const Title = styled.h2`
 const Group = styled.div`
   padding: 8px;
   position: relative;
+`;
+
+const FlexGroup = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 18px 8px;
+
+  hr {
+    padding: 4px;
+    margin: 0 12px;
+    border: none;
+    border-radius: 50%;
+    background-color: #fff;
+  }
 `;
 
 const Label: any = styled.label`
@@ -43,6 +59,11 @@ const Control = styled.input`
   }
 `;
 
+const Checkbox = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
 const Submit = styled.button`
   border: none;
   width: 100%;
@@ -58,4 +79,23 @@ const Submit = styled.button`
   }
 `;
 
-export default { Horizontal, Title, Group, Label, Control, Submit };
+const Action = styled(Link)`
+  color: #7e57c2;
+  transition: 0.2s;
+
+  &:hover {
+    color: #7f46e3;
+  }
+`;
+
+export default {
+  Horizontal,
+  Title,
+  Group,
+  FlexGroup,
+  Label,
+  Control,
+  Checkbox,
+  Submit,
+  Action,
+};
