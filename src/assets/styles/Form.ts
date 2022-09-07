@@ -13,8 +13,9 @@ const Horizontal = styled(Form)`
 
 const Title = styled.h2`
   font-size: 2rem;
-  font-weight: 300;
-  padding: 8px;
+  font-weight: 400;
+  padding: 18px;
+  text-align: center;
 `;
 
 const Group = styled.div`
@@ -43,6 +44,7 @@ const Label: any = styled.label`
   color: #000;
   transition: 0.1s;
   position: absolute;
+  font-size: ${({ filled }: any) => (filled ? "1.1rem" : "0.9rem")};
 `;
 
 const Control = styled.input`
@@ -56,6 +58,10 @@ const Control = styled.input`
   &:focus ~ label {
     top: 12px;
     font-size: 0.9rem;
+  }
+
+  &:disabled {
+    color: #000;
   }
 `;
 
@@ -71,6 +77,8 @@ const Submit = styled.button`
   transition: 0.2s;
   font-size: 1.2rem;
   border-radius: 6px;
+  display: flex;
+  justify-content: center;
   color: #fff;
   background-color: #7e57c2;
 

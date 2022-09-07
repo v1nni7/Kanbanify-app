@@ -1,6 +1,9 @@
 import { Formik } from "formik";
 import { Centered } from "../../assets/styles/Layout";
 import Form from "../../assets/styles/Form";
+import signup from "../signup";
+import * as Yup from "yup";
+import api from "../../services/api";
 
 const Login = () => {
   interface SignInType {
@@ -15,22 +18,30 @@ const Login = () => {
     stayConnected: false,
   };
 
-  const handleSubmit = (signIn: SignInType) => {
+  const handleSubmit = async (data: SignInType) => {
     try {
-      
-    } catch (error) {
-      
-    }
+      // validate data
+      const schema = Yup.object().shape({
+        email: Yup.string().email().required(),
+        password: Yup.string().required(),
+      });
+
+      schema.validateSync(data);
+
+      const response = await api.signIn(data);
+      if (response.status === 200) {
+      }
+    } catch (error) {}
   };
 
   return (
     <>
       <Centered>
         <Formik onSubmit={handleSubmit} initialValues={signInValues}>
-          {({ handleBlur, handleChange, values }) => (
+          {({ handleChange, values }) => (
             <>
               <Form.Horizontal>
-                <Form.Title>Entrar</Form.Title>
+                <Form.Title>Login</Form.Title>
 
                 <Form.Group>
                   <Form.Control
@@ -56,29 +67,29 @@ const Login = () => {
                     htmlFor="email"
                     filled={values.password ? false : true}
                   >
-                    Senha
+                    Password
                   </Form.Label>
                 </Form.Group>
 
                 <Form.Group>
                   <Form.Checkbox>
                     <input id="connected" type="checkbox" />
-                    <label htmlFor="connected">Mantenha-se conectado</label>
+                    <label htmlFor="connected">Stay connected</label>
                   </Form.Checkbox>
                 </Form.Group>
 
                 <Form.Group>
-                  <Form.Submit type="submit">Enviar</Form.Submit>
+                  <Form.Submit type="submit">Login</Form.Submit>
                 </Form.Group>
 
                 <Form.FlexGroup>
                   <Form.Action to="/recover-password">
-                    Recuperar senha
+                    Recover password
                   </Form.Action>
 
                   <hr />
 
-                  <Form.Action to="/register">Criar nova conta</Form.Action>
+                  <Form.Action to="/register">Create your account</Form.Action>
                 </Form.FlexGroup>
               </Form.Horizontal>
             </>

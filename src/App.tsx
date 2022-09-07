@@ -9,6 +9,7 @@ import Login from "./pages/login";
 import Test from "./pages/test";
 import Workspace from "./pages/workspace";
 import Boards from "./pages/boards";
+import Register from "./pages/signup/Register";
 import Navbar from "./components/Navbar/Navbar";
 import PrivateRoute from "./components/Private/PrivateRoute";
 
@@ -22,6 +23,7 @@ const App = () => {
         <Routes>
           <Route index element={<Home />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
           <Route
             path="/boards"
             element={
@@ -30,7 +32,14 @@ const App = () => {
               </PrivateRoute>
             }
           />
-          <Route path="/workspace/:idWorkspace" element={<Workspace />} />
+          <Route
+            path="/workspace/:idWorkspace"
+            element={
+              <PrivateRoute>
+                <Workspace />
+              </PrivateRoute>
+            }
+          />
           <Route path="/testes" element={<Test />} />
         </Routes>
       </BoardContextProvider>
