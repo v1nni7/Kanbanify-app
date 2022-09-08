@@ -4,7 +4,7 @@ const PrivateRoute = ({ children }: { children: JSX.Element }) => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const authStorage = JSON.parse(localStorage.getItem("auth") as string);
+  const authStorage = JSON.parse(localStorage.getItem("user") as string);
 
   if (!authStorage) {
     return <Navigate to="/login" state={{ from: location }} replace />;

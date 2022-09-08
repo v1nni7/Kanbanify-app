@@ -87,9 +87,10 @@ const Submit = styled.button`
   }
 `;
 
-const Action = styled(Link)`
+const Action: any = styled(Link)`
   color: #7e57c2;
   transition: 0.2s;
+  text-align: ${({ align }: any) => align || "start"};
 
   &:hover {
     color: #7f46e3;

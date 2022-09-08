@@ -12,6 +12,7 @@ import Boards from "./pages/boards";
 import Register from "./pages/signup/Register";
 import Navbar from "./components/Navbar/Navbar";
 import PrivateRoute from "./components/Private/PrivateRoute";
+import AuthContextProvider from "./hooks/context/AuthContext";
 
 import BoardContextProvider from "./hooks/context/BoardContext";
 
@@ -19,30 +20,32 @@ const App = () => {
   return (
     <BrowserRouter>
       {/* <Navbar /> */}
-      <BoardContextProvider>
-        <Routes>
-          <Route index element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route
-            path="/boards"
-            element={
-              <PrivateRoute>
-                <Boards />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/workspace/:idWorkspace"
-            element={
-              <PrivateRoute>
-                <Workspace />
-              </PrivateRoute>
-            }
-          />
-          <Route path="/testes" element={<Test />} />
-        </Routes>
-      </BoardContextProvider>
+      <AuthContextProvider>
+        <BoardContextProvider>
+          <Routes>
+            <Route index element={<Home />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route
+              path="/boards"
+              element={
+                <PrivateRoute>
+                  <Boards />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/workspace/:idWorkspace"
+              element={
+                <PrivateRoute>
+                  <Workspace />
+                </PrivateRoute>
+              }
+            />
+            <Route path="/testes" element={<Test />} />
+          </Routes>
+        </BoardContextProvider>
+      </AuthContextProvider>
     </BrowserRouter>
   );
 };

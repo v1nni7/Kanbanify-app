@@ -7,7 +7,7 @@ import { TailSpin } from "react-loader-spinner";
 import api from "../../services/api";
 import Form from "../../assets/styles/Form";
 import { Centered } from "../../assets/styles/Layout";
-import authSchema from "../../assets/schema/authSchema";
+import authSchemaValidate from "../../assets/schema/authSchemaValidate";
 
 const Register = () => {
   const [loading, setLoading] = useState(false);
@@ -32,11 +32,8 @@ const Register = () => {
   const handleSubmit = async (data: RegisterType) => {
     try {
       setLoading(true);
-      console.log(data);
 
-      await authSchema.signUp(data);
-
-      console.log(data);
+      await authSchemaValidate.signUp(data);
 
       const response = await api.signUp({
         email: data.email,
@@ -158,7 +155,7 @@ const Register = () => {
               </Form.Group>
 
               <Form.Group>
-                <Form.Submit type="submit">
+                <Form.Submit type="submit" disabled={loading}>
                   {loading ? (
                     <TailSpin
                       height="25"

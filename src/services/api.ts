@@ -31,7 +31,7 @@ const signUp = async (data: signUpDataTypes) => {
 };
 
 const signIn = async (data: signInDataTypes) => {
-  const promise = await api.post("/sign-in");
+  const promise = await api.post("/sign-in", data);
   return promise;
 };
 

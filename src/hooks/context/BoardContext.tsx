@@ -1,8 +1,5 @@
 import {
   createContext,
-  SetStateAction,
-  useCallback,
-  useEffect,
   useState,
 } from "react";
 import { initialData } from "../../pages/test/components/data";
