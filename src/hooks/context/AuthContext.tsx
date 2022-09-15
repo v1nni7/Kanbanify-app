@@ -2,29 +2,31 @@ import { createContext, useState, useEffect } from "react";
 
 interface AuthContextType {
   email: string;
-  password: string;
   firstName: string;
   lastName: string;
   username: string;
+  token: string;
 }
 
 export const AuthContext: any = createContext(null);
 
 const AuthContextProvider = ({ children }: any) => {
-  const [user, setUser] = useState<AuthContextType>({
+  
+  const [user, setUser] = useState<AuthContextType | any>({
     email: "",
-    password: "",
     firstName: "",
     lastName: "",
     username: "",
+    token: "",
   });
 
+  const localUser: any = localStorage.getItem("user");
+
   useEffect(() => {
-    const user = localStorage.getItem("user");
-    if (user) {
-      setUser(JSON.parse(user));
+    if (localUser) {
+      setUser(JSON.parse(localUser));
     }
-  }, []);
+  }, [localUser]);
 
   return (
     <>

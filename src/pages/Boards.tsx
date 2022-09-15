@@ -1,13 +1,13 @@
 import { Link, useParams } from "react-router-dom";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, useContext } from "react";
 
-import "./styles.scss";
-import Modal from "../../components/Modal";
-import api from "../../services/api";
+import Modal from "../components/Modal";
+import api from "../services/api";
+import { AuthContext } from "../hooks/context/AuthContext";
 
 const Boards = () => {
-  const [createdWorkspaces, setCreatedWorkspaces] = useState<any>([]);
   const [modalOpen, setModalOpen] = useState<boolean>(false);
+  const [createdWorkspaces, setCreatedWorkspaces] = useState<any>([]);
 
   const loadingAllBoards = useCallback(async () => {
     try {
@@ -28,7 +28,7 @@ const Boards = () => {
         <div className="boards flex flex-wrap">
           <div className="board" onClick={() => setModalOpen(!modalOpen)}>
             <div className="board-background background-new-board flex justify-content-center align-items-center">
-              <h2>Criar novo quadro</h2>
+              <h2>Criar novo quadro</h2> <span></span>
             </div>
           </div>
           {createdWorkspaces ? (

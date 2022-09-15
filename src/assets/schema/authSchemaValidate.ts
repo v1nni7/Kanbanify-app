@@ -12,10 +12,8 @@ export interface signUpDataTypes extends signInDataTypes {
 
 const signUp = (data: signUpDataTypes) => {
   const schema = object({
-    termConditions: boolean().oneOf([true], "You must accept the terms"),
-    confirmPassword: string()
-      .oneOf([ref("password"), null], "Passwords must match")
-      .required("Confirm password is required"),
+    termsConditions: boolean().oneOf([true], "You must accept the terms"),
+    confirmPassword: string().oneOf([ref("password"), null], "Passwords must match").required("Confirm password is required"),
     password: string().min(6).required("Password is required"),
     email: string().email().required("Email is required"),
     username: string().required("Username is required"),

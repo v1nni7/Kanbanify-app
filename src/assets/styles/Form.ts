@@ -1,99 +1,103 @@
-import styled from "styled-components";
 import { Form } from "formik";
 import { Link } from "react-router-dom";
+import styled from "styled-components";
 
 const Horizontal = styled(Form)`
-  margin: 0 auto;
   width: 400px;
-  padding: 8px;
-  display: block;
+  padding: 12px;
   border-radius: 12px;
   background-color: #444;
 `;
 
+const Flex = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+`;
+
 const Title = styled.h2`
-  font-size: 2rem;
-  font-weight: 400;
-  padding: 18px;
+  font-size: 1.8rem;
   text-align: center;
 `;
 
 const Group = styled.div`
-  padding: 8px;
+  padding: 12px;
   position: relative;
 `;
 
-const FlexGroup = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 18px 8px;
-
-  hr {
-    padding: 4px;
-    margin: 0 12px;
-    border: none;
-    border-radius: 50%;
-    background-color: #fff;
-  }
-`;
-
-const Label: any = styled.label`
-  top: ${({ filled }: any) => (filled ? "24px" : "12px")};
-  left: 20px;
-  color: #000;
-  transition: 0.1s;
+const Label = styled.label`
+  top: 22px;
+  left: 16px;
   position: absolute;
-  font-size: ${({ filled }: any) => (filled ? "1.1rem" : "0.9rem")};
 `;
 
 const Control = styled.input`
   width: 100%;
   height: 50px;
   border: none;
-  border-radius: 6px;
   font-size: 1.2rem;
-  padding: 18px 12px 0;
-
-  &:focus ~ label {
-    top: 12px;
-    font-size: 0.9rem;
-  }
-
-  &:disabled {
-    color: #000;
-  }
-`;
-
-const Checkbox = styled.div`
-  display: flex;
-  align-items: center;
+  border-radius: 8px;
+  padding: 8px 8px 8px 38px;
+  font-family: "Lexend Deca", sans-serif;
 `;
 
 const Submit = styled.button`
-  border: none;
   width: 100%;
-  padding: 10px;
-  transition: 0.2s;
-  font-size: 1.2rem;
-  border-radius: 6px;
-  display: flex;
-  justify-content: center;
+  border: none;
   color: #fff;
-  background-color: #7e57c2;
+  padding: 12px;
+  transition: 0.2s;
+  border-radius: 8px;
+  font-size: 1.2rem;
+  background-color: #9e3dff;
 
   &:hover {
-    background-color: #673ab7;
+    background-color: #7d2bd8;
   }
 `;
 
-const Action: any = styled(Link)`
-  color: #7e57c2;
+const SignUp = styled(Link)`
+  display: block;
+  padding: 12px;
+  color: #9e3dff;
+  border-radius: 8px;
+  border: 2px #9e3dff solid;
+  text-align: center;
+  text-decoration: none;
   transition: 0.2s;
-  text-align: ${({ align }: any) => align || "start"};
+  font-size: 1.2rem;
 
   &:hover {
-    color: #7f46e3;
+    color: #b061ff;
+    border-color: #b061ff;
+  }
+`;
+
+const ForgotPassword = styled(Link)`
+  color: #fff;
+  transition: 0.2s;
+  text-decoration: none;
+
+  &:hover {
+    color: #ccc;
+  }
+`;
+
+const ButtonGoogle = styled.button`
+  color: #444;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #fff;
+  border: none;
+  padding: 12px;
+  font-size: 1.2rem;
+  border-radius: 8px;
+  transition: 0.2s;
+
+  &:hover {
+    background-color: #ccc;
   }
 `;
 
@@ -101,10 +105,11 @@ export default {
   Horizontal,
   Title,
   Group,
-  FlexGroup,
   Label,
   Control,
-  Checkbox,
   Submit,
-  Action,
+  ButtonGoogle,
+  SignUp,
+  Flex,
+  ForgotPassword,
 };
