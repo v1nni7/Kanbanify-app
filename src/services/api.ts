@@ -16,8 +16,8 @@ const api = axios.create({
   baseURL: "http://localhost:5000",
 });
 
-const getAllWorkspaces = async () => {
-  const promise = await api.get("/workspaces");
+const getCreatedWorkspaces = async (id: number) => {
+  const promise = await api.get(`/workspaces/${id}`);
   return promise;
 };
 
@@ -40,4 +40,4 @@ const signIn = async ({email, password}: signInDataTypes) => {
   return promise;
 };
 
-export default { getAllWorkspaces, getWorkspaceData, signIn, signUp };
+export default { getCreatedWorkspaces, getWorkspaceData, signIn, signUp };

@@ -1,78 +1,47 @@
-import { Link, useParams } from "react-router-dom";
-import { useCallback, useEffect, useState, useContext } from "react";
+import { useContext, useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 
-import Modal from "../components/Modal";
 import api from "../services/api";
+import Board from "../assets/styles/Board";
 import { AuthContext } from "../hooks/context/AuthContext";
 
 const Boards = () => {
-  const [modalOpen, setModalOpen] = useState<boolean>(false);
-  const [createdWorkspaces, setCreatedWorkspaces] = useState<any>([]);
+  const { user } = useContext<any>(AuthContext);
 
-  const loadingAllBoards = useCallback(async () => {
+  const [workspaces, setWorkspaces] = useState<any>([]);
+
+  const getUserBoards = async () => {
     try {
-      const response = await api.getAllWorkspaces();
-      setCreatedWorkspaces(response.data);
+      const response = await api.getCreatedWorkspaces(user.id);
+
+      if (response.status === 200) {
+        setWorkspaces(response.data);
+      }
     } catch (error) {
       console.log(error);
     }
-  }, []);
+  };
 
   useEffect(() => {
-    loadingAllBoards();
-  }, [loadingAllBoards]);
+    getUserBoards();
+  }, [getUserBoards]);
 
   return (
     <>
-      <section className="boards-section">
-        <div className="boards flex flex-wrap">
-          <div className="board" onClick={() => setModalOpen(!modalOpen)}>
-            <div className="board-background background-new-board flex justify-content-center align-items-center">
-              <h2>Criar novo quadro</h2> <span></span>
-            </div>
-          </div>
-          {createdWorkspaces ? (
-            createdWorkspaces?.map((createdWorkspace: any, index: number) => (
-              <Link
-                to={`/workspace/${createdWorkspace.id}`}
-                className="board"
-                key={index}
-              >
-                <div className="board-background">
-                  <img src={createdWorkspace.backgroundImage} alt="" />
-                </div>
-                <div className="board-background-gradient flex align-items-end">
-                  <h2>{createdWorkspace.name}</h2>
-                </div>
-              </Link>
-            ))
-          ) : (
-            <></>
-          )}
-          {/* <Link to="/workspace/1" className="board">
-            <div className="board-background">
-              <img src={backgroundImage} alt="" />
-            </div>
-            <div className="board-background-gradient flex align-items-end">
-              <h2>Meu primeiro quadro</h2>
-            </div>
-          </Link> */}
-        </div>
-      </section>
-
-      <Modal onHide={() => setModalOpen(!modalOpen)} modalOpen={modalOpen}>
-        <form className="form-create-workspace">
-          <div className="form-group">
-            <label htmlFor="" className="form-label">
-              Nome do Workspace
-            </label>
-            <input className="form-control" name="name" type="text" />
-          </div>
-          <div className="form-group">
-            <button type="submit">Enviar</button>
-          </div>
-        </form>
-      </Modal>
+      <Board.Container>
+        <Board.Horizontal>
+          <Board.Item itemCreate={true}>
+            <h2>Criar novo quadro</h2>
+          </Board.Item>
+          {workspaces.map((workspace: any) => (
+            <Link to={`/workspace/${workspace.id}`}>
+              <Board.Item key={workspace.id}>
+                <h2>{workspace.name}</h2>
+              </Board.Item>
+            </Link>
+          ))}
+        </Board.Horizontal>
+      </Board.Container>
     </>
   );
 };

@@ -1,5 +1,7 @@
 import Board from "../components/Board/Board";
 
+import './test/styles.scss'
+
 const Workspace = () => {
   return (
     <>

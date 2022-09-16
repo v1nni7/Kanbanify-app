@@ -16,13 +16,12 @@ interface TypeColumns {
 const DroppableArea = () => {
   const [board, setBoard] = useState<SetStateAction<TypeColumns> | any>();
 
-  console.log(board);
-
   const { idWorkspace } = useParams();
 
   const loadingBoard = useCallback(async () => {
     try {
       const response = await api.getWorkspaceData(idWorkspace as string);
+
       setBoard(response.data);
     } catch (error) {
       console.log(error);
@@ -38,6 +37,10 @@ const DroppableArea = () => {
 
   const handleDragEnd: any = useCallback(
     ({ destination, source, draggableId, type }: any) => {
+      //console.log("Source: " + source)
+      console.log(destination)
+      console.log(draggableId)
+
       // Reorganizar as colunas
       if (!destination) {
         return;
