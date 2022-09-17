@@ -15,9 +15,9 @@ const App = () => {
   return (
     <>
       <GlobalStyles />
-      <BrowserRouter>
-        {/* <Navbar /> */}
-        <AuthContextProvider>
+      <AuthContextProvider>
+        <BrowserRouter>
+          {/* <Navbar /> */}
           <BoardContextProvider>
             <Routes>
               <Route index element={<Home />} />
@@ -42,8 +42,8 @@ const App = () => {
               {/* <Route path="/testes" element={<Test />} /> */}
             </Routes>
           </BoardContextProvider>
-        </AuthContextProvider>
-      </BrowserRouter>
+        </BrowserRouter>
+      </AuthContextProvider>
     </>
   );
 };

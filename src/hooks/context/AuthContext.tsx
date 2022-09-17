@@ -19,9 +19,8 @@ const AuthContextProvider = ({ children }: any) => {
     token: "",
   });
 
-  const localUser: any = localStorage.getItem("user");
-
   useEffect(() => {
+    const localUser: any = localStorage.getItem("user");
     if (localUser) {
       setUser(JSON.parse(localUser));
     }

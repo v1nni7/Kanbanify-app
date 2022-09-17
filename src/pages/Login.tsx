@@ -1,5 +1,5 @@
 import { Formik } from "formik";
-import { useState, useContext, useEffect } from "react";
+import { useState, useContext, useEffect, useLayoutEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import { ValidationError } from "yup";
@@ -14,7 +14,7 @@ import { AuthContext } from "../hooks/context/AuthContext";
 const Login = () => {
   const navigate = useNavigate();
 
-  const { user }: any = useContext(AuthContext);
+  const { user, setUser }: any = useContext(AuthContext);
   const [loading, setLoading] = useState(false);
 
   const loginData = {
@@ -33,6 +33,7 @@ const Login = () => {
 
       if (response.status === 200) {
         localStorage.setItem("user", JSON.stringify(response.data));
+        setUser(response.data);
         navigate("/boards");
       }
     } catch (error: any) {
@@ -47,7 +48,7 @@ const Login = () => {
     }
   };
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (user.token) {
       navigate("/boards");
     }
@@ -82,7 +83,7 @@ const Login = () => {
 
                 <Form.Control
                   type="text"
-                  autoComplete="current-email"
+                  autoComplete="email"
                   onChange={handleChange("email")}
                   value={values.email}
                   placeholder="Email"

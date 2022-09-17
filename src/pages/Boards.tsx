@@ -12,11 +12,13 @@ const Boards = () => {
 
   const getUserBoards = useCallback(async () => {
     try {
-      if (!user.id) {
+      if (!user.token) {
         return;
       }
 
-      const response = await api.getCreatedWorkspaces(user.id);
+      const headers = { headers: { Authorization: `Bearer ${user.token}` } };
+
+      const response = await api.getWorkspaces(headers);
 
       if (response.status === 200) {
         setWorkspaces(response.data);
@@ -24,23 +26,25 @@ const Boards = () => {
     } catch (error) {
       console.log(error);
     }
-  }, [user.id]);
+  }, [user.token]);
 
   useEffect(() => {
     getUserBoards();
-  }, [getUserBoards]);
+  }, [getUserBoards, user.token]);
 
   return (
     <>
       <Board.Container>
         <Board.Horizontal>
-          <Board.Item itemCreate={true}>
+          <Board.Item>
             <h2>Criar novo quadro</h2>
           </Board.Item>
           {workspaces.map((workspace: any) => (
             <Link key={workspace.id} to={`/workspace/${workspace.id}`}>
-              <Board.Item>
-                <h2>{workspace.name}</h2>
+              <Board.Item image={workspace.background}>
+                <Board.Overlay>
+                  <h2>{workspace.name}</h2>
+                </Board.Overlay>
               </Board.Item>
             </Link>
           ))}

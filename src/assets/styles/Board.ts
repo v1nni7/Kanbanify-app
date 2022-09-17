@@ -17,20 +17,22 @@ const Item: any = styled.div`
   width: 250px;
   height: 150px;
   transition: 0.2s;
+  cursor: pointer;
   margin: 0 16px 0 0;
   position: relative;
   border-radius: 10px;
   color: #fff;
-  background-color: ${({ itemCreate }: any) =>
-    itemCreate ? "#b39ddb" : "#333"};
+  background: ${({ image }: any) => (image ? `url(${image})` : "#b39ddb")};
+  background-size: cover;
+  overflow: hidden;
 
   &:hover {
-    background-color: ${({ itemCreate }: any) =>
-      itemCreate ? "#9457fda4" : "#555"};
+    background: ${({ image }: any) => (image ? null : "#9457fda4")};
   }
 
   h2 {
     bottom: 0;
+    z-index: 2;
     padding: 16px;
     font-weight: 500;
     font-size: 1.2rem;
@@ -39,6 +41,19 @@ const Item: any = styled.div`
   }
 `;
 
-const Background = styled.div``;
+const Overlay = styled.div`
+  z-index: 1;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  transition: 0.4s;
+  background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 1));
 
-export default { Container, Horizontal, Background, Item };
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+`;
+
+export default { Container, Horizontal, Overlay, Item };
