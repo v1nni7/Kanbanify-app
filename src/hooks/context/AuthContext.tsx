@@ -11,7 +11,6 @@ interface AuthContextType {
 export const AuthContext: any = createContext(null);
 
 const AuthContextProvider = ({ children }: any) => {
-  
   const [user, setUser] = useState<AuthContextType | any>({
     email: "",
     firstName: "",
@@ -26,7 +25,7 @@ const AuthContextProvider = ({ children }: any) => {
     if (localUser) {
       setUser(JSON.parse(localUser));
     }
-  }, [localUser]);
+  }, []);
 
   return (
     <>
