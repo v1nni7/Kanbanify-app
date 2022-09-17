@@ -12,7 +12,8 @@ const Overlay: any = styled.div`
 `;
 
 const Content = styled.div`
-  width: 400px;
+  width: 1000px;
+  height: 600px;
   display: flex;
   align-items: center;
   margin: 32px auto;
@@ -23,7 +24,7 @@ const Dialog = styled.div`
   width: 100%;
   padding: 12px;
   border-radius: 12px;
-  color: #fff;
+  color: #000;
   animation: opening 0.4s;
   background-color: #444;
 
@@ -38,4 +39,15 @@ const Dialog = styled.div`
   }
 `;
 
-export { Overlay, Content, Dialog };
+const Flex = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  img {
+    width: 60%;
+    height: 100%;
+  }
+`;
+
+export { Overlay, Content, Dialog, Flex };

@@ -1,5 +1,12 @@
 import styled from "styled-components";
-import { BiLock, BiLockOpen, BiEnvelope, BiUser } from "react-icons/bi";
+import {
+  BiLock,
+  BiLockOpen,
+  BiEnvelope,
+  BiUser,
+  BiColumns,
+  BiImage,
+} from "react-icons/bi";
 import { FcGoogle } from "react-icons/fc";
 
 const Lock = styled(BiLock)`
@@ -26,4 +33,14 @@ const User = styled(BiUser)`
   font-size: 1.8rem;
 `;
 
-export default { Lock, Email, Google, User, LockOpen };
+const Board = styled(BiColumns)`
+  color: #9e3dff;
+  font-size: 1.8rem;
+`;
+
+const Image = styled(BiImage)`
+  color: #9e3dff;
+  font-size: 1.8rem;
+`;
+
+export default { Lock, Email, Google, User, LockOpen, Board, Image };

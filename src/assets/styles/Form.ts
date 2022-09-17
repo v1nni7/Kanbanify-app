@@ -45,6 +45,8 @@ const Submit = styled.button`
   width: 100%;
   border: none;
   color: #fff;
+  display: flex;
+  justify-content: center;
   padding: 12px;
   transition: 0.2s;
   border-radius: 8px;
@@ -53,6 +55,10 @@ const Submit = styled.button`
 
   &:hover {
     background-color: #7d2bd8;
+  }
+
+  &:disabled {
+    background-color: #bb78ff;
   }
 `;
 
