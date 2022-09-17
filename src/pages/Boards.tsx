@@ -4,13 +4,15 @@ import { Link } from "react-router-dom";
 import api from "../services/api";
 import Board from "../assets/styles/Board";
 import { AuthContext } from "../hooks/context/AuthContext";
+import Modal from "../components/Modal";
 
 const Boards = () => {
   const { user } = useContext<any>(AuthContext);
 
   const [workspaces, setWorkspaces] = useState<any>([]);
+  const [isModalOpen, setIsModalOpen] = useState<any>(false);
 
-  const getUserBoards = useCallback(async () => {
+  const getBoards = useCallback(async () => {
     try {
       if (!user.token) {
         return;
@@ -18,7 +20,7 @@ const Boards = () => {
 
       const headers = { headers: { Authorization: `Bearer ${user.token}` } };
 
-      const response = await api.getWorkspaces(headers);
+      const response = await api.getBoards(headers);
 
       if (response.status === 200) {
         setWorkspaces(response.data);
@@ -28,15 +30,29 @@ const Boards = () => {
     }
   }, [user.token]);
 
+  const createBoard = useCallback(async (data: any) => {
+    try {
+      const headers = { headers: { Authorization: `Bearer ${user.token}` } };
+
+      const response = await api.createBoard(data, headers);
+
+      if (response.status === 201) {
+        getBoards();
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
+
   useEffect(() => {
-    getUserBoards();
-  }, [getUserBoards, user.token]);
+    getBoards();
+  }, [getBoards, user.token]);
 
   return (
     <>
       <Board.Container>
         <Board.Horizontal>
-          <Board.Item>
+          <Board.Item onClick={() => setIsModalOpen(true)}>
             <h2>Criar novo quadro</h2>
           </Board.Item>
           {workspaces.map((workspace: any) => (
@@ -50,6 +66,10 @@ const Boards = () => {
           ))}
         </Board.Horizontal>
       </Board.Container>
+
+      <Modal onHide={() => setIsModalOpen(false)} modalOpen={isModalOpen}>
+        <h1>Modal</h1>
+      </Modal>
     </>
   );
 };

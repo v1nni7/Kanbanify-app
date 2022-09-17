@@ -1,28 +1,40 @@
 import axios from "axios";
 
-interface signUpDataTypes {
+interface SignUpDataTypes {
   email: string;
   password: string;
   username: string;
   confirmPassword: string;
 }
 
-interface signInDataTypes {
+interface SignInDataTypes {
   email: string;
   password: string;
+}
+
+interface HeadersTypes {
+  headers: {
+    Authorization: string;
+  };
+}
+
+interface WorkspacesTypes {
+  id: number;
+  name: string;
+  background: string;
 }
 
 const api = axios.create({
   baseURL: "http://localhost:5000",
 });
 
-const getWorkspaces = async (headers: any) => {
+const getBoards = async (headers: HeadersTypes) => {
   const promise = await api.get(`/workspaces`, headers);
   return promise;
 };
 
-const getWorkspaceData = async (id: string) => {
-  const promise = await api.get(`/workspace/${id}`);
+const createBoard = async (workspaceData: WorkspacesTypes, headers: HeadersTypes) => {
+  const promise = await api.post("/workspaces", workspaceData, headers);
   return promise;
 };
 
@@ -31,18 +43,21 @@ const signUp = async ({
   username,
   password,
   confirmPassword,
-}: signUpDataTypes) => {
-  const newData = { email, username, password, confirmPassword };
-
-  const promise = await api.post("/sign-up", newData);
+}: SignUpDataTypes) => {
+  const promise = await api.post("/sign-up", {
+    email,
+    username,
+    password,
+    confirmPassword,
+  });
   return promise;
 };
 
-const signIn = async ({ email, password }: signInDataTypes) => {
+const signIn = async ({ email, password }: SignInDataTypes) => {
   const newData = { email, password };
 
   const promise = await api.post("/sign-in", newData);
   return promise;
 };
 
-export default { getWorkspaces, signIn, signUp };
+export default { getBoards, createBoard, signIn, signUp };

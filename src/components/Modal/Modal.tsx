@@ -1,5 +1,5 @@
-import { ReactNode, useEffect, useRef, useState } from "react";
-import "./styles.scss";
+import { ReactNode, useRef } from "react";
+import { Overlay, Content, Dialog } from "../../assets/styles/Modal";
 
 interface ModalTypes {
   onHide: Function;
@@ -21,15 +21,11 @@ const Modal = ({ onHide, children, modalOpen }: ModalTypes | any) => {
 
   return (
     <>
-      <div
-        className={`modal ${modalOpen ? "show" : "hidden"}`}
-        ref={modal}
-        onClick={setModalClose}
-      >
-        <div className="modal-content" ref={modalContent}>
-          <div className="modal-dialog">{children}</div>
-        </div>
-      </div>
+      <Overlay isModalOpen={modalOpen} ref={modal} onClick={setModalClose}>
+        <Content ref={modalContent}>
+          <Dialog>{children}</Dialog>
+        </Content>
+      </Overlay>
     </>
   );
 };
