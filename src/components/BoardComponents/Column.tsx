@@ -1,4 +1,7 @@
 import { Draggable, Droppable } from "react-beautiful-dnd";
+import { Formik, Form } from "formik";
+import { BiPlus } from "react-icons/bi";
+
 import Board from "../../assets/styles/Board";
 import Task from "./Task";
 
@@ -16,6 +19,14 @@ type ColumnPropsType = {
 };
 
 const Column = ({ column, tasks, index }: ColumnPropsType) => {
+  const handleAddTask = (data: any) => {
+    try {
+      console.log(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <>
       <Draggable draggableId={column.id} index={index}>
@@ -32,12 +43,36 @@ const Column = ({ column, tasks, index }: ColumnPropsType) => {
                     ref={provided.innerRef}
                   >
                     {tasks.map((task: any, index: number) => (
-                      <Task key={task.id} index={index} task={task} columnTitle={column.title} />
+                      <Task
+                        key={task.id}
+                        index={index}
+                        task={task}
+                        columnTitle={column.title}
+                      />
                     ))}
                     {provided.placeholder}
                   </Board.TaskList>
                 )}
               </Droppable>
+              <Board.Create createTask={true}>
+                <Formik
+                  initialValues={{ nameOfTask: "Add tasks" }}
+                  onSubmit={handleAddTask}
+                >
+                  {({ handleChange, values }) => (
+                    <Form>
+                      <input
+                        type="text"
+                        onChange={handleChange("nameOfColumn")}
+                        value={values.nameOfTask}
+                      />
+                      <button type="submit">
+                        <BiPlus />
+                      </button>
+                    </Form>
+                  )}
+                </Formik>
+              </Board.Create>
             </Board.Column>
           </Board.ColumnHeight>
         )}

@@ -1,10 +1,12 @@
 import { useCallback, useEffect, useState, SetStateAction } from "react";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
 import { useParams } from "react-router-dom";
+import { BiCheck } from "react-icons/bi";
 
 import Column from "../components/BoardComponents/Column";
 import { initialData } from "./test/components/data";
 import Board from "../assets/styles/Board";
+import { Form, Formik } from "formik";
 
 type BoardType = {
   tasks: object;
@@ -100,6 +102,14 @@ const BoardPage = () => {
     [board]
   );
 
+  const handleAddColumn = (data: any) => {
+    try {
+      console.log(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <>
       <Board.Container>
@@ -136,6 +146,25 @@ const BoardPage = () => {
                 )}
               </Droppable>
             </DragDropContext>
+            <Board.Create>
+              <Formik
+                initialValues={{ nameOfColumn: "New column" }}
+                onSubmit={handleAddColumn}
+              >
+                {({ handleChange, values }) => (
+                  <Form>
+                    <input
+                      type="text"
+                      onChange={handleChange("nameOfColumn")}
+                      value={values.nameOfColumn}
+                    />
+                    <button type="submit">
+                      <BiCheck />
+                    </button>
+                  </Form>
+                )}
+              </Formik>
+            </Board.Create>
           </>
         ) : (
           "Carregando..."

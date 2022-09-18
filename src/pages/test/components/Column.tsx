@@ -11,7 +11,7 @@ interface TypeColumn {
 }
 
 const Column = ({ column, tasks, index }: TypeColumn) => {
-  const { board, setBoard } = useContext(BoardContext);
+  const { board, setBoard } = useContext<any>(BoardContext);
 
   const [inputTaskValue, setInputTaskValue] =
     useState<string>("Adicionar tarefa");
