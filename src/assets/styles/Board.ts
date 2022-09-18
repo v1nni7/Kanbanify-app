@@ -1,59 +1,90 @@
 import styled from "styled-components";
 
 const Container = styled.section`
-  padding: 36px 48px;
+  padding: 36px;
 `;
 
-const Horizontal = styled.div`
-  padding: 18px;
+const ColumnContainer = styled.div`
   display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  border-radius: 12px;
-  background-color: #444;
 `;
 
-const Item: any = styled.div`
-  width: 250px;
-  height: 150px;
-  transition: 0.2s;
-  cursor: pointer;
-  margin: 0 16px 0 0;
-  position: relative;
+const ColumnHeight = styled.div`
+  height: 84vh;
+`;
+
+const Column = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 300px;
+  margin: 0 18px 0 0;
   border-radius: 10px;
+  background-color: #3a3a3a;
+`;
+
+const Title = styled.div`
+  display: flex;
+  padding: 12px;
+  font-size: 1.2rem;
+  align-items: flex-start;
+  flex-direction: column;
+  justify-content: space-between;
+`;
+
+const TaskList = styled.div`
+  flex-grow: 1;
+`;
+
+const Content = styled.div`
   color: #fff;
-  background: ${({ image }: any) => (image ? `url(${image})` : "#b39ddb")};
-  background-size: cover;
   overflow: hidden;
-
-  &:hover {
-    background: ${({ image }: any) => (image ? null : "#9457fda4")};
-  }
-
-  h2 {
-    bottom: 0;
-    z-index: 2;
-    padding: 16px;
-    font-weight: 500;
-    font-size: 1.2rem;
-    position: absolute;
-    margin: 0 16px 0 0;
-  }
+  padding: 16px 8px;
+  border-radius: 10px;
+  background-color: #757575;
 `;
 
-const Overlay = styled.div`
-  z-index: 1;
-  top: 0;
-  left: 0;
+const Item = styled.div`
+  padding: 6px;
+`;
+
+const ItemTitle = styled.div`
   width: 100%;
-  height: 100%;
-  position: absolute;
-  transition: 0.4s;
-  background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 1));
+  display: flex;
+  padding: 0 12px;
+  align-items: center;
+  justify-content: space-between;
+`;
 
-  &:hover {
-    background-color: rgba(0, 0, 0, 0.5);
+const ItemFlex = styled.div`
+  display: flex;
+`;
+
+const Checkbox: any = styled.div`
+  width: 25px;
+  height: 25px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  background-color: #ccc;
+  justify-content: center;
+  border-radius: 4px;
+  cursor: pointer;
+
+  svg {
+    display: ${({ isChecked }: any) => (isChecked ? "block" : "none")};
   }
 `;
 
-export default { Container, Horizontal, Overlay, Item };
+export default {
+  Container,
+  ColumnContainer,
+  ColumnHeight,
+  Column,
+  Title,
+  TaskList,
+  Item,
+  Content,
+  ItemTitle,
+  ItemFlex,
+  Checkbox,
+};

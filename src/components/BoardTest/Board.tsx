@@ -3,7 +3,7 @@ import { DragDropContext, Droppable } from "react-beautiful-dnd";
 import { IoCheckmarkSharp } from "react-icons/io5";
 import { useParams } from "react-router-dom";
 import { ThreeCircles } from "react-loader-spinner";
-import api from "../../services/api";
+import { initialData } from "../../pages/test/components/data";
 
 import Column from "./Column";
 
@@ -14,18 +14,18 @@ interface TypeColumns {
 }
 
 const DroppableArea = () => {
-  const [board, setBoard] = useState<SetStateAction<TypeColumns> | any>();
+  const [board, setBoard] = useState<SetStateAction<TypeColumns> | any>(initialData);
 
   const { idWorkspace } = useParams();
 
   const loadingBoard = useCallback(async () => {
-    try {
-      const response = await api.getWorkspaceData(idWorkspace as string);
+    /*try {
+        const response = await api.getWorkspaceData(idWorkspace as string);
 
-      setBoard(response.data);
+        setBoard(response.data);
     } catch (error) {
-      console.log(error);
-    }
+        console.log(error);
+    } */
   }, [idWorkspace]);
 
   useEffect(() => {
@@ -38,8 +38,8 @@ const DroppableArea = () => {
   const handleDragEnd: any = useCallback(
     ({ destination, source, draggableId, type }: any) => {
       //console.log("Source: " + source)
-      console.log(destination)
-      console.log(draggableId)
+      console.log(destination);
+      console.log(draggableId);
 
       // Reorganizar as colunas
       if (!destination) {

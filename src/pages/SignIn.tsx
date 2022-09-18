@@ -11,7 +11,7 @@ import { Centered } from "../assets/styles/Layout";
 import authSchemaValidate from "../assets/schema/authSchemaValidate";
 import { AuthContext } from "../hooks/context/AuthContext";
 
-const Login = () => {
+const SignIn = () => {
   const navigate = useNavigate();
 
   const { user, setUser }: any = useContext(AuthContext);
@@ -150,4 +150,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default SignIn;

@@ -8,7 +8,7 @@ import Navbar from "./components/Navbar/Navbar";
 import PrivateRoute from "./components/Private/PrivateRoute";
 import AuthContextProvider from "./hooks/context/AuthContext";
 import BoardContextProvider from "./hooks/context/BoardContext";
-import { Home, Boards, Login, SignUp, Workspace } from "./pages";
+import { Home, Workspace, SignIn, SignUp, Board, Test } from "./pages";
 import GlobalStyles from "./assets/styles/Global";
 
 const App = () => {
@@ -21,25 +21,25 @@ const App = () => {
           <BoardContextProvider>
             <Routes>
               <Route index element={<Home />} />
-              <Route path="/login" element={<Login />} />
+              <Route path="/login" element={<SignIn />} />
               <Route path="/signup" element={<SignUp />} />
               <Route
-                path="/boards"
-                element={
-                  <PrivateRoute>
-                    <Boards />
-                  </PrivateRoute>
-                }
-              />
-              <Route
-                path="/workspace/:idWorkspace"
+                path="/workspace"
                 element={
                   <PrivateRoute>
                     <Workspace />
                   </PrivateRoute>
                 }
               />
-              {/* <Route path="/testes" element={<Test />} /> */}
+              <Route
+                path="/board/:stringId"
+                element={
+                  <PrivateRoute>
+                    <Board />
+                  </PrivateRoute>
+                }
+              />
+              <Route path="/testes" element={<Test />} />
             </Routes>
           </BoardContextProvider>
         </BrowserRouter>

@@ -6,7 +6,9 @@ import {
   BiUser,
   BiColumns,
   BiImage,
+  BiCheck,
 } from "react-icons/bi";
+import { FaCheck } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 
 const Lock = styled(BiLock)`
@@ -43,4 +45,12 @@ const Image = styled(BiImage)`
   font-size: 1.8rem;
 `;
 
-export default { Lock, Email, Google, User, LockOpen, Board, Image };
+const Check = styled(FaCheck)`
+  top: -4px;
+  left: 0px;
+  color: #349c2f;
+  font-size: 1.8rem;
+  position: absolute;
+`;
+
+export default { Lock, Email, Google, User, LockOpen, Board, Image, Check };

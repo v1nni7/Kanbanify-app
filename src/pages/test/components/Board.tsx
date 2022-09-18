@@ -15,7 +15,7 @@ import { BoardContext } from "../../../hooks/context/BoardContext";
 import Column from "./Column";
 
 const DroppableArea = () => {
-  const { board, setBoard } = useContext(BoardContext);
+  const [board, setBoard] = useState<any>(initialData);
 
   const [inputColumnValue, setInputColumnValue] =
     useState<string>("Nova coluna");

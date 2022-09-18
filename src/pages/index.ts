@@ -1,7 +1,8 @@
 import Home from "./Home";
-import Boards from "./Boards";
-import Login from "./Login";
-import SignUp from "./SignUp";
 import Workspace from "./Workspace";
+import SignIn from "./SignIn";
+import SignUp from "./SignUp";
+import Board from "./Board";
+import Test from "./test/Test";
 
-export { Home, Boards, Login, SignUp, Workspace };
+export { Home, Workspace, SignIn, SignUp, Board, Test };
