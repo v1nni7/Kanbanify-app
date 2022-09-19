@@ -13,9 +13,6 @@ const Task = ({ index, task, columnTitle }: TaskPropsType) => {
   const [isCheck, setIsCheck] = useState(false);
 
   useEffect(() => {
-    if (task.completedCheckbox === task.totalCheckbox) {
-      setIsCheck(true);
-    }
     if (columnTitle === "Done" || columnTitle === "Concluido") {
       setIsCheck(true);
     }
@@ -23,7 +20,7 @@ const Task = ({ index, task, columnTitle }: TaskPropsType) => {
 
   return (
     <>
-      <Draggable draggableId={task.id} index={index}>
+      <Draggable draggableId={task.stringId} index={index}>
         {(provided) => (
           <Board.Item
             {...provided.draggableProps}
@@ -39,9 +36,9 @@ const Task = ({ index, task, columnTitle }: TaskPropsType) => {
                   <Icon.Check />
                 </Board.Checkbox>
                 <Board.ItemTitle>
-                  {task.content}
+                  {task.title}
                   <span>
-                    {task.completedCheckbox} / {task.totalCheckbox}
+                    0 / 12
                   </span>
                 </Board.ItemTitle>
               </Board.ItemFlex>

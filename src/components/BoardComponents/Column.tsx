@@ -4,39 +4,44 @@ import { BiPlus } from "react-icons/bi";
 
 import Board from "../../assets/styles/Board";
 import Task from "./Task";
+import { useContext } from "react";
+import { AuthContext } from "../../hooks/context/AuthContext";
+import api from "../../services/api";
+import { useParams } from "react-router-dom";
 
 type ColumnPropsType = {
   index: number;
-  column: { id: string; title: string; taskIds: string[] };
-  tasks: {
-    id: string;
-    content: string;
-    isAction: boolean;
-    column: string;
-    totalCheckbox: number;
-    completedCheckbox: number;
-  }[];
+  column: any;
+  tasks: any;
+  loadingBoard: Function;
 };
 
-const Column = ({ column, tasks, index }: ColumnPropsType) => {
-  const handleAddTask = (data: any) => {
+const Column = ({ column, tasks, index, loadingBoard }: ColumnPropsType) => {
+  const { stringId } = useParams();
+  const { user } = useContext<any>(AuthContext);
+
+  const handleAddTask = async (data: any) => {
     try {
-      console.log(data);
-    } catch (error) {
-      console.log(error);
-    }
+      const order = column.taskIds.length + 1;
+      const response = await api.createTask(data, stringId, column.id, order);
+
+      if (response.status === 201) {
+        loadingBoard()
+        console.log("Task created");
+      }
+    } catch (error) {}
   };
 
   return (
     <>
-      <Draggable draggableId={column.id} index={index}>
+      <Draggable draggableId={column.stringId} index={index}>
         {(provided) => (
           <Board.ColumnHeight>
             <Board.Column {...provided.draggableProps} ref={provided.innerRef}>
               <Board.Title {...provided.dragHandleProps}>
                 {column.title}
               </Board.Title>
-              <Droppable droppableId={column.id} type="task">
+              <Droppable droppableId={column.stringId} type="task">
                 {(provided) => (
                   <Board.TaskList
                     {...provided.droppableProps}
@@ -56,15 +61,15 @@ const Column = ({ column, tasks, index }: ColumnPropsType) => {
               </Droppable>
               <Board.Create createTask={true}>
                 <Formik
-                  initialValues={{ nameOfTask: "Add tasks" }}
+                  initialValues={{ title: "Add tasks" }}
                   onSubmit={handleAddTask}
                 >
                   {({ handleChange, values }) => (
                     <Form>
                       <input
                         type="text"
-                        onChange={handleChange("nameOfColumn")}
-                        value={values.nameOfTask}
+                        value={values.title}
+                        onChange={handleChange("title")}
                       />
                       <button type="submit">
                         <BiPlus />

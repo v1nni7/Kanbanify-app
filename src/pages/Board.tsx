@@ -1,4 +1,10 @@
-import { useCallback, useEffect, useState, SetStateAction } from "react";
+import {
+  useCallback,
+  useState,
+  SetStateAction,
+  useContext,
+  useEffect,
+} from "react";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
 import { useParams } from "react-router-dom";
 import { BiCheck } from "react-icons/bi";
@@ -7,6 +13,8 @@ import Column from "../components/BoardComponents/Column";
 import { initialData } from "./test/components/data";
 import Board from "../assets/styles/Board";
 import { Form, Formik } from "formik";
+import api from "../services/api";
+import { AuthContext } from "../hooks/context/AuthContext";
 
 type BoardType = {
   tasks: object;
@@ -16,9 +24,8 @@ type BoardType = {
 
 const BoardPage = () => {
   const { stringId } = useParams();
-  const [board, setBoard] = useState<SetStateAction<BoardType> | any>(
-    initialData
-  );
+  const { user } = useContext<any>(AuthContext);
+  const [board, setBoard] = useState<SetStateAction<BoardType> | any>();
 
   const handleDragEnd: any = useCallback(
     ({ destination, source, draggableId, type }: any) => {
@@ -65,7 +72,7 @@ const BoardPage = () => {
           ...board,
           columns: {
             ...board?.columns,
-            [newColumn.id]: newColumn,
+            [newColumn.stringId]: newColumn,
           },
         };
 
@@ -92,8 +99,8 @@ const BoardPage = () => {
         ...board,
         columns: {
           ...board?.columns,
-          [newStart.id]: newStart,
-          [newFinish.id]: newFinish,
+          [newStart.stringId]: newStart,
+          [newFinish.stringId]: newFinish,
         },
       };
 
@@ -102,13 +109,36 @@ const BoardPage = () => {
     [board]
   );
 
-  const handleAddColumn = (data: any) => {
+  const handleAddColumn = async (data: any) => {
     try {
-      console.log(data);
+      const order = board.columnOrder.length + 1;
+      const response = await api.createColumn(data, stringId, order);
+
+      if (response.status === 201) {
+        loadingBoard();
+        console.log("Column created");
+      }
     } catch (error) {
       console.log(error);
     }
   };
+
+  const loadingBoard: Function = useCallback(async () => {
+    try {
+      const response = await api.getBoard(stringId);
+
+      if (response.status === 200) {
+        setBoard(response.data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }, [stringId]);
+
+  useEffect(() => {
+    console.log('useEffect')
+    loadingBoard();
+  }, [loadingBoard]);
 
   return (
     <>
@@ -138,6 +168,7 @@ const BoardPage = () => {
                           column={column}
                           tasks={tasks}
                           index={index}
+                          loadingBoard={loadingBoard}
                         />
                       );
                     })}
@@ -146,29 +177,29 @@ const BoardPage = () => {
                 )}
               </Droppable>
             </DragDropContext>
-            <Board.Create>
-              <Formik
-                initialValues={{ nameOfColumn: "New column" }}
-                onSubmit={handleAddColumn}
-              >
-                {({ handleChange, values }) => (
-                  <Form>
-                    <input
-                      type="text"
-                      onChange={handleChange("nameOfColumn")}
-                      value={values.nameOfColumn}
-                    />
-                    <button type="submit">
-                      <BiCheck />
-                    </button>
-                  </Form>
-                )}
-              </Formik>
-            </Board.Create>
           </>
         ) : (
-          "Carregando..."
+          <></>
         )}
+        <Board.Create>
+          <Formik
+            initialValues={{ title: "New column" }}
+            onSubmit={handleAddColumn}
+          >
+            {({ handleChange, values }) => (
+              <Form>
+                <input
+                  type="text"
+                  onChange={handleChange("title")}
+                  value={values.title}
+                />
+                <button type="submit">
+                  <BiCheck />
+                </button>
+              </Form>
+            )}
+          </Formik>
+        </Board.Create>
       </Board.Container>
     </>
   );

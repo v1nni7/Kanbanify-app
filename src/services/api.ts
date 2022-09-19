@@ -33,8 +33,44 @@ const getBoards = async (headers: HeadersTypes) => {
   return promise;
 };
 
-const createBoard = async (workspaceData: WorkspacesTypes, headers: HeadersTypes) => {
+const getBoard = async (stringId: any) => {
+  const promise = await api.get(`/board/${stringId}`);
+  return promise;
+};
+
+const createBoard = async (
+  workspaceData: WorkspacesTypes,
+  headers: HeadersTypes
+) => {
   const promise = await api.post("/workspaces", workspaceData, headers);
+  return promise;
+};
+
+const createColumn = async (
+  columnData: any,
+  stringId: any,
+  order: number = 0
+) => {
+  const promise = await api.post("/workspaces/create/column", {
+    ...columnData,
+    order,
+    boardId: stringId,
+  });
+  return promise;
+};
+
+const createTask = async (
+  taskData: any,
+  stringId: any,
+  columnId: any,
+  order: number = 0
+) => {
+  const promise = await api.post("/workspaces/create/task", {
+    ...taskData,
+    order,
+    boardId: stringId,
+    columnId: columnId,
+  });
   return promise;
 };
 
@@ -60,4 +96,12 @@ const signIn = async ({ email, password }: SignInDataTypes) => {
   return promise;
 };
 
-export default { getBoards, createBoard, signIn, signUp };
+export default {
+  getBoards,
+  getBoard,
+  createBoard,
+  createColumn,
+  createTask,
+  signIn,
+  signUp,
+};
