@@ -1,4 +1,5 @@
 import axios from "axios";
+import cryptoRandomString from "crypto-random-string";
 
 interface SignUpDataTypes {
   email: string;
@@ -7,9 +8,10 @@ interface SignUpDataTypes {
   confirmPassword: string;
 }
 
-interface SignInDataTypes {
+interface SignInTypes {
   email: string;
   password: string;
+  stayConnected: boolean;
 }
 
 interface HeadersTypes {
@@ -18,7 +20,7 @@ interface HeadersTypes {
   };
 }
 
-interface WorkspacesTypes {
+interface BoardTypes {
   id: number;
   name: string;
   background: string;
@@ -26,6 +28,12 @@ interface WorkspacesTypes {
 
 const api = axios.create({
   baseURL: "http://localhost:5000",
+  headers: {
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${JSON.parse(
+      localStorage.getItem("token") as string
+    )}`,
+  },
 });
 
 const getBoards = async (headers: HeadersTypes) => {
@@ -38,12 +46,9 @@ const getBoard = async (stringId: any) => {
   return promise;
 };
 
-const createBoard = async (
-  workspaceData: WorkspacesTypes,
-  headers: HeadersTypes
-) => {
-  const promise = await api.post("/workspaces", workspaceData, headers);
-  return promise;
+const createNewBoard = async (body: BoardTypes) => {
+  const stringId = cryptoRandomString({ length: 16, type: "url-safe" });
+  return await api.post("/boards", { ...body, stringId });
 };
 
 const createColumn = async (
@@ -74,34 +79,10 @@ const createTask = async (
   return promise;
 };
 
-const signUp = async ({
-  email,
-  username,
-  password,
-  confirmPassword,
-}: SignUpDataTypes) => {
-  const promise = await api.post("/sign-up", {
-    email,
-    username,
-    password,
-    confirmPassword,
-  });
-  return promise;
-};
-
-const signIn = async ({ email, password }: SignInDataTypes) => {
-  const newData = { email, password };
-
-  const promise = await api.post("/sign-in", newData);
-  return promise;
-};
-
-export default {
+export {
   getBoards,
   getBoard,
-  createBoard,
+  createNewBoard,
   createColumn,
   createTask,
-  signIn,
-  signUp,
 };

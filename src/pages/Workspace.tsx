@@ -4,9 +4,8 @@ import { Link } from "react-router-dom";
 import { Formik } from "formik";
 import { ValidationError } from "yup";
 import { toast, ToastContainer } from "react-toastify";
-import cryptoRandomString from "crypto-random-string";
 
-import api from "../services/api";
+import { createNewBoard } from "../services/api";
 import Modal from "../components/Modal";
 import { AuthContext } from "../hooks/context/AuthContext";
 
@@ -22,67 +21,27 @@ const WorkspacePage = () => {
     background: "",
   };
 
-  const { user } = useContext<any>(AuthContext);
-
   const [boards, setBoards] = useState<any>([]);
   const [isLoading, setIsLoading] = useState<any>(false);
   const [isModalOpen, setIsModalOpen] = useState<any>(false);
 
-  const getBoards = useCallback(async () => {
+  const handleCreateBoard = useCallback(async (data: any) => {
     try {
-      if (!user.token) {
-        return;
-      }
+      setIsLoading(true)
+      await workspaceSchemaValidate.workspaceSchema(data);
 
-      const headers = { headers: { Authorization: `Bearer ${user.token}` } };
+      const response = await createNewBoard(data);
 
-      const response = await api.getBoards(headers);
-
-      if (response.status === 200) {
-        setBoards(response.data);
+      if (response.status === 201) {
+        setIsModalOpen(false);
+        setBoards((prevState: any) => [...prevState, response.data]);
       }
     } catch (error) {
       console.log(error);
+    } finally {
+      setIsLoading(false);
     }
-  }, [user.token]);
-
-  const createBoard = useCallback(
-    async (data: any) => {
-      try {
-        const headers = { headers: { Authorization: `Bearer ${user.token}` } };
-        setIsLoading(true);
-
-        await workspaceSchemaValidate.workspaceSchema(data);
-
-        const response = await api.createBoard(
-          {
-            ...data,
-            stringId: cryptoRandomString({ length: 10, type: "url-safe" }),
-          },
-          headers
-        );
-
-        if (response.status === 201) {
-          getBoards();
-        }
-      } catch (error: any) {
-        if (error instanceof ValidationError) {
-          toast.error(error.message);
-          return;
-        }
-
-        toast.error(`${error.response.data}`);
-      } finally {
-        setIsLoading(false);
-        setIsModalOpen(false);
-      }
-    },
-    [user.token]
-  );
-
-  useEffect(() => {
-    getBoards();
-  }, [getBoards]);
+  }, []);
 
   return (
     <>
@@ -118,7 +77,11 @@ const WorkspacePage = () => {
 
       <Modal onHide={() => setIsModalOpen(false)} modalOpen={isModalOpen}>
         <Flex>
-          <Formik initialValues={boardValues} onSubmit={createBoard}>
+          <Formik
+            enableReinitialize
+            initialValues={boardValues}
+            onSubmit={handleCreateBoard}
+          >
             {({ handleChange, values }) => (
               <>
                 <Form.Horizontal>

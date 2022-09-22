@@ -21,10 +21,10 @@ const signUp = (data: signUpDataTypes) => {
   return schema.validate(data);
 };
 
-const signIn = (data: signInDataTypes) => {
+const signIn = (data: any) => {
   const schema = object({
-    password: string().required("Password is required"),
-    email: string().email().required("Email is required"),
+    password: string().required("Password must be provided"),
+    email: string().email().required("Email must be provided"),
   });
   return schema.validate(data);
 };

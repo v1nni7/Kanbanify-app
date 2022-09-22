@@ -1,19 +1,11 @@
-import {
-  useCallback,
-  useState,
-  SetStateAction,
-  useContext,
-  useEffect,
-} from "react";
+import { useCallback, useState, SetStateAction, useContext } from "react";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
 import { useParams } from "react-router-dom";
 import { BiCheck } from "react-icons/bi";
-
-import Column from "../components/BoardComponents/Column";
-import { initialData } from "./test/components/data";
-import Board from "../assets/styles/Board";
 import { Form, Formik } from "formik";
-import api from "../services/api";
+
+import Board from "../assets/styles/Board";
+import Column from "../components/BoardComponents/Column";
 import { AuthContext } from "../hooks/context/AuthContext";
 
 type BoardType = {
@@ -109,36 +101,7 @@ const BoardPage = () => {
     [board]
   );
 
-  const handleAddColumn = async (data: any) => {
-    try {
-      const order = board.columnOrder.length + 1;
-      const response = await api.createColumn(data, stringId, order);
-
-      if (response.status === 201) {
-        loadingBoard();
-        console.log("Column created");
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const loadingBoard: Function = useCallback(async () => {
-    try {
-      const response = await api.getBoard(stringId);
-
-      if (response.status === 200) {
-        setBoard(response.data);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  }, [stringId]);
-
-  useEffect(() => {
-    console.log('useEffect')
-    loadingBoard();
-  }, [loadingBoard]);
+  const handleAddColumn = useCallback(async () => {}, []);
 
   return (
     <>
@@ -168,7 +131,6 @@ const BoardPage = () => {
                           column={column}
                           tasks={tasks}
                           index={index}
-                          loadingBoard={loadingBoard}
                         />
                       );
                     })}

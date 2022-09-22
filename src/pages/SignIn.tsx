@@ -1,58 +1,50 @@
-import { Formik } from "formik";
-import { useState, useContext, useLayoutEffect } from "react";
+import { Formik, FormikValues } from "formik";
+import { useState, useContext, useLayoutEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import { ValidationError } from "yup";
 
-import api from "../services/api";
 import Form from "../assets/styles/Form";
 import Icon from "../assets/styles/Icon";
 import { Centered } from "../assets/styles/Layout";
 import authSchemaValidate from "../assets/schema/authSchemaValidate";
 import { AuthContext } from "../hooks/context/AuthContext";
+import userServices from "../services/userServices";
 
 const SignIn = () => {
   const navigate = useNavigate();
 
-  const { user, setUser }: any = useContext(AuthContext);
+  const { setUser }: any = useContext(AuthContext);
   const [loading, setLoading] = useState(false);
 
   const loginData = {
     email: "",
     password: "",
-    stayConnected: false,
+    stayLoggedIn: false,
   };
 
-  const handleSubmit = async (data: any) => {
+  const handleSubmit = useCallback(async (data: any) => {
     try {
       setLoading(true);
-
       await authSchemaValidate.signIn(data);
 
-      const response = await api.signIn(data);
+      const response = await userServices.signIn(data);
 
       if (response.status === 200) {
-        localStorage.setItem("user", JSON.stringify(response.data));
-        setUser(response.data);
-        navigate("/boards");
+        localStorage.setItem("token", JSON.stringify(response.data.token));
+        localStorage.setItem("user", JSON.stringify(response.data.user));
+        setUser(response.data.user);
+        navigate("/workspace");
       }
-    } catch (error: any) {
+    } catch (error) {
+      console.log(error);
       if (error instanceof ValidationError) {
         toast.error(error.message);
-        return;
       }
-
-      toast.error(`${error.response.data}`);
     } finally {
       setLoading(false);
     }
-  };
-
-  useLayoutEffect(() => {
-    if (user.token) {
-      navigate("/boards");
-    }
-  }, [user]);
+  }, []);
 
   return (
     <>
@@ -111,8 +103,8 @@ const SignIn = () => {
                   <div>
                     <input
                       type="checkbox"
-                      onChange={handleChange("stayConnected")}
-                      checked={values.stayConnected}
+                      onChange={handleChange("stayLoggedIn")}
+                      checked={values.stayLoggedIn}
                       disabled={loading}
                       id="remember"
                     />

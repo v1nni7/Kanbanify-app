@@ -1,36 +1,22 @@
 import { Draggable, Droppable } from "react-beautiful-dnd";
+import { useCallback } from "react";
 import { Formik, Form } from "formik";
 import { BiPlus } from "react-icons/bi";
-
-import Board from "../../assets/styles/Board";
-import Task from "./Task";
-import { useContext } from "react";
-import { AuthContext } from "../../hooks/context/AuthContext";
-import api from "../../services/api";
 import { useParams } from "react-router-dom";
 
+import Task from "./Task";
+import Board from "../../assets/styles/Board";
+
 type ColumnPropsType = {
-  index: number;
-  column: any;
   tasks: any;
-  loadingBoard: Function;
+  column: any;
+  index: number;
 };
 
-const Column = ({ column, tasks, index, loadingBoard }: ColumnPropsType) => {
+const Column = ({ column, tasks, index }: ColumnPropsType) => {
   const { stringId } = useParams();
-  const { user } = useContext<any>(AuthContext);
 
-  const handleAddTask = async (data: any) => {
-    try {
-      const order = column.taskIds.length + 1;
-      const response = await api.createTask(data, stringId, column.id, order);
-
-      if (response.status === 201) {
-        loadingBoard()
-        console.log("Task created");
-      }
-    } catch (error) {}
-  };
+  const handleAddTask = useCallback(() => {}, []);
 
   return (
     <>

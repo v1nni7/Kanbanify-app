@@ -4,12 +4,12 @@ import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import { ValidationError } from "yup";
 
-import api from "../services/api";
 import Form from "../assets/styles/Form";
 import Icon from "../assets/styles/Icon";
 import { Centered } from "../assets/styles/Layout";
 import authSchemaValidate from "../assets/schema/authSchemaValidate";
 import { AuthContext } from "../hooks/context/AuthContext";
+import userServices from "../services/userServices";
 
 const SignUp = () => {
   const navigate = useNavigate();
@@ -31,7 +31,7 @@ const SignUp = () => {
 
       await authSchemaValidate.signUp(data);
 
-      const response = await api.signUp(data);
+      const response = await userServices.signUp(data);
 
       if (response.status === 201) {
         navigate("/login");
