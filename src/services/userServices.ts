@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const userServices = axios.create({
+const api = axios.create({
   baseURL: "http://localhost:5000",
 });
 
@@ -18,11 +18,11 @@ type SignUpTypes = {
 };
 
 const signIn = async (body: SignInTypes) => {
-  return await userServices.post("/auth/sign-in", body);
+  return await api.post("/auth/sign-in", body);
 };
 
 const signUp = async (body: SignUpTypes) => {
-  return await userServices.post("/auth/sign-up", body);
+  return await api.post("/auth/sign-up", body);
 };
 
 export default { signIn, signUp };

@@ -7,6 +7,7 @@ import { Form, Formik } from "formik";
 import Board from "../assets/styles/Board";
 import Column from "../components/BoardComponents/Column";
 import { AuthContext } from "../hooks/context/AuthContext";
+import boardServices from "../services/boardServices";
 
 type BoardType = {
   tasks: object;
@@ -15,9 +16,15 @@ type BoardType = {
 };
 
 const BoardPage = () => {
-  const { stringId } = useParams();
+  const { boardId } = useParams();
   const { user } = useContext<any>(AuthContext);
-  const [board, setBoard] = useState<SetStateAction<BoardType> | any>();
+  const [board, setBoard] = useState<SetStateAction<BoardType> | any>({
+    tasks: {},
+    columns: {},
+    columnOrder: [],
+  });
+
+  console.log(board);
 
   const handleDragEnd: any = useCallback(
     ({ destination, source, draggableId, type }: any) => {
@@ -101,7 +108,31 @@ const BoardPage = () => {
     [board]
   );
 
-  const handleAddColumn = useCallback(async () => {}, []);
+  const handleAddColumn = useCallback(
+    async (data: any) => {
+      try {
+        const response = await boardServices.createColumn({
+          ...data,
+          boardId,
+          order: board.columnsOrder ? board.columnsOrder.length + 1 : 0,
+        });
+
+        if (response.status === 201) {
+          setBoard({
+            ...board,
+            columns: {
+              ...board.columns,
+              [response.data.stringId]: response.data,
+            },
+            columnOrder: [...board.columnOrder, response.data.stringId],
+          });
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    [board]
+  );
 
   return (
     <>
@@ -145,6 +176,7 @@ const BoardPage = () => {
         )}
         <Board.Create>
           <Formik
+            enableReinitialize
             initialValues={{ title: "New column" }}
             onSubmit={handleAddColumn}
           >

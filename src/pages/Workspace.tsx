@@ -5,7 +5,6 @@ import { Formik } from "formik";
 import { ValidationError } from "yup";
 import { toast, ToastContainer } from "react-toastify";
 
-import { createNewBoard } from "../services/api";
 import Modal from "../components/Modal";
 import { AuthContext } from "../hooks/context/AuthContext";
 
@@ -14,6 +13,7 @@ import Icon from "../assets/styles/Icon";
 import Workspace from "../assets/styles/Workspace";
 import { Flex } from "../assets/styles/Modal";
 import workspaceSchemaValidate from "../assets/schema/workspaceSchemaValidate";
+import boardServices from "../services/boardServices";
 
 const WorkspacePage = () => {
   const boardValues = {
@@ -27,10 +27,10 @@ const WorkspacePage = () => {
 
   const handleCreateBoard = useCallback(async (data: any) => {
     try {
-      setIsLoading(true)
+      setIsLoading(true);
       await workspaceSchemaValidate.workspaceSchema(data);
 
-      const response = await createNewBoard(data);
+      const response = await boardServices.createBoard(data);
 
       if (response.status === 201) {
         setIsModalOpen(false);
@@ -42,6 +42,22 @@ const WorkspacePage = () => {
       setIsLoading(false);
     }
   }, []);
+
+  const loadingBoards = useCallback(async () => {
+    try {
+      const response = await boardServices.getBoards();
+
+      if (response.status === 200) {
+        setBoards(response.data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
+
+  useEffect(() => {
+    loadingBoards();
+  }, [loadingBoards]);
 
   return (
     <>
@@ -63,15 +79,17 @@ const WorkspacePage = () => {
             <h2>Create new board</h2>
           </Workspace.Item>
 
-          {boards.map((workspace: any) => (
-            <Link key={workspace.id} to={`/board/${workspace.stringId}`}>
-              <Workspace.Item image={workspace.background}>
+          {boards.map((board: any, index: number) => (
+            <Link key={index} to={`/board/${board.stringId}`}>
+              <Workspace.Item className="teste" image={board.background}>
                 <Workspace.Overlay>
-                  <h2>{workspace.name}</h2>
+                  <h2>{board.name}</h2>
                 </Workspace.Overlay>
               </Workspace.Item>
             </Link>
           ))}
+
+          {/*   */}
         </Workspace.Horizontal>
       </Workspace.Container>
 

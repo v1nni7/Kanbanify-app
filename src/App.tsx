@@ -32,7 +32,7 @@ const App = () => {
                 }
               />
               <Route
-                path="/board/:stringId"
+                path="/board/:boardId"
                 element={
                   <PrivateRoute>
                     <Board />
