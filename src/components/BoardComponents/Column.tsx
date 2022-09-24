@@ -59,7 +59,7 @@ const Column = ({ column, tasks, index, board, setBoard }: ColumnPropsType) => {
                   >
                     {tasks.map((task: any, index: number) => (
                       <Task
-                        key={index}
+                        key={task.uuid}
                         task={task}
                         index={index}
                         columnTitle={column.title}

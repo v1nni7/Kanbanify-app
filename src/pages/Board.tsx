@@ -113,32 +113,29 @@ const BoardPage = () => {
     [board]
   );
 
-  const handleAddColumn = useCallback(
-    async (data: any) => {
-      try {
-        const response = await boardServices.createColumn({
-          ...data,
-          boardId,
-          order:
-            board.columnOrder.length !== 0 ? board.columnOrder.length + 1 : 1,
-        });
+  const handleAddColumn = useCallback(async (data: any) => {
+    try {
+      const response = await boardServices.createColumn({
+        ...data,
+        boardId,
+        order:
+          board.columnOrder.length !== 0 ? board.columnOrder.length + 1 : 1,
+      });
 
-        if (response.status === 201) {
-          setBoard({
-            ...board,
-            columns: {
-              ...board.columns,
-              [response.data.uuid]: response.data,
-            },
-            columnOrder: [...board.columnOrder, response.data.uuid],
-          });
-        }
-      } catch (error) {
-        console.log(error);
+      if (response.status === 201) {
+        setBoard({
+          ...board,
+          columns: {
+            ...board.columns,
+            [response.data.uuid]: response.data,
+          },
+          columnOrder: [...board.columnOrder, response.data.uuid],
+        });
       }
-    },
-    [boardId]
-  );
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
 
   const loadingColumns = useCallback(async () => {
     try {
@@ -150,7 +147,7 @@ const BoardPage = () => {
     } catch (error) {
       console.log(error);
     }
-  }, [boardId]);
+  }, []);
 
   useEffect(() => {
     loadingColumns();
@@ -180,7 +177,7 @@ const BoardPage = () => {
 
                       return (
                         <Column
-                          key={index}
+                          key={column.id}
                           column={column}
                           tasks={tasks}
                           index={index}
