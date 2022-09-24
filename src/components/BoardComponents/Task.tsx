@@ -20,7 +20,7 @@ const Task = ({ index, task, columnTitle }: TaskPropsType) => {
 
   return (
     <>
-      <Draggable draggableId={task.stringId} index={index}>
+      <Draggable draggableId={task.uuid} index={index}>
         {(provided) => (
           <Board.Item
             {...provided.draggableProps}

@@ -1,4 +1,10 @@
-import { useCallback, useState, SetStateAction, useContext } from "react";
+import {
+  useCallback,
+  useState,
+  SetStateAction,
+  useContext,
+  useEffect,
+} from "react";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
 import { useParams } from "react-router-dom";
 import { BiCheck } from "react-icons/bi";
@@ -17,7 +23,6 @@ type BoardType = {
 
 const BoardPage = () => {
   const { boardId } = useParams();
-  const { user } = useContext<any>(AuthContext);
   const [board, setBoard] = useState<SetStateAction<BoardType> | any>({
     tasks: {},
     columns: {},
@@ -71,7 +76,7 @@ const BoardPage = () => {
           ...board,
           columns: {
             ...board?.columns,
-            [newColumn.stringId]: newColumn,
+            [newColumn.uuid]: newColumn,
           },
         };
 
@@ -98,8 +103,8 @@ const BoardPage = () => {
         ...board,
         columns: {
           ...board?.columns,
-          [newStart.stringId]: newStart,
-          [newFinish.stringId]: newFinish,
+          [newStart.uuid]: newStart,
+          [newFinish.uuid]: newFinish,
         },
       };
 
@@ -114,7 +119,8 @@ const BoardPage = () => {
         const response = await boardServices.createColumn({
           ...data,
           boardId,
-          order: board.columnsOrder ? board.columnsOrder.length + 1 : 0,
+          order:
+            board.columnOrder.length !== 0 ? board.columnOrder.length + 1 : 1,
         });
 
         if (response.status === 201) {
@@ -122,17 +128,33 @@ const BoardPage = () => {
             ...board,
             columns: {
               ...board.columns,
-              [response.data.stringId]: response.data,
+              [response.data.uuid]: response.data,
             },
-            columnOrder: [...board.columnOrder, response.data.stringId],
+            columnOrder: [...board.columnOrder, response.data.uuid],
           });
         }
       } catch (error) {
         console.log(error);
       }
     },
-    [board]
+    [boardId]
   );
+
+  const loadingColumns = useCallback(async () => {
+    try {
+      const response = await boardServices.getBoardData(boardId);
+
+      if (response.status === 200) {
+        setBoard(response.data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }, [boardId]);
+
+  useEffect(() => {
+    loadingColumns();
+  }, []);
 
   return (
     <>
@@ -158,10 +180,12 @@ const BoardPage = () => {
 
                       return (
                         <Column
-                          key={column.id}
+                          key={index}
                           column={column}
                           tasks={tasks}
                           index={index}
+                          board={board}
+                          setBoard={setBoard}
                         />
                       );
                     })}

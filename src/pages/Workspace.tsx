@@ -80,7 +80,7 @@ const WorkspacePage = () => {
           </Workspace.Item>
 
           {boards.map((board: any, index: number) => (
-            <Link key={index} to={`/board/${board.stringId}`}>
+            <Link key={index} to={`/board/${board.safeUrl}`}>
               <Workspace.Item className="teste" image={board.background}>
                 <Workspace.Overlay>
                   <h2>{board.name}</h2>

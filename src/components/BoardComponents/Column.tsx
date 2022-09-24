@@ -6,28 +6,52 @@ import { useParams } from "react-router-dom";
 
 import Task from "./Task";
 import Board from "../../assets/styles/Board";
+import boardServices from "../../services/boardServices";
 
 type ColumnPropsType = {
   tasks: any;
   column: any;
   index: number;
+  board: any;
+  setBoard: any;
 };
 
-const Column = ({ column, tasks, index }: ColumnPropsType) => {
-  const { stringId } = useParams();
+const Column = ({ column, tasks, index, board, setBoard }: ColumnPropsType) => {
+  const { boardId } = useParams();
 
-  const handleAddTask = useCallback(() => {}, []);
+  const handleAddTask = useCallback(
+    async (data: any) => {
+      try {
+        const response = await boardServices.createTask({
+          ...data,
+          boardId,
+          columnId: column.uuid,
+          order: tasks.length !== 0 ? tasks.length + 1 : 1,
+        });
+
+        if (response.status === 201) {
+          const newBoard = { ...board };
+          newBoard.tasks[response.data.uuid] = response.data;
+          newBoard.columns[column.uuid].taskIds.push(response.data.uuid);
+          setBoard(newBoard);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    [board]
+  );
 
   return (
     <>
-      <Draggable draggableId={column.stringId} index={index}>
+      <Draggable draggableId={column.uuid} index={index}>
         {(provided) => (
           <Board.ColumnHeight>
             <Board.Column {...provided.draggableProps} ref={provided.innerRef}>
               <Board.Title {...provided.dragHandleProps}>
                 {column.title}
               </Board.Title>
-              <Droppable droppableId={column.stringId} type="task">
+              <Droppable droppableId={column.uuid} type="task">
                 {(provided) => (
                   <Board.TaskList
                     {...provided.droppableProps}
@@ -35,9 +59,9 @@ const Column = ({ column, tasks, index }: ColumnPropsType) => {
                   >
                     {tasks.map((task: any, index: number) => (
                       <Task
-                        key={task.id}
-                        index={index}
+                        key={index}
                         task={task}
+                        index={index}
                         columnTitle={column.title}
                       />
                     ))}

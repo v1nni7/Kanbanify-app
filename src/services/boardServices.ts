@@ -16,13 +16,30 @@ const getBoards = () => {
 };
 
 const createBoard = (body: any) => {
-  const stringId = cryptoRandomString({ length: 16, type: "url-safe" });
-  return api.post("/boards", { ...body, stringId });
+  const safeUrl = cryptoRandomString({ length: 16, type: "url-safe" });
+  return api.post("/boards", { ...body, safeUrl });
+};
+
+const getColumns = (boardId: string | undefined) => {
+  return api.get(`/boards/columns/${boardId}`);
+};
+
+const getBoardData = (boardId: string | undefined) => {
+  return api.get(`/boards/data/${boardId}`);
 };
 
 const createColumn = (body: any) => {
-  const stringId = cryptoRandomString({ length: 10, type: "url-safe" });
-  return api.post("/boards/columns", { ...body, stringId });
+  return api.post("/boards/columns", body);
 };
 
-export default { getBoards, createBoard, createColumn };
+const createTask = (body: any) => {
+  return api.post("/boards/tasks", body);
+};
+
+export default {
+  getBoards,
+  createBoard,
+  createColumn,
+  createTask,
+  getBoardData,
+};
