@@ -20,10 +20,6 @@ const createBoard = (body: any) => {
   return api.post("/boards", { ...body, safeUrl });
 };
 
-const getColumns = (boardId: string | undefined) => {
-  return api.get(`/boards/columns/${boardId}`);
-};
-
 const getBoardData = (boardId: string | undefined) => {
   return api.get(`/boards/data/${boardId}`);
 };
@@ -36,10 +32,20 @@ const createTask = (body: any) => {
   return api.post("/boards/tasks", body);
 };
 
+const updateColumn = (body: any) => {
+  return api.put("/boards/columns", body);
+};
+
+const updateTask = (body: any) => {
+  return api.put("/boards/tasks", body);
+};
+
 export default {
   getBoards,
+  getBoardData,
   createBoard,
   createColumn,
   createTask,
-  getBoardData,
+  updateColumn,
+  updateTask,
 };

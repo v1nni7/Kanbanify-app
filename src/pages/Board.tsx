@@ -12,7 +12,6 @@ import { Form, Formik } from "formik";
 
 import Board from "../assets/styles/Board";
 import Column from "../components/BoardComponents/Column";
-import { AuthContext } from "../hooks/context/AuthContext";
 import boardServices from "../services/boardServices";
 
 type BoardType = {
@@ -29,10 +28,10 @@ const BoardPage = () => {
     columnOrder: [],
   });
 
-  console.log(board);
-
   const handleDragEnd: any = useCallback(
     ({ destination, source, draggableId, type }: any) => {
+      console.log(destination);
+
       // Reorganizar as colunas
       if (!destination) {
         return;
@@ -56,6 +55,10 @@ const BoardPage = () => {
         };
 
         setBoard(newState);
+        boardServices.updateColumn({
+          uuid: draggableId,
+          order: destination.index,
+        });
         return;
       }
 
@@ -109,6 +112,11 @@ const BoardPage = () => {
       };
 
       setBoard(newState);
+      boardServices.updateTask({
+        uuid: draggableId,
+        order: destination.index,
+        columnId: destination.droppableId,
+      });
     },
     [board]
   );
@@ -151,7 +159,7 @@ const BoardPage = () => {
 
   useEffect(() => {
     loadingColumns();
-  }, []);
+  }, [loadingColumns]);
 
   return (
     <>
