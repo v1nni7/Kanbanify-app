@@ -1,27 +1,20 @@
-import {
-  useCallback,
-  useState,
-  SetStateAction,
-  useContext,
-  useEffect,
-} from "react";
+import { Formik, FormikValues, Form } from "formik";
+import { useCallback, useState, SetStateAction, useEffect } from "react";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
+import { BiPlus } from "react-icons/bi";
 import { useParams } from "react-router-dom";
-import { BiCheck } from "react-icons/bi";
-import { Form, Formik } from "formik";
-
-import Board from "../assets/styles/Board";
+import { toast } from "react-toastify";
+import { ValidationError } from "yup";
 import Column from "../components/BoardComponents/Column";
-import boardServices from "../services/boardServices";
 
-type BoardType = {
+interface BoardType {
   tasks: object;
   columns: object;
   columnOrder: TemplateStringsArray;
-};
+}
 
 const BoardPage = () => {
-  const { boardId } = useParams();
+  const { boardId }: any = useParams();
   const [board, setBoard] = useState<SetStateAction<BoardType> | any>({
     tasks: {},
     columns: {},
@@ -55,10 +48,6 @@ const BoardPage = () => {
         };
 
         setBoard(newState);
-        boardServices.updateColumn({
-          uuid: draggableId,
-          order: destination.index,
-        });
         return;
       }
 
@@ -79,7 +68,7 @@ const BoardPage = () => {
           ...board,
           columns: {
             ...board?.columns,
-            [newColumn.uuid]: newColumn,
+            [newColumn.id]: newColumn,
           },
         };
 
@@ -106,124 +95,130 @@ const BoardPage = () => {
         ...board,
         columns: {
           ...board?.columns,
-          [newStart.uuid]: newStart,
-          [newFinish.uuid]: newFinish,
+          [newStart.id]: newStart,
+          [newFinish.id]: newFinish,
         },
       };
 
       setBoard(newState);
-      boardServices.updateTask({
-        uuid: draggableId,
-        order: destination.index,
-        columnId: destination.droppableId,
-      });
     },
     [board]
   );
 
-  const handleAddColumn = useCallback(async (data: any) => {
-    try {
-      const response = await boardServices.createColumn({
-        ...data,
-        boardId,
-        order:
-          board.columnOrder.length !== 0 ? board.columnOrder.length + 1 : 1,
-      });
+  const initialColumnValues = {
+    columnTitle: "",
+  };
 
-      if (response.status === 201) {
-        setBoard({
+  const handleSubmitColumn = useCallback(
+    async (data: FormikValues) => {
+      try {
+        const newColumn = {
+          id: Math.random().toString(36).substr(2, 9),
+          title: data.columnTitle,
+          taskIds: [],
+        };
+
+        const newColumnOrder = Array.from(board.columnOrder);
+        newColumnOrder.push(newColumn.id);
+
+        const newState = {
           ...board,
           columns: {
             ...board.columns,
-            [response.data.uuid]: response.data,
+            [newColumn.id]: newColumn,
           },
-          columnOrder: [...board.columnOrder, response.data.uuid],
-        });
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  }, []);
+          columnOrder: newColumnOrder,
+        };
 
-  const loadingColumns = useCallback(async () => {
-    try {
-      const response = await boardServices.getBoardData(boardId);
+        setBoard(newState);
 
-      if (response.status === 200) {
-        setBoard(response.data);
+        const oldBoardData = JSON.parse(localStorage.getItem("boards") as any);
+        const newBoarData = { ...oldBoardData, [boardId]: newState };
+        localStorage.setItem("boards", JSON.stringify(newBoarData));
+      } catch (error: any) {
+        if (error instanceof ValidationError) {
+          toast.error(error.message);
+        }
+
+        if (error.response) {
+          toast.error(error.response.data.message);
+        }
       }
-    } catch (error) {
-      console.log(error);
-    }
-  }, []);
+    },
+    [board]
+  );
 
   useEffect(() => {
-    loadingColumns();
-  }, [loadingColumns]);
+    const board = JSON.parse(localStorage.getItem("boards") as any)[boardId];
+    if(board) {
+      setBoard(board);
+    }
+  }, []);
 
   return (
     <>
-      <Board.Container>
-        {board ? (
-          <>
-            <DragDropContext onDragEnd={handleDragEnd}>
-              <Droppable
-                droppableId="all-columns"
-                direction="horizontal"
-                type="column"
-              >
-                {(provided) => (
-                  <Board.ColumnContainer
-                    {...provided.droppableProps}
-                    ref={provided.innerRef}
-                  >
-                    {board.columnOrder.map((columnId: any, index: any) => {
-                      const column = board.columns[columnId];
-                      const tasks = column.taskIds.map(
-                        (taskId: any) => board.tasks[taskId]
-                      );
-
-                      return (
-                        <Column
-                          key={column.id}
-                          column={column}
-                          tasks={tasks}
-                          index={index}
-                          board={board}
-                          setBoard={setBoard}
-                        />
-                      );
-                    })}
-                    {provided.placeholder}
-                  </Board.ColumnContainer>
-                )}
-              </Droppable>
-            </DragDropContext>
-          </>
-        ) : (
-          <></>
-        )}
-        <Board.Create>
-          <Formik
-            enableReinitialize
-            initialValues={{ title: "New column" }}
-            onSubmit={handleAddColumn}
+      <section className="board">
+        <DragDropContext onDragEnd={handleDragEnd}>
+          <Droppable
+            droppableId="all-columns"
+            direction="horizontal"
+            type="column"
           >
-            {({ handleChange, values }) => (
-              <Form>
-                <input
-                  type="text"
-                  onChange={handleChange("title")}
-                  value={values.title}
-                />
-                <button type="submit">
-                  <BiCheck />
-                </button>
-              </Form>
+            {(provided) => (
+              <div
+                className="board-column-container"
+                {...provided.droppableProps}
+                ref={provided.innerRef}
+              >
+                {board.columnOrder.length > 0 ? (
+                  board.columnOrder.map((columnId: any, index: number) => {
+                    const column = board.columns[columnId];
+                    const tasks = column.taskIds.map(
+                      (taskId: any) => board.tasks[taskId]
+                    );
+
+                    return (
+                      <Column
+                        key={column.id}
+                        column={column}
+                        tasks={tasks}
+                        index={index}
+                        board={board}
+                        setBoard={setBoard}
+                      />
+                    );
+                  })
+                ) : (
+                  <></>
+                )}
+                {provided.placeholder}
+
+                <div className="board-column-create">
+                  <Formik
+                    initialValues={initialColumnValues}
+                    onSubmit={handleSubmitColumn}
+                  >
+                    {({ handleChange, values }) => (
+                      <Form className="form-create-board-item">
+                        <input
+                          type="text"
+                          className="board-control"
+                          placeholder="Criar coluna"
+                          onChange={handleChange("columnTitle")}
+                          value={values.columnTitle}
+                        />
+                        <button type="submit" className="board-submit">
+                          <BiPlus />
+                        </button>
+                      </Form>
+                    )}
+                  </Formik>
+                </div>
+              </div>
             )}
-          </Formik>
-        </Board.Create>
-      </Board.Container>
+          </Droppable>
+        </DragDropContext>
+      </section>
     </>
   );
 };

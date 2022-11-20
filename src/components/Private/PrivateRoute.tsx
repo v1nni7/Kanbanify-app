@@ -4,6 +4,7 @@ const PrivateRoute = ({ children }: { children: JSX.Element }) => {
   const auth = JSON.parse(localStorage.getItem("user") as any);
 
   if (!auth) {
+    console.log("not auth");
     return <Navigate to="/login" />;
   }
 

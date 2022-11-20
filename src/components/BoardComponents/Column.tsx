@@ -1,95 +1,122 @@
+import { Form, Formik, FormikValues } from "formik";
 import { Draggable, Droppable } from "react-beautiful-dnd";
-import { useCallback } from "react";
-import { Formik, Form } from "formik";
 import { BiPlus } from "react-icons/bi";
-import { useParams } from "react-router-dom";
-
+import { toast } from "react-toastify";
+import { ValidationError } from "yup";
 import Task from "./Task";
-import Board from "../../assets/styles/Board";
-import boardServices from "../../services/boardServices";
 
-type ColumnPropsType = {
-  tasks: any;
-  column: any;
+interface ColumnProps {
+  column: { id: string; title: string; taskIds: string[] };
+  tasks: [];
   index: number;
   board: any;
-  setBoard: any;
-};
+  setBoard: Function;
+}
 
-const Column = ({ column, tasks, index, board, setBoard }: ColumnPropsType) => {
-  const { boardId } = useParams();
+const Column = ({ column, tasks, index, board, setBoard }: ColumnProps) => {
+  const initialTaskValue = {
+    title: "",
+  };
 
-  const handleAddTask = useCallback(
-    async (data: any) => {
-      try {
-        const response = await boardServices.createTask({
-          ...data,
-          boardId,
-          columnId: column.uuid,
-          order: tasks.length !== 0 ? tasks.length + 1 : 1,
-        });
+  const handleSubmitTask = async (data: FormikValues) => {
+    try {
+      setBoard((prevState: any) => {
+        const newTask = {
+          id: Math.random().toString(36).substr(2, 9),
+          title: data.title,
+        };
 
-        if (response.status === 201) {
-          const newBoard = { ...board };
-          newBoard.tasks[response.data.uuid] = response.data;
-          newBoard.columns[column.uuid].taskIds.push(response.data.uuid);
-          setBoard(newBoard);
-        }
-      } catch (error) {
-        console.log(error);
+        const newTaskIds = Array.from(column.taskIds);
+        newTaskIds.push(newTask.id);
+
+        const newColumn = {
+          ...column,
+          taskIds: newTaskIds,
+        };
+
+        const newState = {
+          ...prevState,
+          tasks: {
+            ...prevState.tasks,
+            [newTask.id]: newTask,
+          },
+          columns: {
+            ...prevState.columns,
+            [newColumn.id]: newColumn,
+          },
+        };
+
+        return newState;
+      });
+    } catch (error: any) {
+      if (error instanceof ValidationError) {
+        toast.error(error.message);
       }
-    },
-    [board]
-  );
+
+      if (error.response) {
+        toast.error(error.response.data.message);
+      }
+    }
+  };
 
   return (
     <>
-      <Draggable draggableId={column.uuid} index={index}>
+      <Draggable draggableId={column.id} index={index}>
         {(provided) => (
-          <Board.ColumnHeight>
-            <Board.Column {...provided.draggableProps} ref={provided.innerRef}>
-              <Board.Title {...provided.dragHandleProps}>
+          <div className="board-column-height">
+            <div
+              className="board-column"
+              {...provided.draggableProps}
+              ref={provided.innerRef}
+            >
+              <div className="board-column-title" {...provided.dragHandleProps}>
                 {column.title}
-              </Board.Title>
-              <Droppable droppableId={column.uuid} type="task">
+              </div>
+              <Droppable droppableId={column.id} type="task">
                 {(provided) => (
-                  <Board.TaskList
+                  <div
+                    className="board-column-tasks"
                     {...provided.droppableProps}
                     ref={provided.innerRef}
                   >
                     {tasks.map((task: any, index: number) => (
                       <Task
-                        key={task.uuid}
+                        key={task.id}
                         task={task}
                         index={index}
                         columnTitle={column.title}
                       />
                     ))}
                     {provided.placeholder}
-                  </Board.TaskList>
+
+                    <div className="board-task-create">
+                      <div className="board-task-create-background">
+                        <Formik
+                          onSubmit={handleSubmitTask}
+                          initialValues={initialTaskValue}
+                        >
+                          {({ handleChange, values }) => (
+                            <Form className="form-create-board-item">
+                              <input
+                                type="text"
+                                placeholder="Criar tarefa"
+                                className="board-control"
+                                onChange={handleChange("title")}
+                                value={values.title}
+                              />
+                              <button className="board-submit" type="submit">
+                                <BiPlus />
+                              </button>
+                            </Form>
+                          )}
+                        </Formik>
+                      </div>
+                    </div>
+                  </div>
                 )}
               </Droppable>
-              <Board.Create createTask={true}>
-                <Formik
-                  initialValues={{ title: "Add tasks" }}
-                  onSubmit={handleAddTask}
-                >
-                  {({ handleChange, values }) => (
-                    <Form>
-                      <input
-                        type="text"
-                        value={values.title}
-                        onChange={handleChange("title")}
-                      />
-                      <button type="submit">
-                        <BiPlus />
-                      </button>
-                    </Form>
-                  )}
-                </Formik>
-              </Board.Create>
-            </Board.Column>
-          </Board.ColumnHeight>
+            </div>
+          </div>
         )}
       </Draggable>
     </>

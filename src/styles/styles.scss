@@ -1,0 +1,57 @@
+$primary-color: #a555ff;
+$radius: 6px;
+
+@import './reset.scss';
+@import './__board.scss';
+@import './__form.scss';
+@import './_navbar.scss';
+@import './__workspace.scss';
+@import './__modal.scss';
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  color: #fff;
+  background-color: #242424;
+  font-family: 'Lexend Deca', sans-serif;
+}
+
+textarea {
+  font-family: 'Lexend Deca', sans-serif;
+}
+
+button {
+  cursor: pointer;
+  font-family: 'Lexend Deca', sans-serif;
+}
+
+.container-fluid {
+  margin: 0 auto;
+  padding: 0 48px;
+}
+
+.signin {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.text-align-center {
+  text-align: center;
+}
+
+.toast-popup {
+
+  .Toastify__toast--error,
+  .Toastify__toast--success,
+  .Toastify__toast--warning,
+  .Toastify__toast--info {
+    color: #fff;
+    border-radius: 8px;
+    background-color: #444;
+    font-family: "Lexend Deca";
+  }
+}

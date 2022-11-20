@@ -1,0 +1,97 @@
+.modal {
+  top: 0;
+  left: 0;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  display: none;
+  position: fixed;
+  background-color: rgba(0, 0, 0, 0.5);
+
+  .modal-dialog {
+    width: 500px;
+    display: flex;
+    margin: 32px auto;
+    align-items: center;
+    min-height: calc(100% - 32px * 2);
+    animation: openModalAnim 0.4s ease-in-out;
+
+    .modal-content {
+      width: 100%;
+      border-radius: $radius;
+      background-color: #444;
+
+      .modal-header {
+        padding: 12px 24px;
+        display: flex;
+        font-size: 1.2rem;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .modal-body {
+        padding: 12px;
+      }
+
+      .modal-footer {
+        padding: 12px 24px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        .btn-primary {
+          padding: 10px 12px;
+          border: none;
+          border-radius: $radius;
+          font-size: 1.2rem;
+          background-color: $primary-color;
+          color: #fff;
+          transition: .2s;
+
+          &:hover {
+            background-color: #934ce4;
+          }
+        }
+
+        .btn-secondary {
+          color: #fff;
+          font-size: 1.2rem;
+          padding: 10px 12px;
+          border: none;
+          border-radius: $radius;
+          background-color: #888;
+
+          &:hover {
+            background-color: #777;
+          }
+        }
+      }
+
+      .btn-close {
+        border: none;
+        color: #fff;
+        display: flex;
+        font-size: 1.8rem;
+        align-items: center;
+        justify-content: flex-end;
+        background-color: transparent;
+      }
+    }
+  }
+
+  &.show {
+    display: block;
+  }
+
+  @keyframes openModalAnim {
+    0% {
+      opacity: 0;
+      transform: translateY(-150px);
+    }
+
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}

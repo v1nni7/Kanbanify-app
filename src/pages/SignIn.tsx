@@ -1,143 +1,121 @@
-import { Formik, FormikValues } from "formik";
-import { useState, useContext, useLayoutEffect, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
-import { toast, ToastContainer } from "react-toastify";
+import { Form, Formik } from "formik";
 import { ValidationError } from "yup";
-
-import Form from "../assets/styles/Form";
-import Icon from "../assets/styles/Icon";
-import { Centered } from "../assets/styles/Layout";
-import authSchemaValidate from "../assets/schema/authSchemaValidate";
-import { AuthContext } from "../hooks/context/AuthContext";
+import { toast, ToastContainer } from "react-toastify";
+import { BiEnvelope, BiLockAlt } from "react-icons/bi";
+import { FcGoogle } from "react-icons/fc";
+import { Link, useNavigate } from "react-router-dom";
+import { signInSchema } from "../assets/schema/authSchemaValidate";
 import userServices from "../services/userServices";
+
+interface SigninFormValues {
+  email: string;
+  password: string;
+  stayLoggedIn: boolean;
+}
 
 const SignIn = () => {
   const navigate = useNavigate();
 
-  const { setUser }: any = useContext(AuthContext);
-  const [loading, setLoading] = useState(false);
-
-  const loginData = {
+  const initialValues = {
     email: "",
     password: "",
     stayLoggedIn: false,
   };
 
-  const handleSubmit = useCallback(async (data: any) => {
+  const handleSubmit = async (data: SigninFormValues) => {
     try {
-      setLoading(true);
-      await authSchemaValidate.signIn(data);
+      await signInSchema.validate(data);
 
       const response = await userServices.signIn(data);
 
       if (response.status === 200) {
-        localStorage.setItem("token", JSON.stringify(response.data.token));
         localStorage.setItem("user", JSON.stringify(response.data.user));
-        setUser(response.data.user);
+        localStorage.setItem("token", JSON.stringify(response.data.token));
         navigate("/workspace");
       }
-    } catch (error) {
-      console.log(error);
+    } catch (error: any) {
       if (error instanceof ValidationError) {
         toast.error(error.message);
+        return;
       }
-    } finally {
-      setLoading(false);
+
+      toast.error(error.response.data);
     }
-  }, []);
+  };
 
   return (
     <>
-      <ToastContainer
-        position="bottom-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-      />
-
-      <Centered>
-        <Formik initialValues={loginData} onSubmit={handleSubmit}>
-          {({ values, handleChange }) => (
-            <Form.Horizontal>
-              <Form.Group>
-                <Form.Title>Login</Form.Title>
-              </Form.Group>
-
-              <Form.Group>
-                <Form.Label>
-                  <Icon.Email />
-                </Form.Label>
-
-                <Form.Control
+      <section className="signin">
+        <Formik
+          enableReinitialize
+          onSubmit={handleSubmit}
+          initialValues={initialValues}
+        >
+          {({ handleChange, values, isSubmitting }) => (
+            <Form className="form-horizontal">
+              <div className="form-group form-flex">
+                <input
+                  id="email"
                   type="text"
                   autoComplete="email"
+                  className="form-control"
+                  placeholder="E-mail"
                   onChange={handleChange("email")}
                   value={values.email}
-                  placeholder="Email"
-                  disabled={loading}
+                  disabled={isSubmitting}
                 />
-              </Form.Group>
+                <label htmlFor="email" className="form-label">
+                  <BiEnvelope />
+                </label>
+              </div>
+              <div className="form-group">
+                <div className="form-flex">
+                  <input
+                    id="password"
+                    type="password"
+                    autoComplete="password"
+                    className="form-control"
+                    placeholder="Senha"
+                    onChange={handleChange("password")}
+                    value={values.password}
+                    disabled={isSubmitting}
+                  />
+                  <label htmlFor="password" className="form-label">
+                    <BiLockAlt />
+                  </label>
+                </div>
 
-              <Form.Group>
-                <Form.Label>
-                  <Icon.Lock />
-                </Form.Label>
+                <Link to="/" className="form-recover-password">
+                  Esqueci minha senha
+                </Link>
+              </div>
+              <div className="form-group">
+                <button
+                  type="submit"
+                  className="form-submit"
+                  disabled={isSubmitting}
+                >
+                  Entrar
+                </button>
+              </div>
 
-                <Form.Control
-                  type="password"
-                  autoComplete="current-password"
-                  onChange={handleChange("password")}
-                  value={values.password}
-                  placeholder="Password"
-                  disabled={loading}
-                />
-              </Form.Group>
+              <div className="form-group">
+                <hr className="form-divisor" />
+              </div>
 
-              <Form.Group>
-                <Form.Flex>
-                  <div>
-                    <input
-                      type="checkbox"
-                      onChange={handleChange("stayLoggedIn")}
-                      checked={values.stayLoggedIn}
-                      disabled={loading}
-                      id="remember"
-                    />
-                    <label htmlFor="remember">Remember me</label>
-                  </div>
-                  <Form.ForgotPassword to="/recover-password">
-                    Forgot your password?
-                  </Form.ForgotPassword>
-                </Form.Flex>
-              </Form.Group>
-
-              <Form.Group>
-                <Form.Submit type="submit">Login</Form.Submit>
-              </Form.Group>
-
-              <Form.Group>
-                <hr />
-              </Form.Group>
-
-              <Form.Group>
-                <Form.SignUp to="/signup">Sign up for an account</Form.SignUp>
-              </Form.Group>
-
-              <Form.Group>
-                <Form.ButtonGoogle>
-                  <Icon.Google />
-                  Sign up with Google
-                </Form.ButtonGoogle>
-              </Form.Group>
-            </Form.Horizontal>
+              <div className="form-group text-align-center">
+                <Link className="form-link-signup" to="/signup">
+                  Crie sua conta
+                </Link>
+                <button className="form-btn-google">
+                  <FcGoogle />
+                  Entre com Google
+                </button>
+              </div>
+            </Form>
           )}
         </Formik>
-      </Centered>
+      </section>
     </>
   );
 };

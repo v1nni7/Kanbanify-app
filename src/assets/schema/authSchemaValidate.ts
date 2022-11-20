@@ -1,32 +1,18 @@
-import { object, string, boolean, ref } from "yup";
+import * as Yup from "yup";
 
-export interface signInDataTypes {
-  email: string;
-  password: string;
-}
+const signUpSchema = Yup.object().shape({
+  termsConditions: Yup.boolean().oneOf([true], "Aceite os termos de condições"),
+  confirmPassword: Yup.string()
+    .required()
+    .oneOf([Yup.ref("password"), null], "As senhas não são iguais"),
+  password: Yup.string().required("Preencha o campo de senha"),
+  email: Yup.string().email().required("Preencha o campo de email"),
+  username: Yup.string().required("Preencha o campo de usuário"),
+});
 
-export interface signUpDataTypes extends signInDataTypes {
-  username: string;
-  confirmPassword: string;
-}
+const signInSchema = Yup.object().shape({
+  password: Yup.string().required("Preencha o campo de senha"),
+  email: Yup.string().email("Insira uma email válido").required("Preencha o campo de email"),
+});
 
-const signUp = (data: signUpDataTypes) => {
-  const schema = object({
-    termsConditions: boolean().oneOf([true], "You must accept the terms"),
-    confirmPassword: string().oneOf([ref("password"), null], "Passwords must match").required("Confirm password is required"),
-    password: string().min(6).required("Password is required"),
-    email: string().email().required("Email is required"),
-    username: string().required("Username is required"),
-  });
-  return schema.validate(data);
-};
-
-const signIn = (data: any) => {
-  const schema = object({
-    password: string().required("Password must be provided"),
-    email: string().email().required("Email must be provided"),
-  });
-  return schema.validate(data);
-};
-
-export default { signUp, signIn };
+export { signUpSchema, signInSchema };
