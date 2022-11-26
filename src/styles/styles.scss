@@ -44,7 +44,6 @@ button {
 }
 
 .toast-popup {
-
   .Toastify__toast--error,
   .Toastify__toast--success,
   .Toastify__toast--warning,
@@ -54,4 +53,9 @@ button {
     background-color: #444;
     font-family: "Lexend Deca";
   }
+}
+
+.flex-center {
+  display: flex;
+  align-items: center;
 }

@@ -1,16 +1,26 @@
 import { useState, useRef, useCallback } from "react";
 import { Draggable } from "react-beautiful-dnd";
-import { BiX } from "react-icons/bi";
+import { BiPlus, BiX } from "react-icons/bi";
 import Modal from "../Modal";
 
 interface TaskPropsType {
   task: {
     id: string;
     title: string;
-    display: { description: string; date: string; time: string };
+    display: {
+      description: string;
+      date: string;
+      time: string;
+      tags: [{ id: string; name: string }];
+    };
   };
   index: number;
   columnTitle: string;
+}
+
+interface ITag {
+  id: string;
+  name: string;
 }
 
 const Task = ({ index, task, columnTitle }: TaskPropsType) => {
@@ -25,19 +35,17 @@ const Task = ({ index, task, columnTitle }: TaskPropsType) => {
       <Draggable draggableId={task.id} index={index}>
         {(provided) => (
           <div
-            className="board-tasklist"
+            className="task"
             {...provided.draggableProps}
             {...provided.dragHandleProps}
             ref={provided.innerRef}
           >
-            <div
-              className="board-tasklist-item"
-              onClick={() => onToggleModal()}
-            >
-              <div className="board-tasklist-content">
-                <div className="board-tasklist-flex">
-                  <div className="board-tasklist-title">{task.title}</div>
-                </div>
+            <div className="task-container">
+              <div
+                className="board-tasklist-item"
+                onClick={() => onToggleModal()}
+              >
+                <div className="task-title">{task.title}</div>
               </div>
             </div>
           </div>
@@ -65,9 +73,14 @@ const Task = ({ index, task, columnTitle }: TaskPropsType) => {
         </div>
         <div className="modal-body">
           <ul className="list-tags">
-            <li className="list-tags-item">
-              
+            <li className="list-tags-item-create">
+              <BiPlus />
             </li>
+            {task.display.tags.map((tag: ITag, index: number) => (
+              <li className="list-tags-item" key={index}>
+                <span className="list-tags-item-title">{tag.name}</span>
+              </li>
+            ))}
           </ul>
         </div>
         <div className="modal-footer"></div>

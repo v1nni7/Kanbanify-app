@@ -6,7 +6,8 @@ import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { ValidationError } from "yup";
 import Column from "../components/BoardComponents/Column";
-import dataJson from "../assets/data/data.json";
+import data from "../assets/data/data.json";
+import { IBoard } from "../interface/boardInterfaces";
 
 interface BoardType {
   tasks: object;
@@ -16,13 +17,17 @@ interface BoardType {
 
 const BoardPage = () => {
   const { boardId }: any = useParams();
-  const [board, setBoard] = useState<SetStateAction<BoardType> | any>({
+  const [board, setBoard] = useState<IBoard>({
     tasks: {},
     columns: {},
     columnOrder: [],
   });
 
-  const handleDragEnd: any = useCallback(
+  console.log(board);
+
+  const [newTitle, setNewTitle] = useState("");
+
+  const handleDragEnd = useCallback(
     ({ destination, source, draggableId, type }: any) => {
       if (!destination) {
         return;
@@ -112,68 +117,15 @@ const BoardPage = () => {
     [board]
   );
 
-  const initialColumnValues = {
-    columnTitle: "",
-  };
-
-  const handleSubmitColumn = useCallback(
-    async (data: FormikValues) => {
-      try {
-        const newColumn = {
-          id: Math.random().toString(36).substr(2, 9),
-          title: data.columnTitle,
-          taskIds: [],
-        };
-
-        const newColumnOrder = Array.from(board.columnOrder);
-        newColumnOrder.push(newColumn.id);
-
-        const newState = {
-          ...board,
-          columns: {
-            ...board.columns,
-            [newColumn.id]: newColumn,
-          },
-          columnOrder: newColumnOrder,
-        };
-
-        setBoard(newState);
-
-        const oldBoardData = JSON.parse(localStorage.getItem("boards") as any);
-        const newBoardData = { ...oldBoardData, [boardId]: newState };
-        localStorage.setItem("boards", JSON.stringify(newBoardData));
-      } catch (error: any) {
-        if (error instanceof ValidationError) {
-          toast.error(error.message);
-        }
-
-        if (error.response) {
-          toast.error(error.response.data.message);
-        }
-      }
-    },
-    [board]
-  );
-
-  const loadingEmptyBoard = useCallback(() => {
-    try {
-      /* const boardStorage = JSON.parse(localStorage.getItem("boards") as any);
-      if (boardStorage[boardId]) {
-        setBoard(boardStorage[boardId]);
-      } */
-      setBoard(dataJson)
-    } catch (error) {
-      return error;
-    }
-  }, []);
+  const handleAddColumn = useCallback(async () => {}, []);
 
   useEffect(() => {
-    loadingEmptyBoard();
-  }, [loadingEmptyBoard]);
+    setBoard(data);
+  }, []);
 
   return (
     <>
-      <section className="board">
+      <main className="board-screen-wrapper">
         <DragDropContext onDragEnd={handleDragEnd}>
           <Droppable
             droppableId="all-columns"
@@ -182,15 +134,15 @@ const BoardPage = () => {
           >
             {(provided) => (
               <div
-                className="board-column-container"
+                className="board-content"
                 {...provided.droppableProps}
                 ref={provided.innerRef}
               >
                 {board.columnOrder ? (
-                  board.columnOrder.map((columnId: any, index: number) => {
+                  board.columnOrder.map((columnId: string, index: number) => {
                     const column = board.columns[columnId];
                     const tasks = column.taskIds.map(
-                      (taskId: any) => board.tasks[taskId]
+                      (taskId) => board.tasks[taskId]
                     );
 
                     return (
@@ -209,46 +161,22 @@ const BoardPage = () => {
                 )}
                 {provided.placeholder}
 
-                <div className="board-column-create">
-                  <Formik
-                    enableReinitialize
-                    initialValues={initialColumnValues}
-                    onSubmit={handleSubmitColumn}
-                  >
-                    {({
-                      handleChange,
-                      values,
-                      isSubmitting,
-                      resetForm,
-                      submitForm,
-                    }) => (
-                      <Form className="form-create-board-item">
-                        <input
-                          type="text"
-                          className="board-control"
-                          placeholder="Criar coluna"
-                          onChange={handleChange("columnTitle")}
-                          value={values.columnTitle}
-                        />
-                        <button
-                          type="button"
-                          onClick={() => {
-                            resetForm();
-                            submitForm();
-                          }}
-                          className="btn-board-submit"
-                        >
-                          <BiPlus />
-                        </button>
-                      </Form>
-                    )}
-                  </Formik>
+                <div className="column">
+                  <div className="column-container flex-center container-sm">
+                    <input
+                      type="text"
+                      className="column-input-create"
+                      placeholder="+ Adicionar nova coluna"
+                      onChange={(e) => setNewTitle(e.target.value)}
+                    />
+                  </div>
                 </div>
               </div>
             )}
           </Droppable>
         </DragDropContext>
-      </section>
+        <aside></aside>
+      </main>
     </>
   );
 };
