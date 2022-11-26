@@ -6,6 +6,7 @@ import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { ValidationError } from "yup";
 import Column from "../components/BoardComponents/Column";
+import dataJson from "../assets/data/data.json";
 
 interface BoardType {
   tasks: object;
@@ -23,9 +24,6 @@ const BoardPage = () => {
 
   const handleDragEnd: any = useCallback(
     ({ destination, source, draggableId, type }: any) => {
-      console.log(destination);
-
-      // Reorganizar as colunas
       if (!destination) {
         return;
       }
@@ -48,6 +46,9 @@ const BoardPage = () => {
         };
 
         setBoard(newState);
+        const oldBoardData = JSON.parse(localStorage.getItem("boards") as any);
+        const newBoard = { ...oldBoardData, [boardId]: newState };
+        localStorage.setItem("boards", JSON.stringify(newBoard));
         return;
       }
 
@@ -73,6 +74,9 @@ const BoardPage = () => {
         };
 
         setBoard(newBoardData);
+        const oldBoardData = JSON.parse(localStorage.getItem("boards") as any);
+        const newBoard = { ...oldBoardData, [boardId]: newBoardData };
+        localStorage.setItem("boards", JSON.stringify(newBoard));
         return;
       }
 
@@ -101,6 +105,9 @@ const BoardPage = () => {
       };
 
       setBoard(newState);
+      const oldBoardData = JSON.parse(localStorage.getItem("boards") as any);
+      const newBoard = { ...oldBoardData, [boardId]: newState };
+      localStorage.setItem("boards", JSON.stringify(newBoard));
     },
     [board]
   );
@@ -133,8 +140,8 @@ const BoardPage = () => {
         setBoard(newState);
 
         const oldBoardData = JSON.parse(localStorage.getItem("boards") as any);
-        const newBoarData = { ...oldBoardData, [boardId]: newState };
-        localStorage.setItem("boards", JSON.stringify(newBoarData));
+        const newBoardData = { ...oldBoardData, [boardId]: newState };
+        localStorage.setItem("boards", JSON.stringify(newBoardData));
       } catch (error: any) {
         if (error instanceof ValidationError) {
           toast.error(error.message);
@@ -148,12 +155,21 @@ const BoardPage = () => {
     [board]
   );
 
-  useEffect(() => {
-    const board = JSON.parse(localStorage.getItem("boards") as any)[boardId];
-    if(board) {
-      setBoard(board);
+  const loadingEmptyBoard = useCallback(() => {
+    try {
+      /* const boardStorage = JSON.parse(localStorage.getItem("boards") as any);
+      if (boardStorage[boardId]) {
+        setBoard(boardStorage[boardId]);
+      } */
+      setBoard(dataJson)
+    } catch (error) {
+      return error;
     }
   }, []);
+
+  useEffect(() => {
+    loadingEmptyBoard();
+  }, [loadingEmptyBoard]);
 
   return (
     <>
@@ -170,7 +186,7 @@ const BoardPage = () => {
                 {...provided.droppableProps}
                 ref={provided.innerRef}
               >
-                {board.columnOrder.length > 0 ? (
+                {board.columnOrder ? (
                   board.columnOrder.map((columnId: any, index: number) => {
                     const column = board.columns[columnId];
                     const tasks = column.taskIds.map(
@@ -195,10 +211,17 @@ const BoardPage = () => {
 
                 <div className="board-column-create">
                   <Formik
+                    enableReinitialize
                     initialValues={initialColumnValues}
                     onSubmit={handleSubmitColumn}
                   >
-                    {({ handleChange, values }) => (
+                    {({
+                      handleChange,
+                      values,
+                      isSubmitting,
+                      resetForm,
+                      submitForm,
+                    }) => (
                       <Form className="form-create-board-item">
                         <input
                           type="text"
@@ -207,7 +230,14 @@ const BoardPage = () => {
                           onChange={handleChange("columnTitle")}
                           value={values.columnTitle}
                         />
-                        <button type="submit" className="board-submit">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            resetForm();
+                            submitForm();
+                          }}
+                          className="btn-board-submit"
+                        >
                           <BiPlus />
                         </button>
                       </Form>

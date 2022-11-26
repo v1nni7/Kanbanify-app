@@ -22,11 +22,37 @@
       background-color: #444;
 
       .modal-header {
-        padding: 12px 24px;
+        padding: 12px;
         display: flex;
         font-size: 1.2rem;
         align-items: center;
         justify-content: space-between;
+
+        .modal-task-title {
+          color: #fff;
+          border: none;
+          font-size: 1.4rem;
+          background-color: transparent;
+        }
+
+        .btn-close-modal {
+          border: none;
+          display: flex;
+          color: #fff;
+          font-size: 2rem;
+          transition: .2s;
+          align-items: center;
+          justify-content: center;
+          background-color: transparent;
+
+          &:hover {
+            color: #ccc;
+          }
+        }
+
+        &.header-form {
+          padding: 12px 24px;
+        }
       }
 
       .modal-body {
@@ -76,6 +102,10 @@
         justify-content: flex-end;
         background-color: transparent;
       }
+    }
+
+    &.modal-dialog-lg {
+      width: 800px;
     }
   }
 

@@ -1,8 +1,10 @@
 import { Form, Formik, FormikValues } from "formik";
+import React, { FocusEventHandler } from "react";
 import { Draggable, Droppable } from "react-beautiful-dnd";
-import { BiPlus } from "react-icons/bi";
+import { BiCheck, BiPlus, BiX } from "react-icons/bi";
+import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import { ValidationError } from "yup";
+import { string, ValidationError } from "yup";
 import Task from "./Task";
 
 interface ColumnProps {
@@ -18,36 +20,84 @@ const Column = ({ column, tasks, index, board, setBoard }: ColumnProps) => {
     title: "",
   };
 
+  const { boardId }: any = useParams();
+
   const handleSubmitTask = async (data: FormikValues) => {
     try {
-      setBoard((prevState: any) => {
-        const newTask = {
-          id: Math.random().toString(36).substr(2, 9),
-          title: data.title,
-        };
+      const newTask = {
+        id: Math.random().toString(36).substr(2, 9),
+        title: data.title,
+        info: {
+          description: "",
+          date: "",
+          time: "",
+        },
+      };
 
-        const newTaskIds = Array.from(column.taskIds);
-        newTaskIds.push(newTask.id);
+      const newTasks = { ...board.tasks, [newTask.id]: newTask };
 
-        const newColumn = {
-          ...column,
-          taskIds: newTaskIds,
-        };
+      const newColumn = {
+        ...board.columns[column.id],
+        taskIds: [...board.columns[column.id].taskIds, newTask.id],
+      };
 
-        const newState = {
-          ...prevState,
-          tasks: {
-            ...prevState.tasks,
-            [newTask.id]: newTask,
-          },
-          columns: {
-            ...prevState.columns,
-            [newColumn.id]: newColumn,
-          },
-        };
+      const newColumns = { ...board.columns, [newColumn.id]: newColumn };
 
-        return newState;
-      });
+      const newState = {
+        ...board,
+        tasks: newTasks,
+        columns: newColumns,
+      };
+
+      setBoard(newState);
+
+      const oldBoard = JSON.parse(localStorage.getItem("boards") as any);
+      const newBoard = { ...oldBoard, [boardId]: newState };
+      localStorage.setItem("boards", JSON.stringify(newBoard));
+    } catch (error: any) {
+      if (error instanceof ValidationError) {
+        toast.error(error.message);
+      }
+
+      if (error.response) {
+        toast.error(error.response.data.message);
+      }
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key !== "Enter") {
+      return;
+    }
+
+    e.target.blur();
+    handleEditColumn(e);
+  };
+
+  const handleEditColumn = (
+    event:
+      | React.KeyboardEvent<HTMLInputElement>
+      | React.FocusEvent<HTMLInputElement>
+  ) => {
+    try {
+      const columnTitle: string = event.target.value;
+
+      const newColumn = {
+        ...board.columns[column.id],
+        title: columnTitle,
+      };
+
+      const newColumns = { ...board.columns, [newColumn.id]: newColumn };
+
+      const newState = {
+        ...board,
+        columns: newColumns,
+      };
+
+      setBoard(newState);
+      const oldBoardData = JSON.parse(localStorage.getItem("boards") as any);
+      const newBoard = { ...oldBoardData, [boardId]: newState };
+      localStorage.setItem("boards", JSON.stringify(newBoard));
     } catch (error: any) {
       if (error instanceof ValidationError) {
         toast.error(error.message);
@@ -70,7 +120,15 @@ const Column = ({ column, tasks, index, board, setBoard }: ColumnProps) => {
               ref={provided.innerRef}
             >
               <div className="board-column-title" {...provided.dragHandleProps}>
-                {column.title}
+                <input
+                  type="text"
+                  autoComplete="off"
+                  id="edit-column-title"
+                  className="column-title-input"
+                  defaultValue={column.title}
+                  onBlur={handleEditColumn}
+                  onKeyDown={handleKeyDown}
+                />
               </div>
               <Droppable droppableId={column.id} type="task">
                 {(provided) => (
@@ -104,7 +162,10 @@ const Column = ({ column, tasks, index, board, setBoard }: ColumnProps) => {
                                 onChange={handleChange("title")}
                                 value={values.title}
                               />
-                              <button className="board-submit" type="submit">
+                              <button
+                                className="btn-board-submit"
+                                type="submit"
+                              >
                                 <BiPlus />
                               </button>
                             </Form>

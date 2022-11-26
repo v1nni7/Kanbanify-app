@@ -117,7 +117,7 @@ const WorkspacePage = () => {
               {({ handleChange, isSubmitting, values }) => (
                 <>
                   <Form>
-                    <div className="modal-header">
+                    <div className="modal-header header-form">
                       <h5 className="modal-title">Criar quadro</h5>
                       <button
                         type="button"
