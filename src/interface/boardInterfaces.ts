@@ -55,16 +55,3 @@ interface IColumnProps {
 }
 
 export type { IBoard, IColumnProps };
-
-// task: {
-//   id: string;
-//   title: string;
-//   display: {
-//     description: string;
-//     date: string;
-//     time: string;
-//     tags: [{ id: string; name: string }];
-//   };
-// };
-// index: number;
-// columnTitle: string;
