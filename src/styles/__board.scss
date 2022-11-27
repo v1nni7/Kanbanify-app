@@ -50,7 +50,7 @@
           border-radius: 4px;
           padding: 8px;
           color: #fff;
-          transition: .2s;
+          transition: .2s ease-in-out;
           background-color: #3a3a3a;
           font-size: 1.2rem;
           outline: none;
@@ -65,16 +65,41 @@
           }
         }
 
-        .task {
-          flex-grow: 1;
+        .form-actions {
+          display: flex;
+          margin: 8px 0;
 
-          .task-container {
-            padding: 0 6px;
+          .btn-create {
+            width: 50%;
+            color: #fff;
+            font-size: 1rem;
+            cursor: pointer;
+            padding: 8px 4px;
+            border: none;
+            border-radius: $radius;
+            background-color: $primary-color;
 
-            .task-title {
-              padding: 10px;
-              border-radius: $radius;
-              background-color: #757575;
+            &:hover {
+              background-color: #9b44ff;
+            }
+          }
+
+          .btn-cancel {
+            width: 15%;
+            color: #fff;
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 8px 4px;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 8px;
+            border-radius: $radius;
+            background-color: #444;
+
+            &:hover {
+              background-color: #555;
             }
           }
         }
@@ -82,6 +107,93 @@
         &.container-sm {
           padding: 8px;
           min-height: 45px;
+        }
+
+        &.container-flex {
+          display: flex;
+          flex-direction: column;
+        }
+
+        &.show {
+          height: 95px;
+
+          .btn-create,
+          .btn-cancel {
+            transition: transform .4s ease-in-out;
+            transform: scale(1);
+          }
+        }
+
+        &.hidden {
+          height: 51px;
+
+          .btn-create,
+          .btn-cancel {
+            transition: transform .1s ease-in-out;
+            transform: scale(0);
+          }
+        }
+      }
+    }
+
+    .task {
+      flex-grow: 1;
+
+      .task-container {
+        padding: 4px 6px;
+        transition: .2s ease-in-out;
+
+        .task-title {
+          padding: 10px;
+          border-radius: $radius;
+          background-color: #757575;
+        }
+
+        .task-input-create {
+          width: 100%;
+          height: 35px;
+          padding: 8px;
+          display: block;
+          color: #fff;
+          border-radius: 4px;
+          font-size: 1rem;
+          outline: none;
+          transition: .2s ease-in-out;
+          background-color: #555;
+          border: 2px solid transparent;
+
+          &::placeholder {
+            color: #8d8d8d;
+          }
+
+          &:focus {
+            background-color: #666;
+            border: 2px solid $primary-color;
+
+            &::placeholder {
+              color: #9b9b9b;
+            }
+          }
+        }
+
+        &.show {
+          height: 85px;
+
+          .btn-create,
+          .btn-cancel {
+            transition: transform .4s ease-in-out;
+            transform: scale(1);
+          }
+        }
+
+        &.hidden {
+          height: 45px;
+
+          .btn-create,
+          .btn-cancel {
+            transition: transform .1s ease-in-out;
+            transform: scale(0);
+          }
         }
       }
     }

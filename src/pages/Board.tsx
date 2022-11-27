@@ -1,31 +1,25 @@
-import { Formik, FormikValues, Form } from "formik";
-import { useCallback, useState, SetStateAction, useEffect } from "react";
+import { useCallback, useState, useEffect } from "react";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
-import { BiPlus } from "react-icons/bi";
-import { useParams } from "react-router-dom";
+import { BiX } from "react-icons/bi";
+import { Params, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { ValidationError } from "yup";
 import Column from "../components/BoardComponents/Column";
-import data from "../assets/data/data.json";
 import { IBoard } from "../interface/boardInterfaces";
+import { Form, Formik, Field, FormikValues } from "formik";
 
-interface BoardType {
-  tasks: object;
-  columns: object;
-  columnOrder: TemplateStringsArray;
+interface IAddColumn {
+  resetForm: () => void;
 }
 
 const BoardPage = () => {
-  const { boardId }: any = useParams();
+  const { boardId }: Readonly<Params<string> | any> = useParams();
+
   const [board, setBoard] = useState<IBoard>({
     tasks: {},
     columns: {},
     columnOrder: [],
   });
-
-  console.log(board);
-
-  const [newTitle, setNewTitle] = useState("");
 
   const handleDragEnd = useCallback(
     ({ destination, source, draggableId, type }: any) => {
@@ -117,11 +111,51 @@ const BoardPage = () => {
     [board]
   );
 
-  const handleAddColumn = useCallback(async () => {}, []);
+  const handleAddColumn = useCallback(
+    async (values: FormikValues, { resetForm }: IAddColumn) => {
+      try {
+        const newColumn = {
+          id: Math.random().toString(36).substring(2, 9),
+          title: values.newTitle,
+          taskIds: [],
+        };
+
+        const newBoard = {
+          ...board,
+          columns: {
+            ...board?.columns,
+            [newColumn.id]: newColumn,
+          },
+          columnOrder: [...board?.columnOrder, newColumn.id],
+        };
+
+        setBoard(newBoard);
+        const oldBoardData = JSON.parse(localStorage.getItem("boards") as any);
+        const newBoardData = { ...oldBoardData, [boardId]: newBoard };
+        localStorage.setItem("boards", JSON.stringify(newBoardData));
+        resetForm();
+      } catch (error) {}
+    },
+    [board]
+  );
+
+  const loadingBoard = useCallback(() => {
+    try {
+      const boardStorage = JSON.parse(localStorage.getItem("boards") as any)[
+        boardId
+      ];
+
+      if (boardStorage) {
+        setBoard(boardStorage);
+      }
+    } catch (error) {
+      toast.success("Carregando quadro...");
+    }
+  }, []);
 
   useEffect(() => {
-    setBoard(data);
-  }, []);
+    loadingBoard();
+  }, [loadingBoard]);
 
   return (
     <>
@@ -162,14 +196,42 @@ const BoardPage = () => {
                 {provided.placeholder}
 
                 <div className="column">
-                  <div className="column-container flex-center container-sm">
-                    <input
-                      type="text"
-                      className="column-input-create"
-                      placeholder="+ Adicionar nova coluna"
-                      onChange={(e) => setNewTitle(e.target.value)}
-                    />
-                  </div>
+                  <Formik
+                    enableReinitialize
+                    onSubmit={handleAddColumn}
+                    initialValues={{ newTitle: "" }}
+                  >
+                    {({ handleChange, handleBlur, values, resetForm }) => (
+                      <Form
+                        className={`column-container container-flex container-sm ${
+                          values.newTitle ? "show" : "hidden close-anim"
+                        }`}
+                      >
+                        <Field
+                          type="text"
+                          id="new-column"
+                          autoComplete="off"
+                          className="column-input-create"
+                          placeholder="Adicionar nova coluna"
+                          onBlur={handleBlur("newTitle")}
+                          onChange={handleChange("newTitle")}
+                          value={values.newTitle}
+                        />
+                        <div className="form-actions">
+                          <button type="submit" className="btn-create">
+                            Adicionar coluna
+                          </button>
+                          <button
+                            type="button"
+                            className="btn-cancel"
+                            onClick={() => resetForm()}
+                          >
+                            <BiX />
+                          </button>
+                        </div>
+                      </Form>
+                    )}
+                  </Formik>
                 </div>
               </div>
             )}

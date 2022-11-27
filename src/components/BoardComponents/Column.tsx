@@ -1,14 +1,102 @@
-import { Form, Formik, FormikValues } from "formik";
-import React, { FocusEventHandler } from "react";
+import { Field, Form, Formik, FormikValues } from "formik";
+import { useCallback } from "react";
 import { Draggable, Droppable } from "react-beautiful-dnd";
 import { BiCheck, BiPlus, BiX } from "react-icons/bi";
-import { useParams } from "react-router-dom";
+import { Params, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { string, ValidationError } from "yup";
 import { IColumnProps } from "../../interface/boardInterfaces";
 import Task from "./Task";
 
+interface IAddTask {
+  resetForm: () => void;
+}
+
 const Column = ({ column, tasks, index, board, setBoard }: IColumnProps) => {
+  const { boardId }: Readonly<Params<string> | any> = useParams();
+  const handleKeyPress = useCallback(
+    (e: React.KeyboardEvent<HTMLInputElement>) => {
+      e.preventDefault();
+      if (e.key !== "Enter") {
+        return;
+      }
+
+      e.target.blur();
+      handleEditColumn(column.id, e.target.value);
+    },
+    [column.id]
+  );
+
+  const handleEditColumn = useCallback(
+    (columnId: string, title: string) => {
+      try {
+        const newBoardData = {
+          ...board,
+          columns: {
+            ...board?.columns,
+            [columnId]: {
+              ...board?.columns[columnId],
+              title,
+            },
+          },
+        };
+
+        setBoard(newBoardData);
+        const oldBoardData = JSON.parse(localStorage.getItem("boards") as any);
+        const newBoard = { ...oldBoardData, [boardId]: newBoardData };
+        localStorage.setItem("boards", JSON.stringify(newBoard));
+      } catch (error) {
+        toast.error("Não foi possível editar a coluna");
+      }
+    },
+    [board]
+  );
+
+  const handleAddTask = useCallback(
+    (values: FormikValues, { resetForm }: IAddTask) => {
+      try {
+        const newTask = {
+          id: Math.random().toString(36).substring(2, 9),
+          title: values.newTitle,
+          totalCheckbox: 0,
+          completedCheckbox: 0,
+          display: {
+            description: "",
+            date: "",
+            time: "",
+            tags: [],
+          },
+        };
+
+        const newTasks = { ...board.tasks, [newTask.id]: newTask };
+
+        const newColumn = {
+          ...board.columns[column.id],
+          taskIds: [...board.columns[column.id].taskIds, newTask.id],
+        };
+
+        const newColumns = { ...board.columns, [newColumn.id]: newColumn };
+
+        const newState = {
+          ...board,
+          tasks: newTasks,
+          columns: newColumns,
+        };
+
+        setBoard(newState);
+
+        const oldBoard = JSON.parse(localStorage.getItem("boards") as any);
+        const newBoard = { ...oldBoard, [boardId]: newState };
+        localStorage.setItem("boards", JSON.stringify(newBoard));
+
+        resetForm();
+      } catch (error: any) {
+        console.log(error);
+      }
+    },
+    [boardId, board, column, setBoard, tasks]
+  );
+
   return (
     <>
       <Draggable draggableId={column.id} index={index}>
@@ -26,6 +114,8 @@ const Column = ({ column, tasks, index, board, setBoard }: IColumnProps) => {
                   id="edit-column-title"
                   className="column-title-editable"
                   defaultValue={column.title}
+                  onKeyUp={handleKeyPress}
+                  onBlur={(e) => handleEditColumn(column.id, e.target.value)} 
                 />
               </div>
               <Droppable droppableId={column.id} type="task">
@@ -41,17 +131,40 @@ const Column = ({ column, tasks, index, board, setBoard }: IColumnProps) => {
                     ))}
                     {provided.placeholder}
 
-                    <div className="board-task-create">
-                      <div className="board-task-create-background">
-                        <input
-                          type="text"
-                          placeholder="Criar tarefa"
-                          className="board-control"
-                        />
-                        <button className="btn-board-submit" type="submit">
-                          <BiPlus />
-                        </button>
-                      </div>
+                    <div className="task">
+                      <Formik
+                        enableReinitialize
+                        onSubmit={handleAddTask}
+                        initialValues={{ newTitle: "" }}
+                      >
+                        {({ handleChange, values, resetForm }) => (
+                          <Form
+                            className={`task-container ${
+                              values.newTitle ? "show" : "hidden"
+                            }`}
+                          >
+                            <Field
+                              id="new-task"
+                              className="task-input-create"
+                              value={values.newTitle}
+                              placeholder="Adicionar nova tarefa"
+                              onChange={handleChange("newTitle")}
+                            />
+                            <div className="form-actions">
+                              <button type="submit" className="btn-create">
+                                Adicionar tarefa
+                              </button>
+                              <button
+                                type="button"
+                                className="btn-cancel"
+                                onClick={() => resetForm()}
+                              >
+                                <BiPlus />
+                              </button>
+                            </div>
+                          </Form>
+                        )}
+                      </Formik>
                     </div>
                   </div>
                 )}
