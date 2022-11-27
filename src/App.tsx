@@ -6,7 +6,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 import PrivateRoute from "./components/Private/PrivateRoute";
 import AuthContextProvider from "./hooks/context/AuthContext";
-import { Home, Workspace, SignIn, SignUp, Board } from "./pages";
+import { Home, Workspace, SignIn, SignUp, Board, Test } from "./pages";
 import GlobalStyles from "./assets/styles/Global";
 import ToastPopUp from "./components/ToastPopUp";
 import Navbar from "./components/Navbar";
@@ -44,6 +44,8 @@ const App = () => {
                 </PrivateRoute>
               }
             />
+            <Route path="/test" element={<Test />} />
+            <Route path="*" element={<h1>404</h1>} />
           </Routes>
         </BrowserRouter>
       </AuthContextProvider>

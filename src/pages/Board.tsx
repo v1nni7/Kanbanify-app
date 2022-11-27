@@ -7,6 +7,7 @@ import { ValidationError } from "yup";
 import Column from "../components/BoardComponents/Column";
 import { IBoard } from "../interface/boardInterfaces";
 import { Form, Formik, Field, FormikValues } from "formik";
+import useStorage from "../hooks/useStorage";
 
 interface IAddColumn {
   resetForm: () => void;
@@ -14,6 +15,8 @@ interface IAddColumn {
 
 const BoardPage = () => {
   const { boardId }: Readonly<Params<string> | any> = useParams();
+
+  const { getStorage, saveStorage } = useStorage();
 
   const [board, setBoard] = useState<IBoard>({
     tasks: {},
@@ -45,9 +48,7 @@ const BoardPage = () => {
         };
 
         setBoard(newState);
-        const oldBoardData = JSON.parse(localStorage.getItem("boards") as any);
-        const newBoard = { ...oldBoardData, [boardId]: newState };
-        localStorage.setItem("boards", JSON.stringify(newBoard));
+        saveStorage(boardId, newState);
         return;
       }
 
@@ -73,9 +74,7 @@ const BoardPage = () => {
         };
 
         setBoard(newBoardData);
-        const oldBoardData = JSON.parse(localStorage.getItem("boards") as any);
-        const newBoard = { ...oldBoardData, [boardId]: newBoardData };
-        localStorage.setItem("boards", JSON.stringify(newBoard));
+        saveStorage(boardId, newBoardData);
         return;
       }
 
@@ -104,9 +103,7 @@ const BoardPage = () => {
       };
 
       setBoard(newState);
-      const oldBoardData = JSON.parse(localStorage.getItem("boards") as any);
-      const newBoard = { ...oldBoardData, [boardId]: newState };
-      localStorage.setItem("boards", JSON.stringify(newBoard));
+      saveStorage(boardId, newState);
     },
     [board]
   );
@@ -130,9 +127,8 @@ const BoardPage = () => {
         };
 
         setBoard(newBoard);
-        const oldBoardData = JSON.parse(localStorage.getItem("boards") as any);
-        const newBoardData = { ...oldBoardData, [boardId]: newBoard };
-        localStorage.setItem("boards", JSON.stringify(newBoardData));
+        saveStorage(boardId, newBoard);
+
         resetForm();
       } catch (error) {}
     },

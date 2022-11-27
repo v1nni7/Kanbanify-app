@@ -5,6 +5,7 @@ import { BiCheck, BiPlus, BiX } from "react-icons/bi";
 import { Params, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { string, ValidationError } from "yup";
+import useStorage from "../../hooks/useStorage";
 import { IColumnProps } from "../../interface/boardInterfaces";
 import Task from "./Task";
 
@@ -14,6 +15,9 @@ interface IAddTask {
 
 const Column = ({ column, tasks, index, board, setBoard }: IColumnProps) => {
   const { boardId }: Readonly<Params<string> | any> = useParams();
+
+  const { saveStorage } = useStorage();
+
   const handleKeyPress = useCallback(
     (e: React.KeyboardEvent<HTMLInputElement>) => {
       e.preventDefault();
@@ -42,9 +46,7 @@ const Column = ({ column, tasks, index, board, setBoard }: IColumnProps) => {
         };
 
         setBoard(newBoardData);
-        const oldBoardData = JSON.parse(localStorage.getItem("boards") as any);
-        const newBoard = { ...oldBoardData, [boardId]: newBoardData };
-        localStorage.setItem("boards", JSON.stringify(newBoard));
+        saveStorage(boardId, newBoardData);
       } catch (error) {
         toast.error("Não foi possível editar a coluna");
       }
@@ -84,10 +86,7 @@ const Column = ({ column, tasks, index, board, setBoard }: IColumnProps) => {
         };
 
         setBoard(newState);
-
-        const oldBoard = JSON.parse(localStorage.getItem("boards") as any);
-        const newBoard = { ...oldBoard, [boardId]: newState };
-        localStorage.setItem("boards", JSON.stringify(newBoard));
+        saveStorage(boardId, newState);
 
         resetForm();
       } catch (error: any) {
@@ -115,7 +114,7 @@ const Column = ({ column, tasks, index, board, setBoard }: IColumnProps) => {
                   className="column-title-editable"
                   defaultValue={column.title}
                   onKeyUp={handleKeyPress}
-                  onBlur={(e) => handleEditColumn(column.id, e.target.value)} 
+                  onBlur={(e) => handleEditColumn(column.id, e.target.value)}
                 />
               </div>
               <Droppable droppableId={column.id} type="task">
