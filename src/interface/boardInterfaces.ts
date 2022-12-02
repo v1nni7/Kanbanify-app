@@ -52,6 +52,14 @@ interface IColumnProps {
   index: number;
   board: IBoard;
   setBoard: Function;
+  children?: React.ReactNode;
 }
 
-export type { IBoard, IColumnProps };
+interface ITaskProps {
+  task: ITask;
+  index: number;
+  setTaskModal: Function;
+  setModalOpen: Function;
+}
+
+export type { IBoard, IColumn, ITask, IColumnProps, ITaskProps };

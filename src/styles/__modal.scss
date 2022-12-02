@@ -5,6 +5,7 @@
   width: 100%;
   height: 100%;
   display: none;
+  cursor: initial;
   position: fixed;
   background-color: rgba(0, 0, 0, 0.5);
 
@@ -18,6 +19,8 @@
 
     .modal-content {
       width: 100%;
+      min-height: 600px;
+      position: relative;
       border-radius: $radius;
       background-color: #444;
 
@@ -101,6 +104,33 @@
         align-items: center;
         justify-content: flex-end;
         background-color: transparent;
+      }
+
+      .modal-loading {
+        width: 100%;
+        height: 100%;
+        padding: 12px;
+        display: flex;
+        position: absolute;
+        align-items: center;
+        justify-content: center;
+      }
+    }
+
+    .modal-wrap-input {
+      display: flex;
+      flex-direction: column;
+
+      label {
+       
+      }
+
+      textarea {
+        display: none;
+
+        &:focus {
+          display: block;
+        }
       }
     }
 

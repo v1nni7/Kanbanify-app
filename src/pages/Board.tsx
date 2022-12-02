@@ -3,7 +3,6 @@ import { DragDropContext, Droppable } from "react-beautiful-dnd";
 import { BiX } from "react-icons/bi";
 import { Params, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import { ValidationError } from "yup";
 import Column from "../components/BoardComponents/Column";
 import { IBoard } from "../interface/boardInterfaces";
 import { Form, Formik, Field, FormikValues } from "formik";
@@ -23,6 +22,8 @@ const BoardPage = () => {
     columns: {},
     columnOrder: [],
   });
+
+  console.log(board)
 
   const handleDragEnd = useCallback(
     ({ destination, source, draggableId, type }: any) => {
@@ -168,27 +169,23 @@ const BoardPage = () => {
                 {...provided.droppableProps}
                 ref={provided.innerRef}
               >
-                {board.columnOrder ? (
-                  board.columnOrder.map((columnId: string, index: number) => {
-                    const column = board.columns[columnId];
-                    const tasks = column.taskIds.map(
-                      (taskId) => board.tasks[taskId]
-                    );
+                {board.columnOrder.map((columnId: string, index: number) => {
+                  const column = board.columns[columnId];
+                  const tasks = column.taskIds.map(
+                    (taskId) => board.tasks[taskId]
+                  );
 
-                    return (
-                      <Column
-                        key={column.id}
-                        column={column}
-                        tasks={tasks}
-                        index={index}
-                        board={board}
-                        setBoard={setBoard}
-                      />
-                    );
-                  })
-                ) : (
-                  <></>
-                )}
+                  return (
+                    <Column
+                      key={column.id}
+                      column={column}
+                      tasks={tasks}
+                      index={index}
+                      board={board}
+                      setBoard={setBoard}
+                    />
+                  );
+                })}
                 {provided.placeholder}
 
                 <div className="column">

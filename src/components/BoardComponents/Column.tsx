@@ -1,12 +1,14 @@
 import { Field, Form, Formik, FormikValues } from "formik";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import { Draggable, Droppable } from "react-beautiful-dnd";
 import { BiCheck, BiPlus, BiX } from "react-icons/bi";
+import { TailSpin } from "react-loader-spinner";
 import { Params, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { string, ValidationError } from "yup";
 import useStorage from "../../hooks/useStorage";
 import { IColumnProps } from "../../interface/boardInterfaces";
+import Modal from "../Modal";
 import Task from "./Task";
 
 interface IAddTask {
@@ -15,6 +17,8 @@ interface IAddTask {
 
 const Column = ({ column, tasks, index, board, setBoard }: IColumnProps) => {
   const { boardId }: Readonly<Params<string> | any> = useParams();
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
+  const [taskModal, setTaskModal] = useState<any>(null);
 
   const { saveStorage } = useStorage();
 
@@ -125,7 +129,8 @@ const Column = ({ column, tasks, index, board, setBoard }: IColumnProps) => {
                         key={task.id}
                         task={task}
                         index={index}
-                        columnTitle={column.title}
+                        setModalOpen={setModalOpen}
+                        setTaskModal={setTaskModal}
                       />
                     ))}
                     {provided.placeholder}
@@ -144,6 +149,7 @@ const Column = ({ column, tasks, index, board, setBoard }: IColumnProps) => {
                           >
                             <Field
                               id="new-task"
+                              autoComplete="off"
                               className="task-input-create"
                               value={values.newTitle}
                               placeholder="Adicionar nova tarefa"
@@ -172,6 +178,34 @@ const Column = ({ column, tasks, index, board, setBoard }: IColumnProps) => {
           </div>
         )}
       </Draggable>
+      <Modal isModalLarge modalOpen={modalOpen} setModalOpen={setModalOpen}>
+        {taskModal ? (
+          <>
+            <div className="modal-header">{taskModal?.title}</div>
+            <div className="modal-body">
+              <div className="modal-wrap-input">
+                <label htmlFor="">Adicione uma descrição</label>
+                <textarea name="" id="description"></textarea>
+              </div>
+            </div>
+            <div className="modal-footer"></div>
+          </>
+        ) : (
+          <>
+            <div className="modal-loading">
+              <TailSpin
+                height="60"
+                width="60"
+                color="#a555ff"
+                ariaLabel="tail-spin-loading"
+                radius="1"
+                wrapperClass=""
+                visible={true}
+              />
+            </div>
+          </>
+        )}
+      </Modal>
     </>
   );
 };

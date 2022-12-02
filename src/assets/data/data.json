@@ -6,7 +6,7 @@
       "totalCheckbox": 6,
       "completedCheckbox": 2,
       "display": {
-        "description": "Descrição da tarefa",
+        "description": "Descrição da tarefa 1",
         "date": "2020-10-10",
         "time": "10:00",
         "tags": [
@@ -31,7 +31,7 @@
       "totalCheckbox": 6,
       "completedCheckbox": 2,
       "display": {
-        "description": "Descrição da tarefa",
+        "description": "Descrição da tarefa 2",
         "date": "2020-10-10",
         "time": "10:00",
         "tags": [
@@ -55,8 +55,13 @@
     "column-1": {
       "id": "column-1",
       "title": "Em andamento",
-      "taskIds": ["task-1", "task-2"]
+      "taskIds": ["task-1"]
+    },
+    "column-2": {
+      "id": "column-2",
+      "title": "Concluído",
+      "taskIds": ["task-2"]
     }
   },
-  "columnOrder": ["column-1"]
+  "columnOrder": ["column-1", "column-2"]
 }
