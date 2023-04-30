@@ -1,8 +1,8 @@
 "use client";
 
-import { setCookie } from "nookies";
+import { setCookie, parseCookies } from "nookies";
 import { useRouter } from "next/navigation";
-import { createContext, ReactNode, useState } from "react";
+import { createContext, ReactNode, useLayoutEffect, useState } from "react";
 import { getUserRequest, signInRequest } from "@/services/user";
 import { api } from "@/services/api";
 
@@ -31,7 +31,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
 
   const signIn = async ({ email, password }: User) => {
-    const { token }: SignInRequestResponse = await signInRequest({ email, password });
+    const { token }: SignInRequestResponse = await signInRequest({
+      email,
+      password,
+    });
 
     if (!token) return;
 
@@ -41,14 +44,11 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
     api.defaults.headers["Authorization"] = `Bearer ${token}`;
 
-    console.log("loading...")
     await loadingUser();
 
     setIsAuthenticated(true);
 
-    console.log("pushing...")
-    router.push("/");
-    console.log("pushed")
+    router.push("/boards");
 
     return;
   };
@@ -58,10 +58,24 @@ export function AuthProvider({ children }: AuthProviderProps) {
       const user = await getUserRequest();
 
       setUser(user);
+      setCookie(undefined, "kanban.user", JSON.stringify(user), {
+        maxAge: 60 * 60 * 24 * 14, // 14 days
+      });
     } catch (error: any) {
       throw new Error(error);
     }
   };
+
+  useLayoutEffect(() => {
+    const { "kanban.user": user } = parseCookies();
+
+    if (user) {
+      const parsedUser = JSON.parse(user);
+
+      setUser(parsedUser);
+      setIsAuthenticated(true);
+    }
+  }, []);
 
   return (
     <AuthContext.Provider value={{ isAuthenticated, signIn, user }}>

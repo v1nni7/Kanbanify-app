@@ -20,8 +20,14 @@ export default function RootLayout({
 }) {
   return (
     <html className="dark" lang="en">
-      <body className={`bg-neutral-800 ${lexendDeca.className}`}>
-        <AuthProvider>{children}</AuthProvider>
+      <body className={`bg-slate-900 ${lexendDeca.className}`}>
+        <AuthProvider>
+          <section className="container mx-auto h-screen py-10">
+            <div className="rounded-lg shadow animate-fade overflow-hidden h-full relative bg-slate-800">
+              {children}
+            </div>
+          </section>
+        </AuthProvider>
       </body>
     </html>
   );
