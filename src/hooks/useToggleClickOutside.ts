@@ -8,7 +8,7 @@ import {
   useState,
 } from "react";
 
-export default function useToggle(defaultValue: boolean): [boolean, () => void, RefObject<HTMLElement> | any, RefObject<HTMLButtonElement>] {
+export default function useToggleClickOutside(defaultValue: boolean): [boolean, () => void, RefObject<HTMLElement> | any, RefObject<HTMLButtonElement>] {
   const [value, setValue] = useState(defaultValue);
 
   const elementRef = useRef<HTMLElement>(null);

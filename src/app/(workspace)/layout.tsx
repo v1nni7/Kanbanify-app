@@ -51,7 +51,7 @@ export default function WorkspaceLayout({ children }: WorkspaceLayoutProps) {
           <ul
             className={`${
               dropdownOpen ? "visible" : "hidden"
-            } w-[160px] rounded-md shadow shadow-inner bg-slate-600 right-0 top-12 absolute overflow-hidden`}
+            } w-[160px] rounded-md shadow shadow-inner bg-slate-600 right-0 top-12 absolute overflow-hidden z-10`}
             ref={elementRef}
           >
             <li className="text-slate-200 hover:bg-slate-500 transition text-center p-2">
