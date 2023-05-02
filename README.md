@@ -1,53 +1,36 @@
-<h1>Aplicação para organização de tarefas</h1>
+This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-<p>Projeto desenvolvido com muito carinho para ser um organizar de tarefas e tempo :D</p>
+## Getting Started
 
-<h2>Instalando e iniciando o projeto</h2>
+First, run the development server:
 
-1. Faça um clone do repositório do projeto (necessário ter o git)
-```
-git clone https://github.com/v1nni7/tasks-app-vitets.git
-```
-
-2. Entre na pasta raiz do projeto e instale as dependências (necessário ter NPM ou Yarn)
-```
-npm install
+```bash
+npm run dev
+# or
+yarn dev
+# or
+pnpm dev
 ```
 
-3. Rode o projeto
-```
-npm start
-```
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-<h2>Tecnologias Utilizadas</h2>
-<ul>
-  <li>React</li>
-  <li>Vite</li>
-  <li>TypeScript</li>
-  <li>SCSS</li>
-</ul>
+You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-<h2>Dependências Utilizadas</h2>
-<ul>
-  <li>Formik</li>
-  <li>Yup</li>
-  <li>React Beautiful Dnd</li>
-  <li>React Icons</li>
-</ul>
+[http://localhost:3000/api/hello](http://localhost:3000/api/hello) is an endpoint that uses [Route Handlers](https://beta.nextjs.org/docs/routing/route-handlers). This endpoint can be edited in `app/api/hello/route.ts`.
 
-**Atenção:** **A lógica para a criação dos cards arrastaveis foram criadas acompanhando o seguinte tutorial do site <a href="https://egghead.io/lessons/react-course-introduction-beautiful-and-accessible-drag-and-drop-with-react-beautiful-dnd">Egg Head</a> e ainda estou estudando essa lógica e como ela funciona!**
+This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
 
-<h2>Branchs</h2>
-<code>main</code>: Branch utilizada para fazer deploy de versões estáveis do projeto <br />
-<code>development</code>: Branch utilizada para desenvolver e testar novas features do projeto
+## Learn More
 
-<h2>Algumas informações</h2>
+To learn more about Next.js, take a look at the following resources:
 
-<h3>Ao usar o <code>npm start</code> onde o projeto abrirá?</h3>
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
->O projeto abrirá na seguinte url <a href="http://localhost:3000" target="_blank">http://localhost:3000</a> <br>
+You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
 
-<h3>É possível mudar a porta do projeto?</h3>
+## Deploy on Vercel
 
->Simm!! Para isso basta abrir o arquivo <code>vite.config.ts</code> e mudar o atributo <code>port</code> para o valor que desejar <br> 
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
+Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
