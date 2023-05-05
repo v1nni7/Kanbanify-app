@@ -2,6 +2,8 @@
 
 import { useCallback, useRef, useState } from "react";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
+import { useForm } from "react-hook-form";
+import { BiX } from "react-icons/bi";
 
 export type TypeData = {
   tasks: any;
@@ -48,11 +50,12 @@ const initialData: TypeData = {
       taskIds: ["task-3", "task-4"],
     },
   },
-  columnOrder: ["column-1", "column-2"],
+  columnOrder: [],
 };
 
 export default function Board({ params }: { params: { boardUrl: string } }) {
   const [board, setBoard] = useState<any>(initialData);
+  const { handleSubmit, register, resetField } = useForm();
 
   const handleDragEnd = useCallback(
     ({ destination, source, draggableId, type }: any) => {
@@ -135,6 +138,31 @@ export default function Board({ params }: { params: { boardUrl: string } }) {
     [board]
   );
 
+  const onSubmit = ({ title }: any) => {
+    const newColumnId = `column-${Math.floor(Math.random() * 1000)}`;
+
+    const newColumn = {
+      id: newColumnId,
+      title,
+      taskIds: [],
+    };
+
+    const newState = {
+      ...board,
+      columns: {
+        ...board?.columns,
+        [newColumnId]: newColumn,
+      },
+
+      columnOrder: [...board.columnOrder, newColumnId],
+    };
+
+    console.log(newState);
+
+    setBoard(newState);
+    resetField("title");
+  };
+
   return (
     <>
       <section className="flex h-[calc(100%-84px)] items-center relative">
@@ -169,10 +197,34 @@ export default function Board({ params }: { params: { boardUrl: string } }) {
                         column={column}
                         tasks={tasks}
                         index={index}
+                        board={board}
+                        setBoard={setBoard}
                       />
                     );
                   })}
                   {placeholder}
+
+                  <div className="h-full flex items-start">
+                    <form
+                      onSubmit={handleSubmit(onSubmit)}
+                      className="w-64 min-h-[62px] flex items-start flex-col justify-start bg-slate-700 rounded-md p-1 px-2 transition"
+                    >
+                      <input
+                        type="text"
+                        placeholder="New column"
+                        {...register("title")}
+                        className="w-full peer rounded-md text-slate-200 bg-slate-700 border border-slate-700 focus:border-slate-500 focus:bg-slate-600 transition outline-0 my-2 p-1"
+                      />
+                      <div className="flex items-center hidden peer-focus:flex pb-2">
+                        <button className="text-slate-200 bg-blue-500 hover:bg-blue-600 rounded-md mr-2 p-1">
+                          Add column
+                        </button>
+                        <button className="text-slate-200 bg-neutral-500 hover:bg-neutral-600 rounded-md p-2">
+                          <BiX />
+                        </button>
+                      </div>
+                    </form>
+                  </div>
                 </div>
               )}
             </Droppable>
@@ -183,8 +235,38 @@ export default function Board({ params }: { params: { boardUrl: string } }) {
   );
 }
 
-function Column({ column, tasks, index }: any) {
+function Column({ column, tasks, index, board, setBoard }: any) {
   const inputRef = useRef<HTMLInputElement>(null);
+  const { register, handleSubmit, resetField } = useForm();
+
+  const onSubmit = (data: any) => {
+    const newTaskId = `task-${Math.floor(Math.random() * 1000)}`;
+
+    const newTask = {
+      id: newTaskId,
+      title: data.title,
+      description: "",
+    };
+
+    const newState = {
+      ...board,
+      tasks: {
+        ...board?.tasks,
+        [newTaskId]: newTask,
+      },
+
+      columns: {
+        ...board?.columns,
+        [column.id]: {
+          ...column,
+          taskIds: [...column.taskIds, newTaskId],
+        },
+      },
+    };
+
+    setBoard(newState);
+    resetField("title");
+  };
 
   return (
     <Draggable draggableId={column.id} index={index}>
@@ -213,6 +295,25 @@ function Column({ column, tasks, index }: any) {
                     ))}
                   </div>
                   {placeholder}
+
+                  <div className="p-1">
+                    <form onSubmit={handleSubmit(onSubmit)}>
+                      <input
+                        type="text"
+                        placeholder="Add task"
+                        {...register("title")}
+                        className="w-full peer text-slate-200 bg-slate-700 border border-slate-700 focus:bg-slate-600 focus:border-slate-500 transition rounded-md outline-0 focus:mb-2 p-1"
+                      />
+                      <div className="flex items-center hidden peer-focus:flex">
+                        <button type="submit" className="text-slate-200 bg-blue-500 hover:bg-blue-600 rounded-md mr-2 p-1">
+                          Add task
+                        </button>
+                        <button type="button" className="text-slate-200 bg-neutral-500 hover:bg-neutral-600 rounded-md p-2">
+                          <BiX />
+                        </button>
+                      </div>
+                    </form>
+                  </div>
                 </>
               )}
             </Droppable>
@@ -233,7 +334,9 @@ function Task({ index, task }: any) {
           {...dragHandleProps}
           className="p-1 group"
         >
-          <div className="rounded-md group-active:bg-slate-500/80 group-active:rotate-2 transition p-2 bg-slate-600 text-slate-200">{task.title}</div>
+          <div className="rounded-md group-active:bg-slate-500/80 group-active:rotate-2 transition p-2 bg-slate-600 text-slate-200">
+            {task.title}
+          </div>
         </div>
       )}
     </Draggable>
