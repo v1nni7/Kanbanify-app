@@ -1,10 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { useContext, useEffect, useRef, useState } from "react";
-import { AuthContext } from "@/context/AuthContext";
 import { BiCaretDown } from "react-icons/bi";
 import useToggleClickOutside from "@/hooks/useToggleClickOutside";
+import { signOut } from "next-auth/react";
 
 type WorkspaceLayoutProps = {
   children: React.ReactNode;
@@ -13,8 +12,6 @@ type WorkspaceLayoutProps = {
 export default function WorkspaceLayout({ children }: WorkspaceLayoutProps) {
   const [dropdownOpen, toggle, elementRef, buttonRef] =
     useToggleClickOutside(false);
-
-  const { user } = useContext(AuthContext);
 
   return (
     <>
@@ -43,7 +40,7 @@ export default function WorkspaceLayout({ children }: WorkspaceLayoutProps) {
           >
             <img
               className="w-10 h-10 object-cover rounded-md border-2 border-slate-400"
-              src={user.profilePicture}
+              src={""}
               alt=""
             />
             <BiCaretDown className="text-slate-200" />
@@ -60,9 +57,7 @@ export default function WorkspaceLayout({ children }: WorkspaceLayoutProps) {
               </Link>
             </li>
             <li className="text-slate-200 hover:bg-red-400 transition text-center p-2">
-              <Link className="block" href="/profile">
-                Exit
-              </Link>
+              <button onClick={() => signOut()}>Exit</button>
             </li>
           </ul>
         </div>

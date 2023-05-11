@@ -1,17 +1,24 @@
 import axios from "axios";
+import { getSession } from "next-auth/react";
 import { GetServerSidePropsContext } from "next";
 import { parseCookies } from "nookies";
 
 export default function getAPIClient(ctx?: GetServerSidePropsContext) {
-  const { "kanban.token": token } = parseCookies(ctx);
-
   const api = axios.create({
     baseURL: process.env.NEXT_PUBLIC_API_URL,
   });
 
-  if (token) {
-    api.defaults.headers["Authorization"] = `Bearer ${token}`;
-  }
+  api.interceptors.request.use(async (config) => {
+    const {
+      user: { accessToken },
+    } = await getSession();
+
+    if (accessToken) {
+      config.headers["Authorization"] = `Bearer ${accessToken}`;
+    }
+
+    return config;
+  });
 
   return api;
 }

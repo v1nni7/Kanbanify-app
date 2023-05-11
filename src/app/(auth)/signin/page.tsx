@@ -1,11 +1,12 @@
 "use client";
 
-import { AuthContext } from "@/context/AuthContext";
 import Link from "next/link";
 import { useContext, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { BiEnvelope, BiLock } from "react-icons/bi";
 import { TailSpin } from "react-loader-spinner";
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 type FieldValues = {
   email: string;
@@ -13,13 +14,26 @@ type FieldValues = {
 };
 
 export default function Signin() {
-  const { signIn } = useContext(AuthContext);
+  const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const { handleSubmit, register } = useForm<FieldValues>();
 
-  const onSubmit: SubmitHandler<FieldValues> = async (data) => {
+  const onSubmit: SubmitHandler<FieldValues> = async ({ email, password }) => {
     try {
-      await signIn(data);
+      const response = await signIn("credentials", {
+        email,
+        password,
+        redirect: false,
+        callbackUrl: "/boards",
+      });
+
+      console.log(response);
+
+      if (!response?.ok) {
+        return;
+      }
+
+      router.push("/boards");
     } catch (error) {
       console.log(error);
     }

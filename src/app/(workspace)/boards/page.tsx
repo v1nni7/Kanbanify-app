@@ -1,10 +1,13 @@
 "use client";
 
-import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
+import { useContext, useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { customRandom, random, urlAlphabet } from "nanoid";
 import useToggleClickOutside from "@/hooks/useToggleClickOutside";
 import { createBoardRequest, getBoardsRequest } from "@/services/board";
+import { BoardContext } from "@/context/BoardContext";
 
 type FieldValues = {
   name: string;
@@ -12,18 +15,35 @@ type FieldValues = {
 };
 
 export default function Boards() {
-  const [boards, setBoard] = useState<any>([]);
+  const router = useRouter();
+  /*   const { data: session } = useSession();
+  console.log({ session }); */
+
+  const { setBoard } = useContext(BoardContext);
+  const [boards, setBoards] = useState<any>([]);
 
   const { handleSubmit, register } = useForm<FieldValues>();
   const [dropdownOpen, toggle, elementRef, buttonRef] =
     useToggleClickOutside(false);
 
-  const onSubmit: SubmitHandler<FieldValues> = async (data) => {
+  const loadingBoard = async (board: any) => {
     try {
-      const response = await createBoardRequest(data);
+      setBoard({ ...board.content, isLoading: false, url: board.url });
+      router.push(`/board/${board.url}`);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const onSubmit: SubmitHandler<FieldValues> = async (values) => {
+    try {
+      const newUrl = customRandom(urlAlphabet, 12, random);
+      const newData = { ...values, url: newUrl() };
+
+      const response = await createBoardRequest(newData);
 
       if (response.status === 201) {
-        setBoard([...boards, response.data]);
+        setBoards([...boards, newData]);
       }
     } catch (error) {
       console.log(error);
@@ -34,7 +54,7 @@ export default function Boards() {
     try {
       const response = await getBoardsRequest();
 
-      if (response.status === 200) setBoard(response.data);
+      if (response.status === 200) setBoards(response.data);
     } catch (error) {
       console.log(error);
     }
@@ -42,7 +62,7 @@ export default function Boards() {
 
   useEffect(() => {
     loadingBoards();
-  }, [loadingBoards]);
+  }, []);
 
   return (
     <>
@@ -103,16 +123,19 @@ export default function Boards() {
           {boards.map((board: any, index: number) => (
             <li
               key={index}
-              className="w-64 h-32 rounded-md flex items-center justify-center relative overflow-hidden hover:cursor-pointer hover:shadow-lg transition"
+              className="w-64 h-32 mr-4 rounded-md flex items-center justify-center relative overflow-hidden hover:cursor-pointer hover:shadow-lg transition"
             >
-              <Link prefetch={false} href={`/board/${board.safeUrl}`} className="w-full h-full relative">
+              <button
+                onClick={() => loadingBoard(board)}
+                className="w-full h-full relative"
+              >
                 <img src={board.background} alt="" />
                 <div className="z-20 inset-0 bg-gradient-to-t from-neutral-900/80 to-neutral-600/20 absolute"></div>
 
                 <span className="block text-slate-50 text-xl z-30 bottom-0 left-0 absolute p-4">
                   {board.name}
                 </span>
-              </Link>
+              </button>
             </li>
           ))}
         </ul>

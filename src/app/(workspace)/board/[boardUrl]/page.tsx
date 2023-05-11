@@ -1,6 +1,9 @@
 "use client";
 
-import { useCallback, useRef, useState } from "react";
+import { BoardContext } from "@/context/BoardContext";
+import useUpdateBoard from "@/hooks/useUpdateBoard";
+import { getBoardContentRequest } from "@/services/board";
+import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import { useForm } from "react-hook-form";
 import { BiX } from "react-icons/bi";
@@ -11,157 +14,39 @@ export type TypeData = {
   columnOrder: Array<string>;
 };
 
-const initialData: TypeData = {
-  tasks: {
-    "task-1": {
-      id: "task-1",
-      title: "Página de Login",
-      totalCheckbox: 6,
-      completedCheckbox: 2,
-    },
-    "task-2": {
-      id: "task-2",
-      title: "Página de cadastro",
-      totalCheckbox: 10,
-      completedCheckbox: 4,
-    },
-    "task-3": {
-      id: "task-3",
-      title: "Área de trabalho",
-      totalCheckbox: 5,
-      completedCheckbox: 1,
-    },
-    "task-4": {
-      id: "task-4",
-      title: "Barra de navegação",
-      totalCheckbox: 8,
-      completedCheckbox: 3,
-    },
-  },
-  columns: {
-    "column-1": {
-      id: "column-1",
-      title: "Em progresso",
-      taskIds: ["task-1", "task-2"],
-    },
-    "column-2": {
-      id: "column-2",
-      title: "Em progresso 2",
-      taskIds: ["task-3", "task-4"],
-    },
-  },
-  columnOrder: [],
-};
-
 export default function Board({ params }: { params: { boardUrl: string } }) {
-  const [board, setBoard] = useState<any>(initialData);
+  const { onSubmitBoard } = useUpdateBoard();
+  const { board, setBoard, handleDragEnd } = useContext(BoardContext);
   const { handleSubmit, register, resetField } = useForm();
 
-  const handleDragEnd = useCallback(
-    ({ destination, source, draggableId, type }: any) => {
-      if (!destination) {
-        return;
-      }
-
-      if (
-        destination.droppableId === source.droppbleId &&
-        destination.index === source.index
-      ) {
-        return;
-      }
-
-      if (type === "column") {
-        const newColumnOrder = Array.from(board.columnOrder);
-        newColumnOrder.splice(source.index, 1);
-        newColumnOrder.splice(destination.index, 0, draggableId);
-
-        const newState = {
-          ...board,
-          columnOrder: newColumnOrder,
-        };
-
-        setBoard(newState);
-        return;
-      }
-
-      const start = board?.columns[source.droppableId];
-      const finish = board?.columns[destination.droppableId];
-
-      if (start === finish) {
-        const newTaskIds = Array.from(start.taskIds);
-        newTaskIds.splice(source.index, 1);
-        newTaskIds.splice(destination.index, 0, draggableId);
-
-        const newColumn = {
-          ...start,
-          taskIds: newTaskIds,
-        };
-
-        const newBoardData: any = {
-          ...board,
-          columns: {
-            ...board?.columns,
-            [newColumn.id]: newColumn,
-          },
-        };
-
-        setBoard(newBoardData);
-        return;
-      }
-
-      // Movendo de uma lista para outra
-      const startTaskIds = Array.from(start.taskIds);
-      startTaskIds.splice(source.index, 1);
-      const newStart = {
-        ...start,
-        taskIds: startTaskIds,
-      };
-
-      const finishTaskIds = Array.from(finish.taskIds);
-      finishTaskIds.splice(destination.index, 0, draggableId);
-      const newFinish = {
-        ...finish,
-        taskIds: finishTaskIds,
-      };
-
-      const newState = {
-        ...board,
-        columns: {
-          ...board?.columns,
-          [newStart.id]: newStart,
-          [newFinish.id]: newFinish,
-        },
-      };
-
-      setBoard(newState);
-    },
-    [board]
-  );
-
-  const onSubmit = ({ title }: any) => {
-    const newColumnId = `column-${Math.floor(Math.random() * 1000)}`;
-
-    const newColumn = {
-      id: newColumnId,
-      title,
-      taskIds: [],
-    };
-
-    const newState = {
-      ...board,
-      columns: {
-        ...board?.columns,
-        [newColumnId]: newColumn,
-      },
-
-      columnOrder: [...board.columnOrder, newColumnId],
-    };
-
-    console.log(newState);
-
-    setBoard(newState);
-    resetField("title");
+  const onSubmit = async ({ title }: any) => {
+    try {
+      await onSubmitBoard({ title, type: "column" });
+    } catch (error) {
+      console.log(error);
+    } finally {
+      resetField("title");
+    }
   };
+
+  const loadingBoard = async () => {
+    try {
+      if (!board.isLoading) return;
+
+      const response = await getBoardContentRequest(params.boardUrl);
+
+      if (response.status === 200) {
+        setBoard({ ...response.data.content, isLoading: false });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    loadingBoard();
+    console.clear();
+  }, []);
 
   return (
     <>
@@ -185,23 +70,26 @@ export default function Board({ params }: { params: { boardUrl: string } }) {
                   {...droppableProps}
                   ref={innerRef}
                 >
-                  {board.columnOrder.map((columnId: string, index: number) => {
-                    const column = board.columns[columnId];
-                    const tasks = column.taskIds.map(
-                      (taskId: string) => board.tasks[taskId]
-                    );
+                  {board.columnOrder.length !== 0
+                    ? board.columnOrder.map(
+                        (columnId: string, index: number) => {
+                          const column = board.columns[columnId];
+                          const tasks = column.taskIds.map(
+                            (taskId: string) => board.tasks[taskId]
+                          );
 
-                    return (
-                      <Column
-                        key={column.id}
-                        column={column}
-                        tasks={tasks}
-                        index={index}
-                        board={board}
-                        setBoard={setBoard}
-                      />
-                    );
-                  })}
+                          return (
+                            <Column
+                              key={column.id}
+                              column={column}
+                              tasks={tasks}
+                              index={index}
+                              boardURL={params.boardUrl}
+                            />
+                          );
+                        }
+                      )
+                    : null}
                   {placeholder}
 
                   <div className="h-full flex items-start">
@@ -235,37 +123,19 @@ export default function Board({ params }: { params: { boardUrl: string } }) {
   );
 }
 
-function Column({ column, tasks, index, board, setBoard }: any) {
+function Column({ column, tasks, index }: any) {
   const inputRef = useRef<HTMLInputElement>(null);
+  const { onSubmitBoard } = useUpdateBoard();
   const { register, handleSubmit, resetField } = useForm();
 
-  const onSubmit = (data: any) => {
-    const newTaskId = `task-${Math.floor(Math.random() * 1000)}`;
-
-    const newTask = {
-      id: newTaskId,
-      title: data.title,
-      description: "",
-    };
-
-    const newState = {
-      ...board,
-      tasks: {
-        ...board?.tasks,
-        [newTaskId]: newTask,
-      },
-
-      columns: {
-        ...board?.columns,
-        [column.id]: {
-          ...column,
-          taskIds: [...column.taskIds, newTaskId],
-        },
-      },
-    };
-
-    setBoard(newState);
-    resetField("title");
+  const onSubmit = async ({ title }: any) => {
+    try {
+      await onSubmitBoard({ title: title, type: "task", columnId: column.id });
+    } catch (error) {
+      console.log(error);
+    } finally {
+      resetField("title");
+    }
   };
 
   return (
@@ -305,10 +175,16 @@ function Column({ column, tasks, index, board, setBoard }: any) {
                         className="w-full peer text-slate-200 bg-slate-700 border border-slate-700 focus:bg-slate-600 focus:border-slate-500 transition rounded-md outline-0 focus:mb-2 p-1"
                       />
                       <div className="flex items-center hidden peer-focus:flex">
-                        <button type="submit" className="text-slate-200 bg-blue-500 hover:bg-blue-600 rounded-md mr-2 p-1">
+                        <button
+                          type="submit"
+                          className="text-slate-200 bg-blue-500 hover:bg-blue-600 rounded-md mr-2 p-1"
+                        >
                           Add task
                         </button>
-                        <button type="button" className="text-slate-200 bg-neutral-500 hover:bg-neutral-600 rounded-md p-2">
+                        <button
+                          type="button"
+                          className="text-slate-200 bg-neutral-500 hover:bg-neutral-600 rounded-md p-2"
+                        >
                           <BiX />
                         </button>
                       </div>
