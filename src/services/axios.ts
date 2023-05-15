@@ -9,12 +9,10 @@ export default function getAPIClient(ctx?: GetServerSidePropsContext) {
   });
 
   api.interceptors.request.use(async (config) => {
-    const {
-      user: { accessToken },
-    } = await getSession();
+    const session = await getSession();
 
-    if (accessToken) {
-      config.headers["Authorization"] = `Bearer ${accessToken}`;
+    if (session?.user.token) {
+      config.headers["Authorization"] = `Bearer ${session?.user.token}`;
     }
 
     return config;

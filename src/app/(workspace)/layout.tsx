@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useSession } from "next-auth/react";
 import { BiCaretDown } from "react-icons/bi";
 import useToggleClickOutside from "@/hooks/useToggleClickOutside";
 import { signOut } from "next-auth/react";
@@ -10,6 +11,8 @@ type WorkspaceLayoutProps = {
 };
 
 export default function WorkspaceLayout({ children }: WorkspaceLayoutProps) {
+  const { data: session } = useSession();
+
   const [dropdownOpen, toggle, elementRef, buttonRef] =
     useToggleClickOutside(false);
 
@@ -40,7 +43,7 @@ export default function WorkspaceLayout({ children }: WorkspaceLayoutProps) {
           >
             <img
               className="w-10 h-10 object-cover rounded-md border-2 border-slate-400"
-              src={""}
+              src={session?.user.profilePicture}
               alt=""
             />
             <BiCaretDown className="text-slate-200" />
@@ -56,8 +59,11 @@ export default function WorkspaceLayout({ children }: WorkspaceLayoutProps) {
                 Profile
               </Link>
             </li>
-            <li className="text-slate-200 hover:bg-red-400 transition text-center p-2">
-              <button onClick={() => signOut()}>Exit</button>
+            <li
+              onClick={() => signOut()}
+              className="text-slate-200 hover:bg-red-400 transition text-center hover:cursor-pointer p-2"
+            >
+              Exit
             </li>
           </ul>
         </div>

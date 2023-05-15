@@ -1,5 +1,3 @@
-"use client"
-
 import { useEffect, useState } from "react";
 
 export default function useFilePreview(file: any) {
@@ -13,11 +11,13 @@ export default function useFilePreview(file: any) {
         setImgSrc(newUrl);
       }
 
-      return 
+      return;
     }
 
-    setImgSrc("https://cdn.discordapp.com/attachments/1013165623188148234/1101890072065888406/user.png")
+    setImgSrc(
+      "https://cdn.discordapp.com/attachments/1013165623188148234/1101890072065888406/user.png"
+    );
   }, [file]);
 
-  return [imgSrc, setImgSrc]
+  return [imgSrc, setImgSrc];
 }

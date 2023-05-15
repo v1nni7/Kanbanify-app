@@ -1,14 +1,13 @@
-import {
-  Dispatch,
-  RefObject,
-  SetStateAction,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import { RefObject, useEffect, useRef, useState } from "react";
 
-export default function useToggleClickOutside(defaultValue: boolean): [boolean, () => void, RefObject<HTMLElement> | any, RefObject<HTMLButtonElement>] {
+export default function useToggleClickOutside(
+  defaultValue: boolean
+): [
+  boolean,
+  () => void,
+  RefObject<HTMLElement> | any,
+  RefObject<HTMLButtonElement>
+] {
   const [value, setValue] = useState(defaultValue);
 
   const elementRef = useRef<HTMLElement>(null);
@@ -20,9 +19,12 @@ export default function useToggleClickOutside(defaultValue: boolean): [boolean, 
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if(buttonRef.current?.contains(event.target as Node)) return;
+      if (buttonRef.current?.contains(event.target as Node)) return;
 
-      if (elementRef.current && !elementRef.current.contains(event.target as Node)) {
+      if (
+        elementRef.current &&
+        !elementRef.current.contains(event.target as Node)
+      ) {
         setValue(false);
       }
     };

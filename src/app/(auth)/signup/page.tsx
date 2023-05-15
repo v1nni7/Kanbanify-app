@@ -5,7 +5,8 @@ import { signUpRequest } from "@/services/user";
 import { useRouter } from "next/navigation";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { BiEnvelope, BiLock, BiUser } from "react-icons/bi";
-import { useEffect } from "react";
+import { FormGroup, FormControl, FormLabel } from "../(components)/Form";
+import useToggle from "@/hooks/useToggle";
 
 type FieldValues = {
   email: string;
@@ -16,11 +17,12 @@ type FieldValues = {
 
 export default function Signup() {
   const router = useRouter();
+  const [loading, toggleLoading] = useToggle(false);
   const { handleSubmit, register } = useForm<FieldValues>();
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
-    console.log("Hello World")
     try {
+      toggleLoading();
       const response = await signUpRequest(data);
 
       if (response.status === 201) {
@@ -28,6 +30,8 @@ export default function Signup() {
       }
     } catch (error) {
       console.log(error);
+    } finally {
+      toggleLoading();
     }
   };
 
@@ -43,70 +47,55 @@ export default function Signup() {
           <h1 className="text-2xl font-bold text-white mt-4">Sign up</h1>
         </div>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="flex items-center relative mb-4">
-            <input
+          <FormGroup>
+            <FormControl
               type="text"
               placeholder="Username"
-              {...register("username")}
-              autoComplete="current-username"
-              className="w-full h-12 rounded-md placeholder:text-slate-500 text-slate-500 text-xl border-2 border-slate-500 focus:placeholder:text-slate-400 focus:text-slate-400 focus:border-slate-400 peer bg-transparent transition outline-none pl-10"
+              register={register("username")}
+              disabled={loading}
             />
 
-            <label
-              className="absolute text-slate-500 peer-focus:text-slate-400 transition ml-2"
-              htmlFor=""
-            >
+            <FormLabel htmlFor="username">
               <BiUser className="text-3xl" />
-            </label>
-          </div>
-          <div className="flex items-center relative mb-4">
-            <input
+            </FormLabel>
+          </FormGroup>
+
+          <FormGroup>
+            <FormControl
               type="text"
               placeholder="E-mail"
-              {...register("email")}
-              autoComplete="current-email"
-              className="w-full h-12 rounded-md placeholder:text-slate-500 text-slate-500 text-xl border-2 border-slate-500 focus:placeholder:text-slate-400 focus:text-slate-400 focus:border-slate-400 peer bg-transparent transition outline-none pl-10"
+              register={register("email")}
+              disabled={loading}
             />
 
-            <label
-              className="absolute text-slate-500 peer-focus:text-slate-400 transition ml-2"
-              htmlFor=""
-            >
+            <FormLabel htmlFor="email">
               <BiEnvelope className="text-3xl" />
-            </label>
-          </div>
-          <div className="flex items-center relative mb-4">
-            <input
+            </FormLabel>
+          </FormGroup>
+          <FormGroup>
+            <FormControl
               type="password"
               placeholder="Password"
-              {...register("password")}
-              autoComplete="current-password"
-              className="w-full h-12 rounded-md placeholder:text-slate-500 text-slate-500 text-xl border-2 border-slate-500 focus:placeholder:text-slate-400 focus:text-slate-400 focus:border-slate-400 peer bg-transparent transition outline-none pl-10"
+              register={register("password")}
+              disabled={loading}
             />
 
-            <label
-              className="absolute text-slate-500 peer-focus:text-slate-400 transition ml-2"
-              htmlFor=""
-            >
+            <FormLabel htmlFor="password">
               <BiLock className="text-3xl" />
-            </label>
-          </div>
-          <div className="flex items-center relative mb-4">
-            <input
+            </FormLabel>
+          </FormGroup>
+          <FormGroup>
+            <FormControl
               type="password"
               placeholder="Confirm password"
-              {...register("confirmPassword")}
-              autoComplete="current-confirmPassword "
-              className="w-full h-12 rounded-md placeholder:text-slate-500 text-slate-500 text-xl border-2 border-slate-500 focus:placeholder:text-slate-400 focus:text-slate-400 focus:border-slate-400 peer bg-transparent transition outline-none pl-10"
+              register={register("confirmPassword")}
+              disabled={loading}
             />
 
-            <label
-              className="absolute text-slate-500 peer-focus:text-slate-400 transition ml-2"
-              htmlFor=""
-            >
+            <FormLabel htmlFor="confirmPassword">
               <BiLock className="text-3xl" />
-            </label>
-          </div>
+            </FormLabel>
+          </FormGroup>
 
           <button
             type="submit"

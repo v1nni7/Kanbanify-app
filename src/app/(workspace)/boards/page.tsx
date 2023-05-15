@@ -1,62 +1,29 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
-import { useContext, useEffect, useState } from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
-import { customRandom, random, urlAlphabet } from "nanoid";
+import { useEffect, useState } from "react";
+import { getBoardsRequest } from "@/services/board";
 import useToggleClickOutside from "@/hooks/useToggleClickOutside";
-import { createBoardRequest, getBoardsRequest } from "@/services/board";
-import { BoardContext } from "@/context/BoardContext";
-
-type FieldValues = {
-  name: string;
-  background: string;
-};
+import useToggle from "@/hooks/useToggle";
+import BoardCard from "../(components)/BoardCard";
+import FormCreateBoard from "../(components)/Form";
+import { ThreeCircles } from "react-loader-spinner";
 
 export default function Boards() {
-  const router = useRouter();
-  /*   const { data: session } = useSession();
-  console.log({ session }); */
-
-  const { setBoard } = useContext(BoardContext);
+  const [isLoading, toggleLoading] = useToggle(false);
   const [boards, setBoards] = useState<any>([]);
-
-  const { handleSubmit, register } = useForm<FieldValues>();
   const [dropdownOpen, toggle, elementRef, buttonRef] =
     useToggleClickOutside(false);
 
-  const loadingBoard = async (board: any) => {
-    try {
-      setBoard({ ...board.content, isLoading: false, url: board.url });
-      router.push(`/board/${board.url}`);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const onSubmit: SubmitHandler<FieldValues> = async (values) => {
-    try {
-      const newUrl = customRandom(urlAlphabet, 12, random);
-      const newData = { ...values, url: newUrl() };
-
-      const response = await createBoardRequest(newData);
-
-      if (response.status === 201) {
-        setBoards([...boards, newData]);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   const loadingBoards = async () => {
     try {
+      toggleLoading();
       const response = await getBoardsRequest();
 
       if (response.status === 200) setBoards(response.data);
     } catch (error) {
       console.log(error);
+    } finally {
+      toggleLoading();
     }
   };
 
@@ -81,63 +48,25 @@ export default function Boards() {
               Create
             </button>
 
-            <form
+            <div
               ref={elementRef}
-              onSubmit={handleSubmit(onSubmit)}
-              className={`w-64 shadow-inner absolute bg-slate-600 rounded-md top-14 right-0 p-4 ${
-                dropdownOpen ? "visible" : "hidden"
-              }`}
+              className={dropdownOpen ? "visible" : "hidden"}
             >
-              <h1 className="text-slate-200 text-center mb-4">
-                Create New Board
-              </h1>
-              <div className="mb-4">
-                <input
-                  type="text"
-                  placeholder="Title"
-                  {...register("name")}
-                  autoComplete="off"
-                  className="w-full p-2 outline-0 h-10 border-2 border-slate-500 focus:border-slate-400 text-slate-400 bg-transparent rounded-md"
-                />
-              </div>
-              <div className="mb-4">
-                <input
-                  type="text"
-                  placeholder="Background"
-                  {...register("background")}
-                  autoComplete="off"
-                  className="w-full p-2 outline-0 h-10 border-2 border-slate-500 focus:border-slate-400 text-slate-400 bg-transparent rounded-md"
-                />
-              </div>
-              <button
-                type="submit"
-                className="w-full rounded-md bg-blue-400 hover:bg-blue-500 text-slate-50 transition p-1"
-              >
-                Create
-              </button>
-            </form>
+              <FormCreateBoard boards={boards} setBoards={setBoards} />
+            </div>
           </div>
         </div>
 
         <ul className="flex flex-row items-center">
-          {boards.map((board: any, index: number) => (
-            <li
-              key={index}
-              className="w-64 h-32 mr-4 rounded-md flex items-center justify-center relative overflow-hidden hover:cursor-pointer hover:shadow-lg transition"
-            >
-              <button
-                onClick={() => loadingBoard(board)}
-                className="w-full h-full relative"
-              >
-                <img src={board.background} alt="" />
-                <div className="z-20 inset-0 bg-gradient-to-t from-neutral-900/80 to-neutral-600/20 absolute"></div>
-
-                <span className="block text-slate-50 text-xl z-30 bottom-0 left-0 absolute p-4">
-                  {board.name}
-                </span>
-              </button>
-            </li>
-          ))}
+          {isLoading ? (
+            <div className="w-full flex items-center justify-center">
+              <ThreeCircles color="#ffffff" />
+            </div>
+          ) : (
+            boards.map((board: any, index: number) => (
+              <BoardCard key={index} board={board} />
+            ))
+          )}
         </ul>
       </section>
     </>
