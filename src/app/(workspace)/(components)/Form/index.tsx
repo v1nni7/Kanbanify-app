@@ -33,7 +33,7 @@ export default function FormCreateBoard({ boards, setBoards }: FormProps) {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="w-64 shadow-inner absolute bg-slate-600 rounded-md top-14 right-0 p-4"
+      className="absolute right-0 top-14 w-64 rounded-md bg-slate-600 p-4 shadow-inner"
     >
       <FormGroup>
         <FormControl
@@ -51,7 +51,7 @@ export default function FormCreateBoard({ boards, setBoards }: FormProps) {
       </FormGroup>
       <button
         type="submit"
-        className="w-full rounded-md bg-blue-400 hover:bg-blue-500 text-slate-50 transition p-1"
+        className="w-full rounded-md bg-blue-400 p-1 text-slate-50 transition hover:bg-blue-500"
       >
         Create
       </button>

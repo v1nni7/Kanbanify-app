@@ -1,16 +1,17 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
+import { ThreeCircles } from "react-loader-spinner";
 import { getBoardsRequest } from "@/services/board";
 import useToggleClickOutside from "@/hooks/useToggleClickOutside";
 import useToggle from "@/hooks/useToggle";
 import BoardCard from "../(components)/BoardCard";
 import FormCreateBoard from "../(components)/Form";
-import { ThreeCircles } from "react-loader-spinner";
+import Loading from "./loading";
 
 export default function Boards() {
-  const [isLoading, toggleLoading] = useToggle(false);
   const [boards, setBoards] = useState<any>([]);
+  const [isLoading, toggleLoading] = useToggle(false);
   const [dropdownOpen, toggle, elementRef, buttonRef] =
     useToggleClickOutside(false);
 
@@ -57,17 +58,13 @@ export default function Boards() {
           </div>
         </div>
 
-        <ul className="flex flex-row items-center">
-          {isLoading ? (
-            <div className="w-full flex items-center justify-center">
-              <ThreeCircles color="#ffffff" />
-            </div>
-          ) : (
-            boards.map((board: any, index: number) => (
+        <Suspense fallback={<Loading />}>
+          <ul className="flex flex-row items-center">
+            {boards.map((board: any, index: number) => (
               <BoardCard key={index} board={board} />
-            ))
-          )}
-        </ul>
+            ))}
+          </ul>
+        </Suspense>
       </section>
     </>
   );

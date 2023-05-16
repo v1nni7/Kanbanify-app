@@ -20,12 +20,12 @@ export default function BoardCard({ board }: BoardCardProps) {
   };
 
   return (
-    <li className="w-64 h-32 mr-4 rounded-md flex items-center justify-center relative overflow-hidden hover:cursor-pointer hover:shadow-lg transition">
-      <button onClick={() => loadingBoard()} className="w-full h-full relative">
+    <li className="relative mr-4 flex h-32 w-64 items-center justify-center overflow-hidden rounded-md transition hover:cursor-pointer hover:shadow-lg">
+      <button onClick={() => loadingBoard()} className="relative h-full w-full">
         <img src={board.background} alt="" />
-        <div className="z-20 inset-0 bg-gradient-to-t from-neutral-900/80 to-neutral-600/20 absolute"></div>
+        <div className="absolute inset-0 z-20 bg-gradient-to-t from-neutral-900/80 to-neutral-600/20"></div>
 
-        <span className="block text-slate-50 text-xl z-30 bottom-0 left-0 absolute p-4">
+        <span className="absolute bottom-0 left-0 z-30 block p-4 text-xl text-slate-50">
           {board.name}
         </span>
       </button>

@@ -23,7 +23,7 @@ export default function RootLayout({ children }: IProps) {
         <SessionProvider>
           <BoardContextProvider>
             <section className="container mx-auto h-screen py-10">
-              <div className="rounded-lg shadow animate-fade overflow-hidden h-full relative bg-slate-800">
+              <div className="relative h-full animate-fade overflow-hidden rounded-lg bg-slate-800 shadow">
                 {children}
               </div>
             </section>

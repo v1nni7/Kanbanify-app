@@ -20,7 +20,7 @@ export default function WorkspaceLayout({ children }: WorkspaceLayoutProps) {
     <>
       <nav className="flex items-center justify-between bg-slate-700 p-4">
         <div className="flex items-center">
-          <h1 className="text-3xl text-blue-500 font-bold bg-blue-200 p-2 rounded-md shadow shadow-blue-200 mr-6">
+          <h1 className="mr-6 rounded-md bg-blue-200 p-2 text-3xl font-bold text-blue-500 shadow shadow-blue-200">
             React Kanban
           </h1>
 
@@ -28,21 +28,21 @@ export default function WorkspaceLayout({ children }: WorkspaceLayoutProps) {
             <li className="mr-3">
               <Link
                 href="/boards"
-                className="block font-semibold py-2 px-4 rounded-md border-2 border-slate-700 text-slate-400 hover:text-slate-300 hover:border-slate-300 transition text-md"
+                className="text-md block rounded-md border-2 border-slate-700 px-4 py-2 font-semibold text-slate-400 transition hover:border-slate-300 hover:text-slate-300"
               >
                 Boards
               </Link>
             </li>
           </ul>
         </div>
-        <div className="flex items-center relative">
+        <div className="relative flex items-center">
           <button
             ref={buttonRef}
             onClick={() => toggle()}
             className="flex items-center"
           >
             <img
-              className="w-10 h-10 object-cover rounded-md border-2 border-slate-400"
+              className="h-10 w-10 rounded-md border-2 border-slate-400 object-cover"
               src={session?.user.profilePicture}
               alt=""
             />
@@ -51,17 +51,17 @@ export default function WorkspaceLayout({ children }: WorkspaceLayoutProps) {
           <ul
             className={`${
               dropdownOpen ? "visible" : "hidden"
-            } w-[160px] rounded-md shadow shadow-inner bg-slate-600 right-0 top-12 absolute overflow-hidden z-10`}
+            } absolute right-0 top-12 z-10 w-[160px] overflow-hidden rounded-md bg-slate-600 shadow shadow-inner`}
             ref={elementRef}
           >
-            <li className="text-slate-200 hover:bg-slate-500 transition text-center p-2">
+            <li className="p-2 text-center text-slate-200 transition hover:bg-slate-500">
               <Link className="block " href="/profile">
                 Profile
               </Link>
             </li>
             <li
               onClick={() => signOut()}
-              className="text-slate-200 hover:bg-red-400 transition text-center hover:cursor-pointer p-2"
+              className="p-2 text-center text-slate-200 transition hover:cursor-pointer hover:bg-red-400"
             >
               Exit
             </li>
