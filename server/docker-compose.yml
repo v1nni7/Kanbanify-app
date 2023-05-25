@@ -1,14 +1,14 @@
 version: "3"
 services:
-  app:
-    container_name: app
+  server:
+    container_name: server
     build: .
     ports:
       - "5000:5000"
     depends_on: 
       - db
     volumes:
-      - .:/app
+      - .:/server
     env_file:
       - .env
   db:
