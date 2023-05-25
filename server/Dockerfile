@@ -1,4 +1,4 @@
-FROM node:16-alpine
+FROM node:15-alpine
 
 WORKDIR /app
 
@@ -14,5 +14,5 @@ EXPOSE 5000
 
 RUN npx prisma generate
 
-CMD ["npm", "run", "dev"]
+CMD ["npm", "run", "dev:migrate"]
 

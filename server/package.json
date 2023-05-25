@@ -7,7 +7,11 @@
     "build": "tsc",
     "start": "node dist/server.js",
     "dev": "tsnd --rs --exit-child --respawn --ignore-watch node_modules -r tsconfig-paths/register src/server.ts",
+    "dev:migrate": "npx prisma migrate dev && npm run dev",
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "prisma": {
+    "schena": "./prisma/schema.prisma"
   },
   "keywords": [],
   "author": "",
