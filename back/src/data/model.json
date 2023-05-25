@@ -1,0 +1,25 @@
+{
+  "_id": "5f0b5a1b9b3a3e1b1c3b3b3b",
+  "userId": 1,
+  "name": "Board 1",
+  "url": "auhfd7832h892nfi",
+  "background": "https://images.unsplash.com/photo-1594396457412-5b4b9d6e8b5b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80",
+  "content": {
+    "tasks": {
+      "task-1": {
+        "id": "task-1",
+        "title": "Take out the garbage",
+        "totalCheckbox": 0,
+        "completedCheckbox": 0
+      }
+    },
+    "columns": {
+      "column-1": {
+        "id": "column-1",
+        "title": "To do",
+        "taskIds": ["task-1"]
+      }
+    },
+    "columnOrder": ["column-1"]
+  }
+}
