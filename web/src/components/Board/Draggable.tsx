@@ -2,6 +2,7 @@ import { Draggable } from "react-beautiful-dnd";
 import Droppable from "./Droppable";
 import { useContext } from "react";
 import { BoardContext } from "@/context/BoardContext";
+import InputCreateTask from "./InputCreateTask";
 
 interface DragProps {
   column: any;
@@ -28,10 +29,12 @@ export default function DraggableComponent({ column, index }: DragProps) {
               <input
                 type="text"
                 defaultValue={column.title}
-                className="w-full rounded-md border border-slate-700 bg-slate-700 p-1 text-xl text-slate-200 outline-0 transition focus:border-slate-400 focus:bg-slate-500/40"
+                className=" w-full rounded-md border border-slate-700 bg-slate-700 p-1 text-xl text-slate-200 outline-0 transition focus:border-slate-400 focus:bg-slate-500/40"
               />
             </div>
             <Droppable droppableId={column.id} tasks={tasks} type="task" />
+
+            <InputCreateTask columnId={column.id} />
           </div>
         </div>
       )}

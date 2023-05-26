@@ -2,6 +2,7 @@ import { useContext } from "react";
 import { DroppableProvided } from "react-beautiful-dnd";
 import { BoardContext } from "@/context/BoardContext";
 import Draggable from "./Draggable";
+import InputCreateBoard from "./InputCreateBoard";
 
 interface ColumnProps extends DroppableProvided {}
 
@@ -20,6 +21,8 @@ export default function Column({
         return <Draggable key={column.id} column={column} index={index} />;
       })}
       {placeholder}
+
+      <InputCreateBoard />
     </div>
   );
 }

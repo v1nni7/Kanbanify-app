@@ -1,13 +1,19 @@
 import { BoardContext } from "@/context/BoardContext";
 import { customAlphabet } from "nanoid";
-import { useCallback, useContext, useState } from "react";
+import { useCallback, useContext } from "react";
+
+type OnSubmitBoardProps = {
+  title: string;
+  type: string;
+  columnId?: string;
+}
 
 export default function useUpdateBoard() {
   const nanoId = customAlphabet("1234567890abcdef", 12);
   const { board, setBoard, updateBoard } = useContext(BoardContext);
 
   const onSubmitBoard = useCallback(
-    async ({ title, type, columnId }: any) => {
+    async ({ title, type, columnId }: OnSubmitBoardProps) => {
       let newState: any = {};
       const newId = nanoId();
 
@@ -26,7 +32,7 @@ export default function useUpdateBoard() {
         };
       }
 
-      if (type === "task") {
+      if (type === "task" && columnId) {
         newState = {
           ...board,
           tasks: {
