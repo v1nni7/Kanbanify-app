@@ -1,70 +1,58 @@
 "use client";
 
-import { Suspense, useEffect, useState } from "react";
-import { ThreeCircles } from "react-loader-spinner";
+import { useLayoutEffect, useState } from "react";
 import { getBoardsRequest } from "@/services/board";
-import useToggleClickOutside from "@/hooks/useToggleClickOutside";
-import useToggle from "@/hooks/useToggle";
-import BoardCard from "../(components)/BoardCard";
-import FormCreateBoard from "../(components)/Form";
-import Loading from "./loading";
+import NewBoardForm from "@/components/NewBoardForm";
 
 export default function Boards() {
-  const [boards, setBoards] = useState<any>([]);
-  const [isLoading, toggleLoading] = useToggle(false);
-  const [dropdownOpen, toggle, elementRef, buttonRef] =
-    useToggleClickOutside(false);
+  const [boards, setBoards] = useState<any | null>(null);
 
   const loadingBoards = async () => {
     try {
-      toggleLoading();
       const response = await getBoardsRequest();
 
-      if (response.status === 200) setBoards(response.data);
+      if (response.status !== 200) {
+        return;
+      }
+
+      setBoards(response.data);
     } catch (error) {
       console.log(error);
-    } finally {
-      toggleLoading();
     }
   };
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     loadingBoards();
   }, []);
 
   return (
     <>
       <section className="p-4">
-        <div className="flex justify-between items-center">
-          <h1 className="text-slate-200 font-bold text-2xl mb-4">
-            Your boards
-          </h1>
+        <div className="h-full w-full rounded-lg bg-neutral-700/20">
+          <div className="grid grid-cols-4 gap-4 p-4">
+            <NewBoardForm />
 
-          <div className="relative">
-            <button
-              ref={buttonRef}
-              onClick={() => toggle()}
-              className="border-2 border-slate-500 text-slate-200 rounded-md bg-slate-500 hover:border-slate-400 hover:bg-slate-700 transition py-2 px-6"
-            >
-              Create
-            </button>
+            {boards
+              ? boards.map((board: any, index: number) => (
+                  <div
+                    key={index}
+                    className="group relative h-44 cursor-pointer overflow-hidden rounded-lg transition hover:shadow-lg"
+                  >
+                    <img
+                      src={board.background}
+                      className="h-full object-cover transition group-hover:scale-125 group-hover:transform"
+                    />
 
-            <div
-              ref={elementRef}
-              className={dropdownOpen ? "visible" : "hidden"}
-            >
-              <FormCreateBoard boards={boards} setBoards={setBoards} />
-            </div>
+                    <div className="absolute inset-0 flex items-end bg-gradient-to-t from-neutral-950/95 to-neutral-700/20 p-4">
+                      <h2 className="font-alt text-lg font-semibold text-neutral-400/80 group-hover:text-neutral-300/80">
+                        {board.name}
+                      </h2>
+                    </div>
+                  </div>
+                ))
+              : "Carregando..."}
           </div>
         </div>
-
-        <Suspense fallback={<Loading />}>
-          <ul className="flex flex-row items-center">
-            {boards.map((board: any, index: number) => (
-              <BoardCard key={index} board={board} />
-            ))}
-          </ul>
-        </Suspense>
       </section>
     </>
   );

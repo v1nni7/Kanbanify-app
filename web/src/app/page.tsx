@@ -1,11 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import { Inter } from "next/font/google";
 import { signIn } from "next-auth/react";
 import { getServerSession } from "next-auth";
-
-const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
   return (

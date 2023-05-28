@@ -4,8 +4,7 @@ import Link from "next/link";
 import { signUpRequest } from "@/services/user";
 import { useRouter } from "next/navigation";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { BiEnvelope, BiLock, BiUser } from "react-icons/bi";
-import { FormGroup, FormControl, FormLabel } from "../(components)/Form";
+import { BiEnvelope, BiLock, BiLockOpen, BiUser } from "react-icons/bi";
 import useToggle from "@/hooks/useToggle";
 
 type FieldValues = {
@@ -36,81 +35,90 @@ export default function Signup() {
   };
 
   return (
-    <div className="flex justify-center items-center h-full">
-      <div className="w-[380px] animate-fade rounded-md p-8">
-        <div className="flex flex-col items-center justify-center mb-4">
-          {/* <img
-            className="w-32 h-32 outline outline-offset-4 outline-3 outline-blue-500 rounded-full object-cover"
-            src="https://cdn.discordapp.com/attachments/1013165623188148234/1042425389684895874/WhatsApp_Image_2022-11-12_at_16.45.17.jpeg"
-            alt=""
-          /> */}
-          <h1 className="text-2xl font-bold text-white mt-4">Sign up</h1>
-        </div>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <FormGroup>
-            <FormControl
+    <section className="flex h-full w-full items-center justify-center">
+      <div className="flex w-80 flex-col gap-4">
+        <h2 className="text-center font-alt text-2xl text-neutral-300">
+          Sign Up
+        </h2>
+
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="flex w-full flex-col gap-4"
+        >
+          <div className="relative flex items-center text-neutral-500">
+            <input
+              id="username"
               type="text"
               placeholder="Username"
-              register={register("username")}
-              disabled={loading}
+              className="peer h-12 w-full rounded-lg border-2 border-neutral-500 bg-transparent p-2 pl-10 text-xl font-semibold outline-none transition placeholder:font-semibold placeholder:text-neutral-500 focus:border-neutral-500/60 focus:placeholder:text-neutral-500/50"
             />
+            <label
+              htmlFor="username"
+              className="absolute ml-2 text-3xl peer-focus:text-neutral-500/60"
+            >
+              <BiUser />
+            </label>
+          </div>
 
-            <FormLabel htmlFor="username">
-              <BiUser className="text-3xl" />
-            </FormLabel>
-          </FormGroup>
-
-          <FormGroup>
-            <FormControl
+          <div className="relative flex items-center text-neutral-500">
+            <input
+              id="email"
               type="text"
-              placeholder="E-mail"
-              register={register("email")}
-              disabled={loading}
+              placeholder="Email"
+              className="peer h-12 w-full rounded-lg border-2 border-neutral-500 bg-transparent p-2 pl-10 text-xl font-semibold outline-none transition placeholder:font-semibold placeholder:text-neutral-500 focus:border-neutral-500/60 focus:placeholder:text-neutral-500/50"
             />
+            <label
+              htmlFor="email"
+              className="absolute ml-2 text-3xl peer-focus:text-neutral-500/60"
+            >
+              <BiEnvelope />
+            </label>
+          </div>
 
-            <FormLabel htmlFor="email">
-              <BiEnvelope className="text-3xl" />
-            </FormLabel>
-          </FormGroup>
-          <FormGroup>
-            <FormControl
+          <div className="relative flex items-center text-neutral-500">
+            <input
+              id="password"
               type="password"
               placeholder="Password"
-              register={register("password")}
-              disabled={loading}
+              className="peer h-12 w-full rounded-lg border-2 border-neutral-500 bg-transparent p-2 pl-10 text-xl font-semibold outline-none transition placeholder:font-semibold placeholder:text-neutral-500 focus:border-neutral-500/60 focus:placeholder:text-neutral-500/50"
             />
+            <label
+              htmlFor="password"
+              className="absolute ml-2 text-3xl peer-focus:text-neutral-500/60"
+            >
+              <BiLockOpen />
+            </label>
+          </div>
 
-            <FormLabel htmlFor="password">
-              <BiLock className="text-3xl" />
-            </FormLabel>
-          </FormGroup>
-          <FormGroup>
-            <FormControl
-              type="password"
-              placeholder="Confirm password"
-              register={register("confirmPassword")}
-              disabled={loading}
+          <div className="relative flex items-center text-neutral-500">
+            <input
+              id="confirmPassword"
+              type="confirmPassword"
+              placeholder="Confirm Password"
+              className="peer h-12 w-full rounded-lg border-2 border-neutral-500 bg-transparent p-2 pl-10 text-xl font-semibold outline-none transition placeholder:font-semibold placeholder:text-neutral-500 focus:border-neutral-500/60 focus:placeholder:text-neutral-500/50"
             />
-
-            <FormLabel htmlFor="confirmPassword">
-              <BiLock className="text-3xl" />
-            </FormLabel>
-          </FormGroup>
+            <label
+              htmlFor="confirmPassword"
+              className="absolute ml-2 text-3xl peer-focus:text-neutral-500/60"
+            >
+              <BiLock />
+            </label>
+          </div>
 
           <button
             type="submit"
-            className="w-full h-12 rounded-md text-slate-200 transition bg-blue-500 hover:bg-blue-600 mb-2"
+            className="rounded-lg bg-violet-500 p-2 font-alt text-xl font-semibold text-neutral-300 transition hover:bg-violet-500/60 focus:bg-violet-500/60 disabled:bg-violet-400"
           >
             Submit
           </button>
-          <Link
-            className="text-center block text-blue-500 hover:text-blue-400"
-            href="/signin"
-          >
-            Already have an account?
-          </Link>
+          
+          <div className="text-center">
+            <Link href="/signin" className="text-violet-500 hover:underline">
+              Already have an account?
+            </Link>
+          </div>
         </form>
       </div>
-    </div>
+    </section>
   );
 }

@@ -1,16 +1,20 @@
 "use client";
 
 import "./globals.css";
-import { Lexend_Deca } from "next/font/google";
+import {
+  Roboto_Flex as Roboto,
+  Lexend_Deca as LexendDeca,
+} from "next/font/google";
 import { SessionProvider } from "next-auth/react";
 import BoardContextProvider from "@/context/BoardContext";
-import { authOptions } from "./api/auth/[...nextauth]/route";
 
-const lexendDeca = Lexend_Deca({
+const lexendDeca = LexendDeca({
   subsets: ["latin"],
   style: "normal",
-  weight: "400",
+  variable: "--font-lexend-deca",
 });
+
+const roboto = Roboto({ subsets: ["latin"], variable: "--font-roboto" });
 
 interface IProps {
   children: React.ReactNode;
@@ -18,12 +22,12 @@ interface IProps {
 
 export default function RootLayout({ children }: IProps) {
   return (
-    <html className="dark" lang="en">
-      <body className={`bg-slate-900 ${lexendDeca.className}`}>
+    <html lang="en">
+      <body className={`bg-neutral-900 ${roboto.variable} ${lexendDeca.variable} font-sans`}>
         <SessionProvider>
           <BoardContextProvider>
-            <section className="container mx-auto h-screen py-10">
-              <div className="relative h-full animate-fade overflow-hidden rounded-lg bg-slate-800 shadow">
+            <section className="w-5/6 mx-auto flex h-screen">
+              <div className="my-8 w-full bg-neutral-800 rounded-lg shadow overflow-hidden">
                 {children}
               </div>
             </section>

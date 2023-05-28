@@ -1,23 +1,17 @@
 import { useEffect, useState } from "react";
 
 export default function useFilePreview(file: any) {
-  const [imgSrc, setImgSrc] = useState<any>(null);
+  const [imageSource, setImageSource] = useState<any>(null);
 
   useEffect(() => {
     if (file && file[0]) {
-      const newUrl = URL.createObjectURL(file[0]);
+      const preview = URL.createObjectURL(file[0]);
 
-      if (newUrl !== imgSrc) {
-        setImgSrc(newUrl);
+      if (preview !== imageSource) {
+        setImageSource(preview);
       }
-
-      return;
     }
-
-    setImgSrc(
-      "https://cdn.discordapp.com/attachments/1013165623188148234/1101890072065888406/user.png"
-    );
   }, [file]);
 
-  return [imgSrc, setImgSrc];
+  return [imageSource, setImageSource];
 }

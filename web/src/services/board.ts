@@ -21,3 +21,7 @@ export async function createBoardRequest(data: CreateBoardRequestData) {
 export async function getBoardsRequest() {
   return await api.get("/board");
 }
+
+export async function uploadBoardBackgroundRequest(data: any) {
+  return await api.post(`/board/upload`, data);
+}

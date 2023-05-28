@@ -7,7 +7,6 @@ import { TailSpin } from "react-loader-spinner";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import useToggle from "@/hooks/useToggle";
-import { FormGroup, FormControl, FormLabel } from "../(components)/Form";
 
 type FieldValues = {
   email: string;
@@ -42,69 +41,63 @@ export default function Signin() {
   };
 
   return (
-    <div className="flex justify-center items-center h-full">
-      <div className="w-[380px] animate-fade rounded-md p-8">
-        <div className="flex flex-col items-center justify-center mb-4">
-          {/*  <img
-            className="w-32 h-32 outline outline-offset-4 outline-3 outline-blue-500 rounded-full object-cover"
-            src="https://cdn.discordapp.com/attachments/1013165623188148234/1042425389684895874/WhatsApp_Image_2022-11-12_at_16.45.17.jpeg"
-            alt=""
-          /> */}
-          <h1 className="text-2xl font-bold text-white mt-4">Sign in</h1>
-          {/* <p className="text-md text-white mt-2">Welcome back {user}!</p> */}
-        </div>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <FormGroup>
-            <FormControl
+    <section className="flex h-full w-full items-center justify-center">
+      <div className="flex w-80 flex-col gap-4">
+        <h2 className="text-center font-alt text-2xl text-neutral-300">
+          Sign In
+        </h2>
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="flex w-full flex-col gap-4"
+        >
+          <div className="relative flex items-center text-neutral-500">
+            <input
+              id="email"
               type="text"
-              placeholder="E-mail"
-              register={register("email")}
-              disabled={loading}
+              autoComplete="off"
+              placeholder="Email"
+              {...register("email")}
+              className="peer h-12 w-full rounded-lg border-2 border-neutral-500 bg-transparent p-2 pl-10 text-xl font-semibold outline-none transition placeholder:font-semibold placeholder:text-neutral-500 focus:border-neutral-500/60 focus:placeholder:text-neutral-500/50"
             />
+            <label
+              htmlFor="email"
+              className="absolute ml-2 text-3xl peer-focus:text-neutral-500/60"
+            >
+              <BiEnvelope />
+            </label>
+          </div>
 
-            <FormLabel htmlFor="email">
-              <BiEnvelope className="text-3xl" />
-            </FormLabel>
-          </FormGroup>
-
-          <FormGroup className="flex items-center relative mb-2">
-            <FormControl
+          <div className="relative flex items-center text-neutral-500">
+            <input
+              id="password"
               type="password"
+              autoComplete="off"
               placeholder="Password"
-              register={register("password")}
-              disabled={loading}
+              {...register("password")}
+              className="peer h-12 w-full rounded-lg border-2 border-neutral-500 bg-transparent p-2 pl-10 text-xl font-semibold outline-none transition placeholder:font-semibold placeholder:text-neutral-500 focus:border-neutral-500/60 focus:placeholder:text-neutral-500/50"
             />
-
-            <FormLabel htmlFor="password">
-              <BiLock className="text-3xl" />
-            </FormLabel>
-          </FormGroup>
-
-          <div className="mb-4">
-            <span className="text-blue-500 hover:text-blue-400 transition hover:cursor-pointer">
-              Forgot password?
-            </span>
+            <label
+              htmlFor="password"
+              className="absolute ml-2 text-3xl peer-focus:text-neutral-500/60"
+            >
+              <BiLock />
+            </label>
           </div>
 
           <button
             type="submit"
-            className="w-full h-12 flex justify-center items-center rounded-md text-slate-200 transition bg-blue-500 hover:bg-blue-600 mb-2 disabled:bg-blue-300 disabled:cursor-not-allowed"
-            disabled={loading}
+            className="rounded-lg bg-violet-500 p-2 font-alt text-xl font-semibold text-neutral-300 transition hover:bg-violet-500/60 focus:bg-violet-500/60 disabled:bg-violet-400"
           >
-            {loading ? (
-              <TailSpin width={30} height={30} color="#ffffff" />
-            ) : (
-              "Submit"
-            )}
+            Submit
           </button>
-          <Link
-            className="text-center block text-blue-500 hover:text-blue-400"
-            href="/signup"
-          >
-            Create account
-          </Link>
+
+          <div className="text-center">
+            <Link href="/signup" className="text-violet-500 hover:underline">
+              Don't have an account?
+            </Link>
+          </div>
         </form>
       </div>
-    </div>
+    </section>
   );
 }
