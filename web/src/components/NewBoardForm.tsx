@@ -8,15 +8,15 @@ import {
   createBoardRequest,
   uploadBoardBackgroundRequest,
 } from "@/services/board";
-import { customRandom, nanoid, random, urlAlphabet } from "nanoid";
+import { customRandom, random, urlAlphabet } from "nanoid";
 
 type FieldValues = {
   name: string;
   media: FileList;
 };
 
-export default function NewBoardForm() {
-  const { handleSubmit, register, watch } = useForm<FieldValues>();
+export default function NewBoardForm({ setBoards }: any) {
+  const { handleSubmit, register, watch, resetField } = useForm<FieldValues>();
   const [flipped, setFlipped] = useState<boolean>(false);
 
   const file = watch("media");
@@ -25,27 +25,37 @@ export default function NewBoardForm() {
   const onSubmit: SubmitHandler<FieldValues> = async ({ name, media }) => {
     try {
       const formData = new FormData();
-      formData.append("name", name);
-      formData.append("media", media[0]);
 
-      let coverUrl = null;
+      let backgroundUrl = null;
 
-      if (formData.get("name")) {
+      if (media.length > 0) {
+        formData.append("media", media[0]);
         const response = await uploadBoardBackgroundRequest(formData);
 
-        coverUrl = response.data;
+        backgroundUrl = response.data;
       }
 
       const boardURL = customRandom(urlAlphabet, 12, random);
 
-      const response = await createBoardRequest({
+      const newBoard = {
         name,
-        background: coverUrl,
         url: boardURL(),
-      });
+        background: backgroundUrl,
+      };
 
-      console.log(response.data);
-    } catch (error) {}
+      const response = await createBoardRequest(newBoard);
+
+      if (response.status !== 201) {
+        return;
+      }
+
+      setBoards((prev: any) => [...prev, newBoard]);
+      resetField("name");
+      resetField("media");
+      setFlipped(false);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (

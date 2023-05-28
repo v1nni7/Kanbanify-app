@@ -30,7 +30,7 @@ export default function Boards() {
       <section className="p-4">
         <div className="h-full w-full rounded-lg bg-neutral-700/20">
           <div className="grid grid-cols-4 gap-4 p-4">
-            <NewBoardForm />
+            <NewBoardForm setBoards={setBoards} />
 
             {boards
               ? boards.map((board: any, index: number) => (
