@@ -6,6 +6,7 @@ const boardRouter = Router();
 
 boardRouter
   .post("/", validateTokenMiddleware, boardController.createBoard)
+  .post("/upload", validateTokenMiddleware, boardController.uploadImage)
   .get("/", validateTokenMiddleware, boardController.getUserBoards)
   .get("/:boardURL", validateTokenMiddleware, boardController.getBoard)
   .put("/:boardURL", validateTokenMiddleware, boardController.updateBoard);

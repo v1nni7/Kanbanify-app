@@ -52,9 +52,21 @@ async function updateBoard(req: Request, res: Response) {
   }
 }
 
+async function uploadImage(req: Request, res: Response) {
+  try {
+    const response = await boardService.uploadImage(req.files)
+
+    res.status(200).json(response);
+  } catch (error) {
+    console.log(error)
+    res.status(error.status || 500).json({ message: error.message });
+  }
+}
+
 export default {
   createBoard,
   getUserBoards,
   getBoard,
   updateBoard,
+  uploadImage,
 };
