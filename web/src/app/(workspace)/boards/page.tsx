@@ -3,12 +3,12 @@
 import { useContext, useLayoutEffect, useState } from "react";
 import { getBoardsRequest } from "@/services/board";
 import NewBoardForm from "@/components/NewBoardForm";
-import { BoardContext } from "@/context/BoardContext";
+import { KanbanContext } from "@/context/KanbanContext";
 import { useRouter } from "next/navigation";
 
 export default function Boards() {
   const router = useRouter();
-  const { setBoard } = useContext(BoardContext);
+  const { setKanban } = useContext(KanbanContext);
   const [boards, setBoards] = useState<any | null>(null);
 
   const loadingBoards = async () => {
@@ -27,7 +27,7 @@ export default function Boards() {
 
   const goToBoardPage = async ({ content, url }: any) => {
     try {
-      setBoard(content);
+      setKanban(content);
       router.push(`/board/${url}`);
     } catch (error) {
       console.log(error);

@@ -3,15 +3,16 @@
 import { useCallback, useContext, useEffect } from "react";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import { IoAddOutline, IoEllipsisVerticalSharp } from "react-icons/io5";
-import { BoardContext } from "@/context/BoardContext";
+import { KanbanContext } from "@/context/KanbanContext";
 import { getBoardContentRequest } from "@/services/board";
+import Kanban from "@/components/Kanban";
 
-export default function Board({ params }: { params: { boardUrl: string } }) {
-  const { board, setBoard, handleDragEnd } = useContext(BoardContext);
+export default function kanban({ params }: { params: { boardUrl: string } }) {
+  const { kanban, setKanban, handleDragEnd } = useContext(KanbanContext);
 
   const loadingBoard = useCallback(async () => {
     try {
-      if (board.columnOrder.length > 0) {
+      if (kanban.columnOrder.length > 0) {
         return;
       }
 
@@ -21,31 +22,35 @@ export default function Board({ params }: { params: { boardUrl: string } }) {
         return;
       }
 
-      setBoard(response.data.content);
+      setKanban(response.data.content);
     } catch (error) {
       console.log(error);
     }
-  }, [board]);
+  }, []);
 
   useEffect(() => {
     loadingBoard();
-    console.clear();
   }, [loadingBoard]);
 
   return (
     <>
       <section className="h-full w-full overflow-hidden bg-neutral-600/20 p-4">
-        <DragDropContext onDragEnd={handleDragEnd}>
+        <Kanban />
+        {/* <DragDropContext onDragEnd={handleDragEnd}>
           <Droppable
             droppableId="all-columns"
             direction="horizontal"
             type="column"
           >
             {({ droppableProps, innerRef, placeholder }) => (
-              <div {...droppableProps} ref={innerRef} className="h-full">
-                {board.columnOrder.length > 0 &&
-                  board.columnOrder?.map((columnId: string, index) => {
-                    const column = board.columns[columnId];
+              <div
+                {...droppableProps}
+                ref={innerRef}
+                className="flex h-full overflow-x-auto"
+              >
+                {kanban.columnOrder.length > 0 &&
+                  kanban.columnOrder?.map((columnId: string, index) => {
+                    const column = kanban.columns[columnId];
 
                     return (
                       <Column key={column.id} column={column} index={index} />
@@ -56,23 +61,21 @@ export default function Board({ params }: { params: { boardUrl: string } }) {
               </div>
             )}
           </Droppable>
-        </DragDropContext>
+        </DragDropContext> */}
       </section>
     </>
   );
 }
 
 function Column({ column, index }: any) {
-  const { board } = useContext(BoardContext);
-  const tasks = column?.taskIds?.map((taskId: string) => board.tasks[taskId]);
+  const { kanban } = useContext(KanbanContext);
+  const tasks = column?.taskIds?.map((taskId: string) => kanban.tasks[taskId]);
 
   return (
     <Draggable draggableId={column.id} index={index}>
       {({ draggableProps, innerRef, dragHandleProps }) => (
         <>
-          {/* Wrapper */}
           <div className="inline-block h-full scroll-m-2 whitespace-nowrap align-top">
-            {/* Content */}
             <div
               ref={innerRef}
               {...draggableProps}
@@ -102,7 +105,11 @@ function Column({ column, index }: any) {
                   {({ droppableProps, innerRef, placeholder }) => (
                     <>
                       {/* List Tasks */}
-                      <div {...droppableProps} ref={innerRef} className="p-1">
+                      <div
+                        {...droppableProps}
+                        ref={innerRef}
+                        className="h-full p-1"
+                      >
                         {tasks?.map((task: any, index: number) => (
                           <Task key={task.id} task={task} index={index} />
                         ))}

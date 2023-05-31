@@ -28,9 +28,9 @@ type BoardData = {
 };
 
 type BoardContextType = {
-  board: BoardData;
-  setBoard: (board: BoardData) => void;
-  updateBoard: (board: BoardData) => void;
+  kanban: BoardData;
+  setKanban: (kanban: BoardData) => void;
+  updateBoard: (kanban: BoardData) => void;
   handleDragEnd: (data: any) => void;
 };
 
@@ -38,12 +38,12 @@ type BoardContextProviderProps = {
   children: React.ReactNode;
 };
 
-export const BoardContext = createContext({} as BoardContextType);
+export const KanbanContext = createContext({} as BoardContextType);
 
-export default function BoardContextProvider({
+export default function KanbanContextProvider({
   children,
 }: BoardContextProviderProps) {
-  const [board, setBoard] = useState({
+  const [kanban, setKanban] = useState({
     tasks: {},
     columns: {},
     columnOrder: [],
@@ -51,9 +51,9 @@ export default function BoardContextProvider({
     isLoading: true,
   } as BoardData);
 
-  const updateBoard = async (board: any) => {
+  const updateBoard = async (kanban: any) => {
     try {
-      const response = await updateBoardRequest(board, board.url);
+      const response = await updateBoardRequest(kanban, kanban.url);
 
       if (response.status === 200) {
         return;
@@ -77,22 +77,22 @@ export default function BoardContextProvider({
       }
 
       if (type === "column") {
-        const newColumnOrder = Array.from(board.columnOrder);
+        const newColumnOrder = Array.from(kanban.columnOrder);
         newColumnOrder.splice(source.index, 1);
         newColumnOrder.splice(destination.index, 0, draggableId);
 
         const newState = {
-          ...board,
+          ...kanban,
           columnOrder: newColumnOrder,
         };
 
-        setBoard(newState);
+        setKanban(newState);
         updateBoard(newState);
         return;
       }
 
-      const start = board?.columns[source.droppableId];
-      const finish = board?.columns[destination.droppableId];
+      const start = kanban?.columns[source.droppableId];
+      const finish = kanban?.columns[destination.droppableId];
 
       if (start === finish) {
         const newTaskIds = Array.from(start.taskIds);
@@ -105,14 +105,14 @@ export default function BoardContextProvider({
         };
 
         const newBoardData: any = {
-          ...board,
+          ...kanban,
           columns: {
-            ...board?.columns,
+            ...kanban?.columns,
             [newColumn.id]: newColumn,
           },
         };
 
-        setBoard(newBoardData);
+        setKanban(newBoardData);
         updateBoard(newBoardData);
         return;
       }
@@ -133,23 +133,23 @@ export default function BoardContextProvider({
       };
 
       const newState = {
-        ...board,
+        ...kanban,
         columns: {
-          ...board?.columns,
+          ...kanban?.columns,
           [newStart.id]: newStart,
           [newFinish.id]: newFinish,
         },
       };
 
-      setBoard(newState);
+      setKanban(newState);
       updateBoard(newState);
     },
-    [board]
+    [kanban]
   );
 
   return (
-    <BoardContext.Provider value={{ board, setBoard, updateBoard, handleDragEnd }}>
+    <KanbanContext.Provider value={{ kanban, setKanban, updateBoard, handleDragEnd }}>
       {children}
-    </BoardContext.Provider>
+    </KanbanContext.Provider>
   );
 }

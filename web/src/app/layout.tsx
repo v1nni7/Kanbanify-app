@@ -6,7 +6,7 @@ import {
   Lexend_Deca as LexendDeca,
 } from "next/font/google";
 import { SessionProvider } from "next-auth/react";
-import BoardContextProvider from "@/context/BoardContext";
+import KanbanProvider from "@/context/KanbanContext";
 
 const lexendDeca = LexendDeca({
   subsets: ["latin"],
@@ -23,15 +23,17 @@ interface IProps {
 export default function RootLayout({ children }: IProps) {
   return (
     <html lang="en">
-      <body className={`bg-neutral-900 ${roboto.variable} ${lexendDeca.variable} font-sans`}>
+      <body
+        className={`bg-neutral-900 ${roboto.variable} ${lexendDeca.variable} font-sans`}
+      >
         <SessionProvider>
-          <BoardContextProvider>
-            <section className="w-5/6 mx-auto flex h-screen">
-              <div className="my-8 w-full bg-neutral-800 rounded-lg shadow overflow-hidden">
+          <KanbanProvider>
+            <section className="mx-auto flex h-screen w-5/6">
+              <div className="my-8 w-full overflow-hidden rounded-lg bg-neutral-800 shadow">
                 {children}
               </div>
             </section>
-          </BoardContextProvider>
+          </KanbanProvider>
         </SessionProvider>
       </body>
     </html>
