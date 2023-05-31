@@ -4,5 +4,23 @@
 
 body {
   -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;  
+  text-rendering: optimizeLegibility;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 10px;
+  background-color: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #383838;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 12px;
+}
+
+::-webkit-scrollbar-corner {
+  display: none;
 }

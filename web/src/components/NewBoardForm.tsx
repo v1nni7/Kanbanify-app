@@ -3,12 +3,12 @@
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { IoDuplicateOutline, IoImagesOutline } from "react-icons/io5";
+import { customRandom, random, urlAlphabet } from "nanoid";
 import useFilePreview from "@/hooks/useFilePreview";
 import {
   createBoardRequest,
   uploadBoardBackgroundRequest,
 } from "@/services/board";
-import { customRandom, random, urlAlphabet } from "nanoid";
 
 type FieldValues = {
   name: string;

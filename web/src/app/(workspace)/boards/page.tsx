@@ -1,10 +1,14 @@
 "use client";
 
-import { useLayoutEffect, useState } from "react";
+import { useContext, useLayoutEffect, useState } from "react";
 import { getBoardsRequest } from "@/services/board";
 import NewBoardForm from "@/components/NewBoardForm";
+import { BoardContext } from "@/context/BoardContext";
+import { useRouter } from "next/navigation";
 
 export default function Boards() {
+  const router = useRouter();
+  const { setBoard } = useContext(BoardContext);
   const [boards, setBoards] = useState<any | null>(null);
 
   const loadingBoards = async () => {
@@ -16,6 +20,15 @@ export default function Boards() {
       }
 
       setBoards(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const goToBoardPage = async ({ content, url }: any) => {
+    try {
+      setBoard(content);
+      router.push(`/board/${url}`);
     } catch (error) {
       console.log(error);
     }
@@ -36,6 +49,7 @@ export default function Boards() {
               ? boards.map((board: any, index: number) => (
                   <div
                     key={index}
+                    onClick={() => goToBoardPage(board)}
                     className="group relative h-44 cursor-pointer overflow-hidden rounded-lg transition hover:shadow-lg"
                   >
                     <img
