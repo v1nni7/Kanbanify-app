@@ -26,10 +26,16 @@ module.exports = {
           "0%, 100%": { transform: "rotate(-6deg)" },
           "50%": { transform: "rotate(6deg)" },
         },
+        open: {
+          "0%": { height: "0px" },
+          "100%": { height: "100px" },
+        },
       },
       animation: {
         fade: "fade 1s",
         wiggle: "wiggle 1s ease-in-out infinite",
+        open: "open 0.2s ease-in-out",
+        "open-reverse": "open 0.2s ease-in-out reverse",
       },
     },
   },
