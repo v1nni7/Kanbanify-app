@@ -1,10 +1,10 @@
 import { Router } from "express";
 import userRouter from "./userRouter";
-import boardRouter from "./boardRouter";
+import kanbanRouter from "./kanbanRouter";
 
 const router = Router();
 
 router.use("/user", userRouter);
-router.use("/board", boardRouter);
+router.use("/kanban", kanbanRouter);
 
 export default router;
