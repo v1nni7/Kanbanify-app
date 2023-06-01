@@ -1,5 +1,5 @@
 import kanbanRepository from "@/repositories/kanbanRepository";
-import { conflictError } from "@/utils/errorUtils";
+import { conflictError, unauthorizedError } from "@/utils/errorUtils";
 
 async function createKanbanBoard(body: any, userId: number) {
   const boardNameAlreadyExists = await kanbanRepository.findBoardByName(
@@ -15,4 +15,14 @@ async function createKanbanBoard(body: any, userId: number) {
   return response;
 }
 
-export default { createKanbanBoard };
+async function getKanbanBoards(userId: number) {
+  if (!userId) {
+    throw unauthorizedError("asdsad");
+  }
+
+  const response = await kanbanRepository.getKanbanBoards(userId);
+
+  return response;
+}
+
+export default { createKanbanBoard, getKanbanBoards };

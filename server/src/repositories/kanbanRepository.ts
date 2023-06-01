@@ -8,4 +8,8 @@ function createKanbanBoard(body: any, userId: number) {
   return boards.insertOne({ ...body, userId, content: null });
 }
 
-export default { findBoardByName, createKanbanBoard };
+function getKanbanBoards(userId: number) {
+  return boards.find({ userId }).toArray();
+}
+
+export default { findBoardByName, createKanbanBoard, getKanbanBoards };

@@ -6,7 +6,10 @@ async function createKanbanBoard(req: Request, res: Response) {
     const { body } = req;
     const { userId } = res.locals;
 
-    const response = await kanbanServices.createKanbanBoard(body, Number(userId));
+    const response = await kanbanServices.createKanbanBoard(
+      body,
+      Number(userId)
+    );
 
     res.status(201).json(response);
   } catch (error) {
@@ -14,4 +17,16 @@ async function createKanbanBoard(req: Request, res: Response) {
   }
 }
 
-export default { createKanbanBoard };
+async function getKanbanBoards(req: Request, res: Response) {
+  try {
+    const { userId } = res.locals;
+
+    const response = await kanbanServices.getKanbanBoards(Number(userId));
+
+    res.status(200).json(response);
+  } catch (error) {
+    res.status(error.status || 500).json(error.message);
+  }
+}
+
+export default { createKanbanBoard, getKanbanBoards };

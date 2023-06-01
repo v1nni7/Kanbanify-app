@@ -8,6 +8,6 @@ kanbanRouter.post(
   "/",
   validateTokenMiddleware,
   kanbanController.createKanbanBoard
-);
+).get('/', validateTokenMiddleware, kanbanController.getKanbanBoards)
 
 export default kanbanRouter;
