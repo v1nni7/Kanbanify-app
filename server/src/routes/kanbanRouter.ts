@@ -4,10 +4,8 @@ import { Router } from "express";
 
 const kanbanRouter = Router();
 
-kanbanRouter.post(
-  "/",
-  validateTokenMiddleware,
-  kanbanController.createKanbanBoard
-).get('/', validateTokenMiddleware, kanbanController.getKanbanBoards)
+kanbanRouter
+  .post("/", validateTokenMiddleware, kanbanController.createKanbanBoard)
+  .get("/", validateTokenMiddleware, kanbanController.getKanbanBoards);
 
 export default kanbanRouter;
