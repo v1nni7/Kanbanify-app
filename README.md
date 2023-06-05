@@ -6,32 +6,54 @@
   <h2 align="center">React Kanban</h2>
 </p>
 
+### 📌 Sobre
 
-<h2> ℹ️ Sobre o projeto</h2>
-<p>Projeto criado para ajudar as pessoas a se organizar durante seu dia a dia, possibilitando visualizar avanços e trabalhos terminados!</p>
+O projeto foi desenvolvido com o objetivo de fornecer uma ferramenta de organização e acompanhamento do dia a dia das pessoas. Utilizando o estilo Kanban, permite que os usuários visualizem e acompanhem o progresso de suas tarefas e trabalhos concluídos de forma intuitiva.
 
-<br />
+Com essa aplicação, os usuários podem criar quadros virtuais compostos por colunas representando diferentes estágios de suas atividades. Isso possibilita a organização e priorização das tarefas, bem como o acompanhamento visual do avanço em direção aos objetivos.
 
-<h2>⚙️ Em progresso</h2>
-  <ul>
-    <li>Otimização dos cards</li>
-    <li>Refatoração do código</li>
-    <li>Quadros no banco de dados</li>
-  </ul>
+### 🛠 Tecnologias
 
-<br />
+As seguintes ferramentas foram usadas na construção do projeto:
 
-<h2>🔬 Próximos passos</h2>
-  <ul>
-   <li>Adicionar usuários ao quadro</li>
-   <li>Usuários enviarem mensagens nos quadros</li>
-  </ul>
+- [React](https://reactjs.org/)
+- [TypeScript](https://www.typescriptlang.org/)
+- [Tailwind CSS](https://tailwindcss.com/)
+- [Next.js](https://nextjs.org/)
+- [React Beautiful DnD](https://react-beautiful-dnd.netlify.app/?path=/story/single-vertical-list--basic)
+- [React Icons](https://react-icons.github.io/react-icons/)
 
-<br />
-<h2> 🚀 Tecnologias Utilizadas</h2>
+### 🎲 Rodando o projeto
 
-<div>
-    <img src="https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" />
-    <img src="https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white" />
-    <img src="https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white" />
-</div>
+```bash
+# Clone este repositório
+$ git clone
+
+# Acesse a pasta do projeto no terminal/cmd
+$ cd react-kanban-app
+
+# Acesse as pastas do projeto web e server
+$ cd web
+$ cd server
+
+# Configure as variáveis de ambiente
+$ cp .env.example .env
+
+# Abra e edite o arquivo .env com as suas configurações
+ VSCODE: $ code .env
+ VIM: $ vim .env
+
+# Instale as dependências
+$ npm install
+
+# Execute a aplicação em modo de desenvolvimento
+$ npm run dev
+
+# O servidor inciará na porta:3000 - acesse http://localhost:3000/signin
+```
+
+### 📝 Licença
+
+Este projeto esta sobe a licença [MIT](./LICENSE).
+
+Feito com ❤️ por **Vinicius Cezar** 👋🏽 [Entre em contato!](https://www.linkedin.com/in/vinicius-silveira-cezar/)
