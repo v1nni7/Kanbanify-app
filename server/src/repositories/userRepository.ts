@@ -16,7 +16,7 @@ function getUser(userId: number) {
       username: true,
       firstName: true,
       lastName: true,
-      profilePicture: true,
+      photo: true,
     },
   });
 }
