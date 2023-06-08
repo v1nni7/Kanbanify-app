@@ -65,10 +65,24 @@ async function createTask(req: Request, res: Response) {
   }
 }
 
+async function updateBoard(req: Request, res: Response) {
+  try {
+    const { body } = req;
+    const { boardURL } = req.params;
+
+    await boardServices.updateBoard(body, boardURL);
+
+    res.status(200).json({ message: "Board updated successfully" });
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 export default {
   createBoard,
   getBoards,
   getBoardContent,
   createColumn,
   createTask,
+  updateBoard
 };

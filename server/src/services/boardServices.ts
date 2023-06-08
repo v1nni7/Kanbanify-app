@@ -102,10 +102,21 @@ async function createTask(body, boardURL: string, columnId: any) {
   return newContent.tasks[taskId];
 }
 
+async function updateBoard(content, boardURL: string) {
+  const isBoardAlreadyCreated = await boardRepository.findBoardByURL(boardURL);
+
+  if (!isBoardAlreadyCreated) {
+    throw new Error("Board not found");
+  }
+
+  await boardRepository.updateBoard(content, boardURL);
+}
+
 export default {
   createBoard,
   getBoardsByUserId,
   getBoardByURL,
   createColumn,
   createTask,
+  updateBoard
 };

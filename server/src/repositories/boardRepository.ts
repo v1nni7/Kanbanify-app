@@ -64,10 +64,24 @@ function createTaskInColumn(newContent, boardURL: string) {
   );
 }
 
+function updateBoard(content, boardURL: string) {
+  return boardCollection.updateOne(
+    {
+      url: boardURL,
+    },
+    {
+      $set: {
+        content,
+      },
+    }
+  );
+}
+
 export default {
   createBoard,
   findBoardByUserId,
   findBoardByURL,
   createColumnInBoard,
   createTaskInColumn,
+  updateBoard
 };
