@@ -2,21 +2,52 @@ import { Draggable, Droppable } from "react-beautiful-dnd";
 import { BiX } from "react-icons/bi";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { IoAddOutline, IoEllipsisVerticalSharp } from "react-icons/io5";
+import { createTask } from "@/services/board";
 import useToggleClickOutside from "@/hooks/useToggleClickOutside";
+import { KanbanContext } from "@/context/KanbanContext";
 import Footer from "./Footer";
 import InnerListTask from "./InnerListTask";
+import { useContext } from "react";
 
 type FieldValues = {
   title: string;
 };
 
-export default function Column({ column, tasks, index }: any) {
+export default function Column({ column, tasks, index, boardURL }: any) {
+  const { kanban, setKanban } = useContext(KanbanContext);
   const { handleSubmit, register } = useForm<FieldValues>();
   const [isOpen, toggle, element, button] = useToggleClickOutside(false);
 
   const onSubmit: SubmitHandler<FieldValues> = async ({ title }) => {
     try {
-    } catch (error) {}
+      const { status, data } = await createTask(title, boardURL, column.id);
+
+      if (status !== 201) {
+        throw new Error("Error to create task");
+      }
+
+      const newKanban = {
+        ...kanban,
+        tasks: {
+          ...kanban.tasks,
+          [data.id]: {
+            id: data.id,
+            title: data.title,
+          },
+        },
+        columns: {
+          ...kanban.columns,
+          [column.id]: {
+            ...kanban.columns[column.id],
+            taskIds: [...kanban.columns[column.id].taskIds, data.id],
+          },
+        },
+      };
+
+      setKanban(newKanban);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -59,7 +90,7 @@ export default function Column({ column, tasks, index }: any) {
                       ref={innerRef}
                     >
                       <div
-                        className={`mb-2 overflow-hidden rounded-lg bg-neutral-700/50 transition-all ${
+                        className={`mb-2 overflow-hidden rounded-lg bg-neutral-900/60 transition-all ${
                           isOpen ? "h-[100px]" : "h-0"
                         }`}
                         ref={element}
@@ -69,10 +100,11 @@ export default function Column({ column, tasks, index }: any) {
                           className="flex flex-col items-start gap-2 p-2"
                         >
                           <input
+                            id="title"
                             type="text"
-                            placeholder="New column"
+                            placeholder="New Task"
                             {...register("title")}
-                            className="w-full rounded-lg border-2 border-neutral-600 bg-transparent p-2 font-alt text-neutral-400 outline-none placeholder:text-neutral-400 focus:border-neutral-500/80"
+                            className="w-full rounded-md bg-neutral-700 p-2 text-lg font-bold text-neutral-400 placeholder-neutral-500 outline-none transition-colors focus:bg-neutral-700/60"
                           />
 
                           <div className="flex items-center gap-2 overflow-hidden text-neutral-300">

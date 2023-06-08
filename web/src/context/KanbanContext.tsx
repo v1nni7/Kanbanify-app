@@ -1,5 +1,6 @@
 "use client";
 
+import { updateBoard } from "@/services/board";
 import { createContext, useCallback, useState } from "react";
 
 type BoardContextProviderProps = {
@@ -12,14 +13,15 @@ export default function KanbanContextProvider({
   children,
 }: BoardContextProviderProps) {
   const [kanban, setKanban] = useState<any>(null);
+  const [boardURL, setBoardURL] = useState<string>("");
 
-  const updateBoard = async (kanban: any) => {
+  const handleUpdateBoard = async (content: any) => {
     try {
-      // const response = await updateKanbanRequest(kanban);
+      const response = await updateBoard(content, boardURL);
 
-      // if (response.status === 200) {
-      //   return;
-      // }
+      if (response.status === 200) {
+        return;
+      }
     } catch (error) {
       console.log(error);
     }
@@ -53,7 +55,7 @@ export default function KanbanContextProvider({
         };
 
         setKanban(newState);
-        updateBoard(newState);
+        handleUpdateBoard(newState);
         return;
       }
 
@@ -79,7 +81,7 @@ export default function KanbanContextProvider({
         };
 
         setKanban(newBoardData);
-        updateBoard(newBoardData);
+        handleUpdateBoard(newBoardData);
         return;
       }
 
@@ -108,14 +110,14 @@ export default function KanbanContextProvider({
       };
 
       setKanban(newState);
-      updateBoard(newState);
+      handleUpdateBoard(newState);
     },
     [kanban]
   );
 
   return (
     <KanbanContext.Provider
-      value={{ kanban, setKanban, updateBoard, handleDragEnd }}
+      value={{ kanban, setKanban, handleUpdateBoard, handleDragEnd, setBoardURL }}
     >
       {children}
     </KanbanContext.Provider>

@@ -15,7 +15,7 @@ type FieldValues = {
 export default function ContainerKanban({ boardURL }: { boardURL: string }) {
   const [isOpen, toggle, element] = useToggleClickOutside(false);
   const { handleSubmit, register } = useForm<FieldValues>();
-  const { kanban, setKanban, handleDragEnd } = useContext(KanbanContext);
+  const { kanban, setKanban, handleDragEnd, setBoardURL } = useContext(KanbanContext);
 
   const onSubmit: SubmitHandler<FieldValues> = useCallback(
     async ({ title }) => {
@@ -57,6 +57,7 @@ export default function ContainerKanban({ boardURL }: { boardURL: string }) {
         throw new Error("Error to get kanban board");
       }
 
+      setBoardURL(boardURL);
       setKanban(data.content);
     } catch (error) {
       console.log(error);
@@ -99,8 +100,9 @@ export default function ContainerKanban({ boardURL }: { boardURL: string }) {
                     <input
                       id="title"
                       type="text"
+                      placeholder="New Column"
                       {...register("title")}
-                      className="rounded-md bg-neutral-700 p-2 text-lg font-bold text-neutral-400 outline-none transition-colors focus:bg-neutral-700/60"
+                      className="rounded-md bg-neutral-700 p-2 text-lg font-bold  text-neutral-400 placeholder-neutral-500 outline-none transition-colors focus:bg-neutral-700/60"
                     />
                   </div>
 
@@ -145,6 +147,7 @@ export default function ContainerKanban({ boardURL }: { boardURL: string }) {
                   return (
                     <InnerListColumn
                       key={column.id}
+                      boardURL={boardURL}
                       taskMap={kanban.tasks}
                       column={column}
                       index={index}
