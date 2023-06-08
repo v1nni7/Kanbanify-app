@@ -1,63 +1,25 @@
 "use client";
 
-import { updateBoardRequest } from "@/services/board";
 import { createContext, useCallback, useState } from "react";
-
-type TaskData = {
-  [key: string]: {
-    id: string;
-    title: string;
-    totalCheckbox: number;
-    completedCheckbox: number;
-  };
-};
-
-type ColumnData = {
-  [key: string]: {
-    id: string;
-    title: string;
-    taskIds: string[];
-  };
-};
-
-type BoardData = {
-  tasks: TaskData;
-  columns: ColumnData;
-  columnOrder: string[];
-  isLoading: boolean;
-};
-
-type BoardContextType = {
-  kanban: BoardData;
-  setKanban: (kanban: BoardData) => void;
-  updateBoard: (kanban: BoardData) => void;
-  handleDragEnd: (data: any) => void;
-};
 
 type BoardContextProviderProps = {
   children: React.ReactNode;
 };
 
-export const KanbanContext = createContext({} as BoardContextType);
+export const KanbanContext = createContext({} as any);
 
 export default function KanbanContextProvider({
   children,
 }: BoardContextProviderProps) {
-  const [kanban, setKanban] = useState({
-    tasks: {},
-    columns: {},
-    columnOrder: [],
-    url: "",
-    isLoading: true,
-  } as BoardData);
+  const [kanban, setKanban] = useState<any>(null);
 
   const updateBoard = async (kanban: any) => {
     try {
-      const response = await updateBoardRequest(kanban, kanban.url);
+      // const response = await updateKanbanRequest(kanban);
 
-      if (response.status === 200) {
-        return;
-      }
+      // if (response.status === 200) {
+      //   return;
+      // }
     } catch (error) {
       console.log(error);
     }
@@ -65,6 +27,10 @@ export default function KanbanContextProvider({
 
   const handleDragEnd = useCallback(
     ({ destination, source, draggableId, type }: any) => {
+      if (!kanban) {
+        return;
+      }
+
       if (!destination) {
         return;
       }
@@ -148,7 +114,9 @@ export default function KanbanContextProvider({
   );
 
   return (
-    <KanbanContext.Provider value={{ kanban, setKanban, updateBoard, handleDragEnd }}>
+    <KanbanContext.Provider
+      value={{ kanban, setKanban, updateBoard, handleDragEnd }}
+    >
       {children}
     </KanbanContext.Provider>
   );

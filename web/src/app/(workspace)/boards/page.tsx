@@ -1,10 +1,10 @@
 "use client";
 
-import { useContext, useLayoutEffect, useState } from "react";
-import { getBoardsRequest } from "@/services/board";
-import NewBoardForm from "@/components/NewBoardForm";
-import { KanbanContext } from "@/context/KanbanContext";
 import { useRouter } from "next/navigation";
+import { useContext, useLayoutEffect, useState } from "react";
+import KanbanBoardForm from "@/components/KanbanBoardForm";
+import { KanbanContext } from "@/context/KanbanContext";
+import { getAllBoards } from "@/services/board";
 
 export default function Boards() {
   const router = useRouter();
@@ -13,7 +13,7 @@ export default function Boards() {
 
   const loadingBoards = async () => {
     try {
-      const response = await getBoardsRequest();
+      const response = await getAllBoards();
 
       if (response.status !== 200) {
         return;
@@ -43,7 +43,7 @@ export default function Boards() {
       <section className="p-4">
         <div className="h-full w-full rounded-lg bg-neutral-700/20">
           <div className="grid grid-cols-4 gap-4 p-4">
-            <NewBoardForm setBoards={setBoards} />
+            <KanbanBoardForm setBoards={setBoards} />
 
             {boards
               ? boards.map((board: any, index: number) => (
@@ -54,7 +54,7 @@ export default function Boards() {
                   >
                     <img
                       src={board.background}
-                      className="h-full object-cover transition group-hover:scale-125 group-hover:transform"
+                      className="h-full w-full object-cover transition group-hover:scale-125 group-hover:transform"
                     />
 
                     <div className="absolute inset-0 flex items-end bg-gradient-to-t from-neutral-950/95 to-neutral-700/20 p-4">

@@ -3,12 +3,8 @@
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { IoDuplicateOutline, IoImagesOutline } from "react-icons/io5";
-import { customRandom, random, urlAlphabet } from "nanoid";
 import useFilePreview from "@/hooks/useFilePreview";
-import {
-  createBoardRequest,
-  uploadBoardBackgroundRequest,
-} from "@/services/board";
+import { createBoard, uploadImage } from "@/services/board";
 
 type FieldValues = {
   name: string;
@@ -30,20 +26,17 @@ export default function NewBoardForm({ setBoards }: any) {
 
       if (media.length > 0) {
         formData.append("media", media[0]);
-        const response = await uploadBoardBackgroundRequest(formData);
+        const response = await uploadImage(formData);
 
         backgroundUrl = response.data;
       }
 
-      const boardURL = customRandom(urlAlphabet, 12, random);
-
       const newBoard = {
         name,
-        url: boardURL(),
         background: backgroundUrl,
       };
 
-      const response = await createBoardRequest(newBoard);
+      const response = await createBoard(newBoard);
 
       if (response.status !== 201) {
         return;

@@ -1,27 +1,21 @@
 import { api } from "./api";
 
-type CreateBoardRequestData = {
-  name: string;
-  background: string;
-  url: string;
-};
-
-export async function getBoardContentRequest(id: string) {
-  return await api.get(`/board/${id}`);
+export async function createBoard(body: any) {
+  return await api.post("/boards", body);
 }
 
-export async function updateBoardRequest(data: any, boardURL: string) {
-  return await api.put(`/board/${boardURL}`, data);
+export async function getAllBoards() {
+  return await api.get("/boards");
 }
 
-export async function createBoardRequest(data: CreateBoardRequestData) {
-  return await api.post("/board", data);
+export async function getBoard(boardId: string) {
+  return await api.get(`/boards/${boardId}`);
 }
 
-export async function getBoardsRequest() {
-  return await api.get("/board");
+export async function createColumn(title: any, boardURL: string) {
+  return await api.post(`/boards/column/${boardURL}`, { title });
 }
 
-export async function uploadBoardBackgroundRequest(data: any) {
-  return await api.post(`/board/upload`, data);
+export async function uploadImage(body: any) {
+  return await api.post("/upload", body);
 }
