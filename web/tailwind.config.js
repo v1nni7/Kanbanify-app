@@ -18,6 +18,10 @@ module.exports = {
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },
       keyframes: {
+        "open-modal": {
+          "0%": { opacity: 0, transform: "translateY(-100px)" },
+          "100%": { opacity: 1, transform: "translateY(0px)" },
+        },
         fade: {
           "0%": { opacity: 0 },
           "100%": { opacity: 1 },
@@ -36,6 +40,7 @@ module.exports = {
         wiggle: "wiggle 1s ease-in-out infinite",
         open: "open 0.2s ease-in-out",
         "open-reverse": "open 0.2s ease-in-out reverse",
+        "open-modal": "open-modal 0.2s ease-in-out",
       },
     },
   },

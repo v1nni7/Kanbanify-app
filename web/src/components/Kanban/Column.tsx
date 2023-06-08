@@ -59,7 +59,7 @@ export default function Column({ column, tasks, index, boardURL }: any) {
             {...draggableProps}
             ref={innerRef}
           >
-            <div className="relative mr-2 flex max-h-full w-[300px] flex-col whitespace-normal rounded-lg bg-neutral-800">
+            <div className="mr-2 flex max-h-full w-[300px] flex-col whitespace-normal rounded-lg bg-neutral-800">
               <div {...dragHandleProps}>
                 <div className="flex items-center justify-between px-2 py-4">
                   <h2 className="font-alt text-lg font-semibold text-neutral-500">
@@ -85,7 +85,7 @@ export default function Column({ column, tasks, index, boardURL }: any) {
                 <Droppable droppableId={column.id} type="task">
                   {({ droppableProps, innerRef, placeholder }) => (
                     <div
-                      className="relative mx-1 min-h-[30px] flex-grow transition"
+                      className="mx-1 min-h-[30px] flex-grow transition"
                       {...droppableProps}
                       ref={innerRef}
                     >
