@@ -50,6 +50,7 @@ export default function Signup() {
               id="username"
               type="text"
               placeholder="Username"
+              {...register("username")}
               className="peer h-12 w-full rounded-lg border-2 border-neutral-500 bg-transparent p-2 pl-10 text-xl font-semibold outline-none transition placeholder:font-semibold placeholder:text-neutral-500 focus:border-neutral-500/60 focus:placeholder:text-neutral-500/50"
             />
             <label
@@ -65,6 +66,7 @@ export default function Signup() {
               id="email"
               type="text"
               placeholder="Email"
+              {...register("email")}
               className="peer h-12 w-full rounded-lg border-2 border-neutral-500 bg-transparent p-2 pl-10 text-xl font-semibold outline-none transition placeholder:font-semibold placeholder:text-neutral-500 focus:border-neutral-500/60 focus:placeholder:text-neutral-500/50"
             />
             <label
@@ -80,6 +82,7 @@ export default function Signup() {
               id="password"
               type="password"
               placeholder="Password"
+              {...register("password")}
               className="peer h-12 w-full rounded-lg border-2 border-neutral-500 bg-transparent p-2 pl-10 text-xl font-semibold outline-none transition placeholder:font-semibold placeholder:text-neutral-500 focus:border-neutral-500/60 focus:placeholder:text-neutral-500/50"
             />
             <label
@@ -93,8 +96,9 @@ export default function Signup() {
           <div className="relative flex items-center text-neutral-500">
             <input
               id="confirmPassword"
-              type="confirmPassword"
+              type="password"
               placeholder="Confirm Password"
+              {...register("confirmPassword")}
               className="peer h-12 w-full rounded-lg border-2 border-neutral-500 bg-transparent p-2 pl-10 text-xl font-semibold outline-none transition placeholder:font-semibold placeholder:text-neutral-500 focus:border-neutral-500/60 focus:placeholder:text-neutral-500/50"
             />
             <label
@@ -111,7 +115,7 @@ export default function Signup() {
           >
             Submit
           </button>
-          
+
           <div className="text-center">
             <Link href="/signin" className="text-violet-500 hover:underline">
               Already have an account?
