@@ -78,11 +78,53 @@ async function updateBoard(req: Request, res: Response) {
   }
 }
 
+async function updateTaskOrder(req: Request, res: Response) {
+  try {
+    const { body } = req;
+    const { boardURL } = req.params;
+
+    await boardServices.updateTaskOrder(body, boardURL);
+
+    res.status(200).json({ message: "Task order updated successfully" });
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+async function updateColumnOrder(req: Request, res: Response) {
+  try {
+    const { body } = req;
+    const { boardURL } = req.params;
+
+    await boardServices.updateColumnOrder(body, boardURL);
+
+    res.status(200).json({ message: "Column order updated successfully" });
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+async function updateTaskToNewColumn(req: Request, res: Response) {
+  try {
+    const { body } = req;
+    const { boardURL } = req.params;
+
+    await boardServices.updateTaskToNewColumn(body, boardURL);
+
+    res.status(200).json({ message: "Task moved successfully" });
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 export default {
   createBoard,
   getBoards,
   getBoardContent,
   createColumn,
   createTask,
-  updateBoard
+  updateBoard,
+  updateTaskOrder,
+  updateColumnOrder,
+  updateTaskToNewColumn,
 };

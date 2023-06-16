@@ -1,5 +1,5 @@
 import { boardCollection } from "@/config/mongo";
-import { ObjectId } from "mongodb";
+import { Db, ObjectId } from "mongodb";
 
 export type Board = {
   _id?: ObjectId;
@@ -77,11 +77,45 @@ function updateBoard(content, boardURL: string) {
   );
 }
 
+function updateColumnOrder(newColumnOrder, boardURL: string) {
+  return boardCollection.updateOne(
+    { url: boardURL },
+    { $set: { "content.columnOrder": newColumnOrder } }
+  );
+}
+
+function updateTaskOrder({ columnId, taskIds }, boardURL: string) {
+  return boardCollection.updateOne(
+    { url: boardURL },
+    { $set: { [`content.columns.${columnId}.taskIds`]: taskIds } }
+  );
+}
+
+function updateTaskToNewColumn(
+  { taskId, sourceColumnId, destinationColumnId, newTaskOrder },
+  boardURL
+) {
+  return boardCollection.updateOne(
+    { url: boardURL },
+    {
+      $pull: {
+        [`content.columns.${sourceColumnId}.taskIds`]: taskId,
+      },
+      $set: {
+        [`content.columns.${destinationColumnId}.taskIds`]: newTaskOrder,
+      },
+    }
+  );
+}
+
 export default {
   createBoard,
   findBoardByUserId,
   findBoardByURL,
   createColumnInBoard,
   createTaskInColumn,
-  updateBoard
+  updateBoard,
+  updateTaskOrder,
+  updateColumnOrder,
+  updateTaskToNewColumn,
 };

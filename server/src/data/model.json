@@ -9,8 +9,32 @@
       "task-1": {
         "id": "task-1",
         "title": "Take out the garbage",
-        "totalCheckbox": 0,
-        "completedCheckbox": 0
+        "description": "Take out the garbage",
+        "coverURL": "https://images.unsplash.com/photo-1594396457412-5b4b9d6e8b5b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80",
+        "checklists": [
+          {
+            "id": "random",
+            "title": "Checklist 1",
+            "items": [
+              {
+                "id": "random",
+                "title": "Item 1",
+                "checked": false
+              },
+              {
+                "id": "random",
+                "title": "Item 2",
+                "checked": false
+              },
+              {
+                "id": "random",
+                "title": "Item 3",
+                "checked": false
+              }
+            ]
+            
+          }
+        ]
       }
     },
     "columns": {
