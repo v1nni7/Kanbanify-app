@@ -1,6 +1,6 @@
 "use client";
 
-import Kanban from "@/components/Kanban/ContainerKanban";
+import Kanban from "@/components/Kanban";
 
 export default function kanban({ params }: { params: { boardUrl: string } }) {
   return (

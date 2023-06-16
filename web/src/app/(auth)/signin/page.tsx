@@ -44,7 +44,7 @@ export default function Signin() {
     <section className="flex h-full w-full items-center justify-center">
       <div className="flex w-80 flex-col gap-4">
         <h2 className="text-center font-alt text-2xl text-neutral-300">
-          Sign In
+          Login
         </h2>
         <form
           onSubmit={handleSubmit(onSubmit)}

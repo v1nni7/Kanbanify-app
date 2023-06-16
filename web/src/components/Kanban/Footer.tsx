@@ -1,5 +1,4 @@
 export default function Footer({ tasks }: any) {
-  console.log(tasks);
 
   return (
     <div className="px-2 py-4">

@@ -1,3 +1,5 @@
+"use client"
+
 import { Draggable, Droppable } from "react-beautiful-dnd";
 import { BiX } from "react-icons/bi";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -90,9 +92,8 @@ export default function Column({ column, tasks, index, boardURL }: any) {
                       ref={innerRef}
                     >
                       <div
-                        className={`mb-2 overflow-hidden rounded-lg bg-neutral-900/60 transition-all ${
-                          isOpen ? "h-[100px]" : "h-0"
-                        }`}
+                        className={`mb-2 overflow-hidden rounded-lg bg-neutral-900/60 transition-all ${isOpen ? "h-[100px]" : "h-0"
+                          }`}
                         ref={element}
                       >
                         <form

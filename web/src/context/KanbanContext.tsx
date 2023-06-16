@@ -1,7 +1,7 @@
 "use client";
 
-import { updateBoard } from "@/services/board";
 import { createContext, useCallback, useState } from "react";
+import { updateColumnOrder, updateTaskOrder, updateTaskToNewColumn } from "@/services/board";
 
 type BoardContextProviderProps = {
   children: React.ReactNode;
@@ -15,17 +15,38 @@ export default function KanbanContextProvider({
   const [kanban, setKanban] = useState<any>(null);
   const [boardURL, setBoardURL] = useState<string>("");
 
-  const handleUpdateBoard = async (content: any) => {
+  const handleUpdateTaskToNewColumn = async (content: any, differentColumn = false) => {
     try {
-      const response = await updateBoard(content, boardURL);
+      if (differentColumn) {
+        await updateTaskToNewColumn(content, boardURL);
+        return
+      }
+
+      await updateTaskOrder(content, boardURL);
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const handleUpdateColumnOrder = async (content: any) => {
+    try {
+      const newColumnOrder = content.columnOrder
+
+      const response = await updateColumnOrder(newColumnOrder, boardURL);
 
       if (response.status === 200) {
+        console.log(response);
         return;
       }
+
     } catch (error) {
       console.log(error);
     }
   };
+
+  const handleUpdateBoard = () => {
+    console.log("Função inativa")
+  }
 
   const handleDragEnd = useCallback(
     ({ destination, source, draggableId, type }: any) => {
@@ -55,7 +76,7 @@ export default function KanbanContextProvider({
         };
 
         setKanban(newState);
-        handleUpdateBoard(newState);
+        handleUpdateColumnOrder(newState);
         return;
       }
 
@@ -81,7 +102,13 @@ export default function KanbanContextProvider({
         };
 
         setKanban(newBoardData);
-        handleUpdateBoard(newBoardData);
+
+        const content = {
+          columnId: source.droppableId,
+          taskIds: newTaskIds
+        }
+
+        handleUpdateTaskToNewColumn(content, false);
         return;
       }
 
@@ -109,8 +136,13 @@ export default function KanbanContextProvider({
         },
       };
 
+
       setKanban(newState);
-      handleUpdateBoard(newState);
+      const sourceColumnId = source.droppableId;
+      const destinationColumnId = destination.droppableId;
+
+      const content = { taskId: draggableId, sourceColumnId, destinationColumnId, newTaskOrder: finishTaskIds }
+      handleUpdateTaskToNewColumn(content, true);
     },
     [kanban]
   );

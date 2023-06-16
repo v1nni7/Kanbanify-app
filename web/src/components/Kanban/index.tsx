@@ -1,3 +1,5 @@
+"use client"
+
 import { BiX } from "react-icons/bi";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useCallback, useContext, useEffect } from "react";
@@ -12,7 +14,7 @@ type FieldValues = {
   title: string;
 };
 
-export default function ContainerKanban({ boardURL }: { boardURL: string }) {
+export default function Kanban({ boardURL }: { boardURL: string }) {
   const [isOpen, toggle, element] = useToggleClickOutside(false);
   const { handleSubmit, register } = useForm<FieldValues>();
   const { kanban, setKanban, handleDragEnd, setBoardURL } = useContext(KanbanContext);

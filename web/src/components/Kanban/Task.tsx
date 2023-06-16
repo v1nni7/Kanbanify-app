@@ -1,15 +1,30 @@
-import { BiX } from "react-icons/bi";
-import { Draggable } from "react-beautiful-dnd";
-import { IoImageOutline } from "react-icons/io5";
-import useToggleClickOutside from "@/hooks/useToggleClickOutside";
+"use client"
 
-import Modal from "../Modal";
+import { Draggable } from "react-beautiful-dnd";
+import { IoCheckbox, IoClose } from "react-icons/io5";
+import { MdReorder, MdSubtitles } from "react-icons/md";
+
+import useToggleClickOutside from "@/hooks/useToggleClickOutside";
+import ModalTask from "@/components/ModalTask"
 
 type TaskProps = {
   task: {
     id: string;
     title: string;
     description: string;
+    checklists: [
+      {
+        id: string;
+        title: string;
+        items: [
+          {
+            id: string;
+            title: string;
+            checked: boolean;
+          }
+        ];
+      }
+    ];
   };
   index: number;
 };
@@ -34,13 +49,7 @@ export default function Task({ task, index }: TaskProps) {
         )}
       </Draggable>
 
-      <Modal show={show} element={element} width="large">
-        <div className="flex flex-col">
-          <div className="flex items-center">
-            <input type="text" value={task.title} />
-          </div>
-        </div>
-      </Modal>
+      <ModalTask task={task} show={show} element={element} width="large" />
     </>
   );
 }
