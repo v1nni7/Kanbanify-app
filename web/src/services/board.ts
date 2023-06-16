@@ -36,8 +36,6 @@ export async function uploadImage(body: any) {
   return await api.post("/upload", body);
 }
 
-// ! Refactor
-
 export async function updateColumnOrder(newColumnOrder: string[], boardURL: string) {
   return await api.put(`/boards/update/columnOrder/${boardURL}`, newColumnOrder);
 }
