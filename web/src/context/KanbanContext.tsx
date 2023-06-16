@@ -1,28 +1,35 @@
-"use client";
+'use client'
 
-import { createContext, useCallback, useState } from "react";
-import { updateColumnOrder, updateTaskOrder, updateTaskToNewColumn } from "@/services/board";
+import { createContext, useCallback, useState } from 'react'
+import {
+  updateColumnOrder,
+  updateTaskOrder,
+  updateTaskToNewColumn,
+} from '@/services/board'
 
 type BoardContextProviderProps = {
-  children: React.ReactNode;
-};
+  children: React.ReactNode
+}
 
-export const KanbanContext = createContext({} as any);
+export const KanbanContext = createContext({} as any)
 
 export default function KanbanContextProvider({
   children,
 }: BoardContextProviderProps) {
-  const [kanban, setKanban] = useState<any>(null);
-  const [boardURL, setBoardURL] = useState<string>("");
+  const [kanban, setKanban] = useState<any>(null)
+  const [boardURL, setBoardURL] = useState<string>('')
 
-  const handleUpdateTaskToNewColumn = async (content: any, differentColumn = false) => {
+  const handleUpdateTaskToNewColumn = async (
+    content: any,
+    differentColumn = false,
+  ) => {
     try {
       if (differentColumn) {
-        await updateTaskToNewColumn(content, boardURL);
+        await updateTaskToNewColumn(content, boardURL)
         return
       }
 
-      await updateTaskOrder(content, boardURL);
+      await updateTaskOrder(content, boardURL)
     } catch (error) {
       console.log(error)
     }
@@ -32,66 +39,64 @@ export default function KanbanContextProvider({
     try {
       const newColumnOrder = content.columnOrder
 
-      const response = await updateColumnOrder(newColumnOrder, boardURL);
+      const response = await updateColumnOrder(newColumnOrder, boardURL)
 
       if (response.status === 200) {
-        console.log(response);
-        return;
+        console.log(response)
       }
-
     } catch (error) {
-      console.log(error);
+      console.log(error)
     }
-  };
+  }
 
   const handleUpdateBoard = () => {
-    console.log("Função inativa")
+    console.log('Função inativa')
   }
 
   const handleDragEnd = useCallback(
     ({ destination, source, draggableId, type }: any) => {
       if (!kanban) {
-        return;
+        return
       }
 
       if (!destination) {
-        return;
+        return
       }
 
       if (
         destination.droppableId === source.droppbleId &&
         destination.index === source.index
       ) {
-        return;
+        return
       }
 
-      if (type === "column") {
-        const newColumnOrder = Array.from(kanban.columnOrder);
-        newColumnOrder.splice(source.index, 1);
-        newColumnOrder.splice(destination.index, 0, draggableId);
+      if (type === 'column') {
+        const newColumnOrder = Array.from(kanban.columnOrder)
+        newColumnOrder.splice(source.index, 1)
+        newColumnOrder.splice(destination.index, 0, draggableId)
 
         const newState = {
           ...kanban,
           columnOrder: newColumnOrder,
-        };
+        }
 
-        setKanban(newState);
-        handleUpdateColumnOrder(newState);
-        return;
+        setKanban(newState)
+        handleUpdateColumnOrder(newState)
+        return
       }
 
-      const start = kanban?.columns[source.droppableId];
-      const finish = kanban?.columns[destination.droppableId];
+      const start = kanban?.columns[source.droppableId]
+      const finish = kanban?.columns[destination.droppableId]
 
       if (start === finish) {
-        const newTaskIds = Array.from(start.taskIds);
-        newTaskIds.splice(source.index, 1);
-        newTaskIds.splice(destination.index, 0, draggableId);
+        const newTaskIds = Array.from(start.taskIds)
+        newTaskIds.splice(source.index, 1)
+        newTaskIds.splice(destination.index, 0, draggableId)
 
         const newColumn = {
           ...start,
           taskIds: newTaskIds,
-        };
+        }
 
         const newBoardData: any = {
           ...kanban,
@@ -99,33 +104,33 @@ export default function KanbanContextProvider({
             ...kanban?.columns,
             [newColumn.id]: newColumn,
           },
-        };
+        }
 
-        setKanban(newBoardData);
+        setKanban(newBoardData)
 
         const content = {
           columnId: source.droppableId,
-          taskIds: newTaskIds
+          taskIds: newTaskIds,
         }
 
-        handleUpdateTaskToNewColumn(content, false);
-        return;
+        handleUpdateTaskToNewColumn(content, false)
+        return
       }
 
       // Movendo de uma lista para outra
-      const startTaskIds = Array.from(start.taskIds);
-      startTaskIds.splice(source.index, 1);
+      const startTaskIds = Array.from(start.taskIds)
+      startTaskIds.splice(source.index, 1)
       const newStart = {
         ...start,
         taskIds: startTaskIds,
-      };
+      }
 
-      const finishTaskIds = Array.from(finish.taskIds);
-      finishTaskIds.splice(destination.index, 0, draggableId);
+      const finishTaskIds = Array.from(finish.taskIds)
+      finishTaskIds.splice(destination.index, 0, draggableId)
       const newFinish = {
         ...finish,
         taskIds: finishTaskIds,
-      };
+      }
 
       const newState = {
         ...kanban,
@@ -134,24 +139,34 @@ export default function KanbanContextProvider({
           [newStart.id]: newStart,
           [newFinish.id]: newFinish,
         },
-      };
+      }
 
+      setKanban(newState)
+      const sourceColumnId = source.droppableId
+      const destinationColumnId = destination.droppableId
 
-      setKanban(newState);
-      const sourceColumnId = source.droppableId;
-      const destinationColumnId = destination.droppableId;
-
-      const content = { taskId: draggableId, sourceColumnId, destinationColumnId, newTaskOrder: finishTaskIds }
-      handleUpdateTaskToNewColumn(content, true);
+      const content = {
+        taskId: draggableId,
+        sourceColumnId,
+        destinationColumnId,
+        newTaskOrder: finishTaskIds,
+      }
+      handleUpdateTaskToNewColumn(content, true)
     },
-    [kanban]
-  );
+    [kanban],
+  )
 
   return (
     <KanbanContext.Provider
-      value={{ kanban, setKanban, handleUpdateBoard, handleDragEnd, setBoardURL }}
+      value={{
+        kanban,
+        setKanban,
+        handleUpdateBoard,
+        handleDragEnd,
+        setBoardURL,
+      }}
     >
       {children}
     </KanbanContext.Provider>
-  );
+  )
 }

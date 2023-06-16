@@ -1,23 +1,24 @@
-"use client";
+'use client'
 
-import "./globals.css";
+import './globals.css'
 import {
   Roboto_Flex as Roboto,
   Lexend_Deca as LexendDeca,
-} from "next/font/google";
-import { SessionProvider } from "next-auth/react";
-import KanbanProvider from "@/context/KanbanContext";
+} from 'next/font/google'
+import { ReactNode } from 'react'
+import { SessionProvider } from 'next-auth/react'
+import KanbanProvider from '@/context/KanbanContext'
 
 const lexendDeca = LexendDeca({
-  subsets: ["latin"],
-  style: "normal",
-  variable: "--font-lexend-deca",
-});
+  subsets: ['latin'],
+  style: 'normal',
+  variable: '--font-lexend-deca',
+})
 
-const roboto = Roboto({ subsets: ["latin"], variable: "--font-roboto" });
+const roboto = Roboto({ subsets: ['latin'], variable: '--font-roboto' })
 
 interface IProps {
-  children: React.ReactNode;
+  children: ReactNode
 }
 
 export default function RootLayout({ children }: IProps) {
@@ -29,7 +30,7 @@ export default function RootLayout({ children }: IProps) {
         <SessionProvider>
           <KanbanProvider>
             <section className="mx-auto flex h-screen w-5/6">
-              <div className="my-8 w-full overflow-hidden rounded-lg bg-neutral-800 shadow">
+              <div className="animate-fade my-8 w-full overflow-hidden rounded-lg bg-neutral-800 shadow">
                 {children}
               </div>
             </section>
@@ -37,5 +38,5 @@ export default function RootLayout({ children }: IProps) {
         </SessionProvider>
       </body>
     </html>
-  );
+  )
 }

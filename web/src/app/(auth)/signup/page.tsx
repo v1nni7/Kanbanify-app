@@ -1,43 +1,41 @@
-"use client";
+'use client'
 
-import Link from "next/link";
-import { signUpRequest } from "@/services/user";
-import { useRouter } from "next/navigation";
-import { SubmitHandler, useForm } from "react-hook-form";
-import { BiEnvelope, BiLock, BiLockOpen, BiUser } from "react-icons/bi";
-import useToggle from "@/hooks/useToggle";
+import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import { SubmitHandler, useForm } from 'react-hook-form'
+import { BiEnvelope, BiLock, BiLockOpen, BiUser } from 'react-icons/bi'
+import { signUpRequest } from '@/services/user'
+import { FormGroup, FormControl, FormLabel } from '@/components/AuthForm'
+import LoadingSpinner from '@/components/LoadingSpinner'
 
 type FieldValues = {
-  email: string;
-  username: string;
-  password: string;
-  confirmPassword: string;
-};
+  email: string
+  username: string
+  password: string
+  confirmPassword: string
+}
 
 export default function Signup() {
-  const router = useRouter();
-  const [loading, toggleLoading] = useToggle(false);
-  const { handleSubmit, register } = useForm<FieldValues>();
+  const router = useRouter()
+  const { handleSubmit, register, formState } = useForm<FieldValues>()
+  const { isSubmitting } = formState
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     try {
-      toggleLoading();
-      const response = await signUpRequest(data);
+      const response = await signUpRequest(data)
 
       if (response.status === 201) {
-        router.push("/signin");
+        router.push('/signin')
       }
     } catch (error) {
-      console.log(error);
-    } finally {
-      toggleLoading();
+      console.log(error)
     }
-  };
+  }
 
   return (
     <section className="flex h-full w-full items-center justify-center">
       <div className="flex w-80 flex-col gap-4">
-        <h2 className="text-center font-alt text-2xl text-neutral-300">
+        <h2 className="font-alt text-center text-2xl text-neutral-300">
           Sign Up
         </h2>
 
@@ -45,61 +43,48 @@ export default function Signup() {
           onSubmit={handleSubmit(onSubmit)}
           className="flex w-full flex-col gap-4"
         >
-          <div className="relative flex items-center text-neutral-500">
-            <input
+          <FormGroup>
+            <FormControl
               id="username"
               type="text"
               placeholder="Username"
-              {...register("username")}
-              className="peer h-12 w-full rounded-lg border-2 border-neutral-500 bg-transparent p-2 pl-10 text-xl font-semibold outline-none transition placeholder:font-semibold placeholder:text-neutral-500 focus:border-neutral-500/60 focus:placeholder:text-neutral-500/50"
+              register={register('username')}
             />
-            <label
-              htmlFor="username"
-              className="absolute ml-2 text-3xl peer-focus:text-neutral-500/60"
-            >
+            <FormLabel htmlFor="username">
               <BiUser />
-            </label>
-          </div>
+            </FormLabel>
+          </FormGroup>
 
-          <div className="relative flex items-center text-neutral-500">
-            <input
+          <FormGroup>
+            <FormControl
               id="email"
               type="text"
               placeholder="Email"
-              {...register("email")}
-              className="peer h-12 w-full rounded-lg border-2 border-neutral-500 bg-transparent p-2 pl-10 text-xl font-semibold outline-none transition placeholder:font-semibold placeholder:text-neutral-500 focus:border-neutral-500/60 focus:placeholder:text-neutral-500/50"
+              register={register}
             />
-            <label
-              htmlFor="email"
-              className="absolute ml-2 text-3xl peer-focus:text-neutral-500/60"
-            >
+            <FormLabel htmlFor="email">
               <BiEnvelope />
-            </label>
-          </div>
+            </FormLabel>
+          </FormGroup>
 
-          <div className="relative flex items-center text-neutral-500">
-            <input
+          <FormGroup>
+            <FormControl
               id="password"
               type="password"
               placeholder="Password"
-              {...register("password")}
-              className="peer h-12 w-full rounded-lg border-2 border-neutral-500 bg-transparent p-2 pl-10 text-xl font-semibold outline-none transition placeholder:font-semibold placeholder:text-neutral-500 focus:border-neutral-500/60 focus:placeholder:text-neutral-500/50"
+              register={register('password')}
             />
-            <label
-              htmlFor="password"
-              className="absolute ml-2 text-3xl peer-focus:text-neutral-500/60"
-            >
+            <FormLabel htmlFor="password">
               <BiLockOpen />
-            </label>
-          </div>
+            </FormLabel>
+          </FormGroup>
 
-          <div className="relative flex items-center text-neutral-500">
-            <input
+          <FormGroup>
+            <FormControl
               id="confirmPassword"
               type="password"
               placeholder="Confirm Password"
-              {...register("confirmPassword")}
-              className="peer h-12 w-full rounded-lg border-2 border-neutral-500 bg-transparent p-2 pl-10 text-xl font-semibold outline-none transition placeholder:font-semibold placeholder:text-neutral-500 focus:border-neutral-500/60 focus:placeholder:text-neutral-500/50"
+              register={register('confirmPassword')}
             />
             <label
               htmlFor="confirmPassword"
@@ -107,13 +92,14 @@ export default function Signup() {
             >
               <BiLock />
             </label>
-          </div>
+          </FormGroup>
 
           <button
             type="submit"
-            className="rounded-lg bg-violet-500 p-2 font-alt text-xl font-semibold text-neutral-300 transition hover:bg-violet-500/60 focus:bg-violet-500/60 disabled:bg-violet-400"
+            className="font-alt rounded-lg bg-violet-500 p-2 text-xl font-semibold text-neutral-300 transition hover:bg-violet-500/60 focus:bg-violet-500/60 disabled:bg-violet-400"
+            disabled={isSubmitting}
           >
-            Submit
+            {isSubmitting ? <LoadingSpinner /> : 'Submit'}
           </button>
 
           <div className="text-center">
@@ -124,5 +110,5 @@ export default function Signup() {
         </form>
       </div>
     </section>
-  );
+  )
 }

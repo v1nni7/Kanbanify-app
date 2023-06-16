@@ -1,52 +1,51 @@
-import { api } from "@/services/api";
-import NextAuth, { NextAuthOptions } from "next-auth";
-import CredentialsProvider from "next-auth/providers/credentials";
-import { setCookie } from "nookies";
+import NextAuth, { NextAuthOptions } from 'next-auth'
+import CredentialsProvider from 'next-auth/providers/credentials'
+import { api } from '@/services/api'
 
 export const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
-      name: "Credentials",
+      name: 'Credentials',
       credentials: {
-        email: { label: "Email", type: "text", placeholder: "jsmith" },
-        password: { label: "Password", type: "password" },
+        email: { label: 'Email', type: 'text', placeholder: 'jsmith' },
+        password: { label: 'Password', type: 'password' },
       },
       async authorize(credentials, req) {
-        const { email, password } = credentials as any;
+        const { email, password } = credentials as any
 
-        const response = await api.post("/user/sign-in", { email, password });
+        const response = await api.post('/user/sign-in', { email, password })
 
-        const user = response.data;
+        const user = response.data
 
         if (response.status === 200 && user) {
-          return user;
+          return user
         }
 
-        return null;
+        return null
       },
     }),
   ],
 
   session: {
-    strategy: "jwt",
+    strategy: 'jwt',
   },
 
   pages: {
-    signIn: "/signin",
+    signIn: '/signin',
   },
 
   callbacks: {
     async jwt({ token, user }) {
-      return { ...token, ...user };
+      return { ...token, ...user }
     },
 
-    async session({ session, token, user }) {
-      session.user = token;
+    async session({ session, token, user }: any) {
+      session.user = token
 
-      return session;
+      return session
     },
   },
-};
+}
 
-const handler = NextAuth(authOptions);
-export { handler as GET, handler as POST };
+const handler = NextAuth(authOptions)
+export { handler as GET, handler as POST }
