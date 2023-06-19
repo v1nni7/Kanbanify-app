@@ -2,11 +2,19 @@
 
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import { yupResolver } from '@hookform/resolvers/yup'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { BiEnvelope, BiLock, BiLockOpen, BiUser } from 'react-icons/bi'
+
+import {
+  FormGroup,
+  FormControl,
+  FormLabel,
+  FormSubmit,
+  FormTooltip,
+} from '@/components/AuthForm'
 import { signUpRequest } from '@/services/user'
-import { FormGroup, FormControl, FormLabel } from '@/components/AuthForm'
-import LoadingSpinner from '@/components/LoadingSpinner'
+import { signUpSchema } from '@/schemas/authSchemas'
 
 type FieldValues = {
   email: string
@@ -17,8 +25,11 @@ type FieldValues = {
 
 export default function Signup() {
   const router = useRouter()
-  const { handleSubmit, register, formState } = useForm<FieldValues>()
-  const { isSubmitting } = formState
+
+  const { handleSubmit, register, formState } = useForm<FieldValues>({
+    resolver: yupResolver(signUpSchema),
+  })
+  const { isSubmitting, errors } = formState
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     try {
@@ -27,7 +38,7 @@ export default function Signup() {
       if (response.status === 201) {
         router.push('/signin')
       }
-    } catch (error) {
+    } catch (error: any) {
       console.log(error)
     }
   }
@@ -35,7 +46,7 @@ export default function Signup() {
   return (
     <section className="flex h-full w-full items-center justify-center">
       <div className="flex w-80 flex-col gap-4">
-        <h2 className="font-alt text-center text-2xl text-neutral-300">
+        <h2 className="text-center font-alt text-2xl text-neutral-300">
           Sign Up
         </h2>
 
@@ -53,6 +64,7 @@ export default function Signup() {
             <FormLabel htmlFor="username">
               <BiUser />
             </FormLabel>
+            <FormTooltip errors={errors.username} />
           </FormGroup>
 
           <FormGroup>
@@ -60,11 +72,12 @@ export default function Signup() {
               id="email"
               type="text"
               placeholder="Email"
-              register={register}
+              register={register('email')}
             />
             <FormLabel htmlFor="email">
               <BiEnvelope />
             </FormLabel>
+            <FormTooltip errors={errors.email} />
           </FormGroup>
 
           <FormGroup>
@@ -77,6 +90,7 @@ export default function Signup() {
             <FormLabel htmlFor="password">
               <BiLockOpen />
             </FormLabel>
+            <FormTooltip errors={errors.password} />
           </FormGroup>
 
           <FormGroup>
@@ -86,21 +100,13 @@ export default function Signup() {
               placeholder="Confirm Password"
               register={register('confirmPassword')}
             />
-            <label
-              htmlFor="confirmPassword"
-              className="absolute ml-2 text-3xl peer-focus:text-neutral-500/60"
-            >
+            <FormLabel htmlFor="confirmPassword">
               <BiLock />
-            </label>
+            </FormLabel>
+            <FormTooltip errors={errors.confirmPassword} />
           </FormGroup>
 
-          <button
-            type="submit"
-            className="font-alt rounded-lg bg-violet-500 p-2 text-xl font-semibold text-neutral-300 transition hover:bg-violet-500/60 focus:bg-violet-500/60 disabled:bg-violet-400"
-            disabled={isSubmitting}
-          >
-            {isSubmitting ? <LoadingSpinner /> : 'Submit'}
-          </button>
+          <FormSubmit disabled={isSubmitting}>Create Account</FormSubmit>
 
           <div className="text-center">
             <Link href="/signin" className="text-violet-500 hover:underline">

@@ -12,7 +12,7 @@ export default function FormLabel({
   return (
     <label
       htmlFor={htmlFor}
-      className="absolute ml-2 text-3xl peer-focus:text-neutral-500/60"
+      className="absolute ml-1 px-2 text-2xl peer-focus:text-neutral-500/60"
       {...props}
     >
       {children}
