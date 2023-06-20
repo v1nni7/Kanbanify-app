@@ -1,20 +1,36 @@
-"use client";
+'use client'
 
-import Link from "next/link";
-import { useSession } from "next-auth/react";
-import { IoMdSettings, IoMdNotifications } from "react-icons/io";
-
-import Image from "next/image";
+import Image from 'next/image'
+import { useSession } from 'next-auth/react'
+import { IoMdSettings, IoMdNotifications } from 'react-icons/io'
+import { usePathname, useRouter } from 'next/navigation'
+import { IoArrowBackOutline } from 'react-icons/io5'
 
 export default function Navbar() {
-  const { data: session } = useSession();
+  const router = useRouter()
+  const pathname = usePathname()
 
-  if (!session) return <></>;
+  const { data: session } = useSession()
 
-  const { user } = session;
+  let user = null
+
+  if (session) {
+    user = session.user
+  }
 
   return (
     <nav className="flex items-center justify-end gap-4 px-8 py-2">
+      <div className="mr-auto">
+        {pathname !== '/boards' && (
+          <button
+            onClick={() => router.back()}
+            className="group flex items-center gap-1 rounded-lg p-2 font-alt text-neutral-300"
+          >
+            <IoArrowBackOutline className="text-xl transition group-hover:-translate-x-2" />
+            Voltar
+          </button>
+        )}
+      </div>
       <div className="relative flex items-center">
         <button className="group text-2xl text-neutral-200 hover:text-neutral-200/60">
           <IoMdNotifications className="group-hover:animate-wiggle" />
@@ -25,15 +41,15 @@ export default function Navbar() {
         <IoMdSettings className="group-hover:animate-[spin_2s_linear]" />
       </button>
 
-      {user.profilePicture && (
+      {user?.photo && (
         <Image
-          width={64}
-          height={64}
-          src={user.profilePicture}
+          width={300}
+          height={300}
+          src={user.photo}
           alt=""
           className="h-12 w-12 rounded-full object-cover"
         />
       )}
     </nav>
-  );
+  )
 }

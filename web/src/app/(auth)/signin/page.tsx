@@ -12,7 +12,7 @@ import {
   FormLabel,
   FormTooltip,
 } from '@/components/AuthForm'
-import FormSubmit from '@/components/AuthForm/FormSubmit'
+import PrimaryButton from '@/components/_Buttons/PrimaryButton'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { signInSchema } from '@/schemas/authSchemas'
 
@@ -85,10 +85,12 @@ export default function Signin() {
             <FormTooltip errors={errors.password} />
           </FormGroup>
 
-          <FormSubmit disabled={isSubmitting}>Submit</FormSubmit>
+          <PrimaryButton size="lg" type="submit" disabled={isSubmitting}>
+            Submit
+          </PrimaryButton>
 
           <div className="text-center">
-            <Link href="/signup" className="text-violet-500 hover:underline">
+            <Link href="/signup" className="text-indigo-500 hover:underline">
               {"Don't"} have an account?
             </Link>
           </div>

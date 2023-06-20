@@ -6,7 +6,7 @@ declare module 'next-auth' {
       token: string
       email: string
       username: string
-      profilePicture: string
+      photo: string
     }
   }
 }

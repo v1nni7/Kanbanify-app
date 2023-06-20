@@ -10,9 +10,9 @@ import {
   FormGroup,
   FormControl,
   FormLabel,
-  FormSubmit,
   FormTooltip,
 } from '@/components/AuthForm'
+import PrimaryButton from '@/components/_Buttons/PrimaryButton'
 import { signUpRequest } from '@/services/user'
 import { signUpSchema } from '@/schemas/authSchemas'
 
@@ -106,10 +106,12 @@ export default function Signup() {
             <FormTooltip errors={errors.confirmPassword} />
           </FormGroup>
 
-          <FormSubmit disabled={isSubmitting}>Create Account</FormSubmit>
+          <PrimaryButton type="submit" size="lg" disabled={isSubmitting}>
+            Create Account
+          </PrimaryButton>
 
           <div className="text-center">
-            <Link href="/signin" className="text-violet-500 hover:underline">
+            <Link href="/signin" className="text-indigo-500 hover:underline">
               Already have an account?
             </Link>
           </div>

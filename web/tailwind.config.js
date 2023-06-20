@@ -7,6 +7,17 @@ module.exports = {
   ],
   theme: {
     extend: {
+      keyframes: {
+        'open-notification': {
+          '0%': { transform: 'translateX(300px)', opacity: 0 },
+          '100%': { transform: 'translateX(0px)', opacity: 1 },
+        },
+      },
+      animation: {
+        'open-notification': 'open-notification 0.5s ease-in-out',
+        'open-notification-reverse':
+          'open-notification 0.5s ease-in-out reverse',
+      },
       fontFamily: {
         sans: 'var(--font-roboto)',
         alt: 'var(--font-lexend-deca)',

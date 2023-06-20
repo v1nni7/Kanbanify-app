@@ -1,61 +1,62 @@
-"use client";
+'use client'
 
-import { useState } from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
-import { IoDuplicateOutline, IoImagesOutline } from "react-icons/io5";
-import useFilePreview from "@/hooks/useFilePreview";
-import { createBoard, uploadImage } from "@/services/board";
+import { useState } from 'react'
+import { SubmitHandler, useForm } from 'react-hook-form'
+import { IoDuplicateOutline, IoImagesOutline } from 'react-icons/io5'
+import useFilePreview from '@/hooks/useFilePreview'
+import { createBoard, uploadImage } from '@/services/board'
+import Image from 'next/image'
 
 type FieldValues = {
-  name: string;
-  media: FileList;
-};
+  name: string
+  media: FileList
+}
 
 export default function NewBoardForm({ setBoards }: any) {
-  const { handleSubmit, register, watch, resetField } = useForm<FieldValues>();
-  const [flipped, setFlipped] = useState<boolean>(false);
+  const { handleSubmit, register, watch, resetField } = useForm<FieldValues>()
+  const [flipped, setFlipped] = useState<boolean>(false)
 
-  const file = watch("media");
-  const [preview] = useFilePreview(file);
+  const file = watch('media')
+  const [preview] = useFilePreview(file)
 
   const onSubmit: SubmitHandler<FieldValues> = async ({ name, media }) => {
     try {
-      const formData = new FormData();
+      const formData = new FormData()
 
-      let backgroundUrl = null;
+      let backgroundUrl = null
 
       if (media.length > 0) {
-        formData.append("media", media[0]);
-        const response = await uploadImage(formData);
+        formData.append('media', media[0])
+        const response = await uploadImage(formData)
 
-        backgroundUrl = response.data;
+        backgroundUrl = response.data
       }
 
       const newBoard = {
         name,
         background: backgroundUrl,
-      };
-
-      const response = await createBoard(newBoard);
-
-      if (response.status !== 201) {
-        return;
       }
 
-      setBoards((prev: any) => [...prev, newBoard]);
-      resetField("name");
-      resetField("media");
-      setFlipped(false);
+      const response = await createBoard(newBoard)
+
+      if (response.status !== 201) {
+        return
+      }
+
+      setBoards((prev: any) => [...prev, newBoard])
+      resetField('name')
+      resetField('media')
+      setFlipped(false)
     } catch (error) {
-      console.log(error);
+      console.log(error)
     }
-  };
+  }
 
   return (
     <div className="relative h-44 w-full" onClick={() => setFlipped(true)}>
       <div
         className={`group absolute h-full w-full cursor-pointer rounded-lg border-2 border-neutral-600 bg-neutral-600/20 transition duration-1000 [backface-visibility:hidden] [transform-style:preserve-3d] hover:border-neutral-500 ${
-          flipped && "[transform:rotateY(-180deg)]"
+          flipped && '[transform:rotateY(-180deg)]'
         }`}
       >
         <div className="flex h-full w-full items-center justify-center font-alt text-neutral-600 transition duration-1000 group-hover:text-neutral-500">
@@ -64,15 +65,17 @@ export default function NewBoardForm({ setBoards }: any) {
       </div>
       <div
         className={`absolute h-full w-full rounded-lg bg-neutral-600/20 transition duration-1000 [backface-visibility:hidden] [transform-style:preserve-3d]  ${
-          flipped ? "[transform:rotateY(0deg)]" : "[transform:rotateY(180deg)]"
+          flipped ? '[transform:rotateY(0deg)]' : '[transform:rotateY(180deg)]'
         }`}
       >
         <div className="group relative flex h-full flex-col gap-2 overflow-hidden rounded-lg transition hover:shadow-lg">
           {preview && (
-            <img
-              alt=""
+            <Image
+              width={312}
+              height={176}
               src={preview}
               className="h-full object-cover transition group-hover:scale-125 group-hover:transform"
+              alt=""
             />
           )}
           <div className="absolute inset-0 bg-gradient-to-t from-neutral-950/95 to-neutral-700/20 p-4">
@@ -90,13 +93,13 @@ export default function NewBoardForm({ setBoards }: any) {
                 hidden
                 type="file"
                 id="background"
-                {...register("media")}
+                {...register('media')}
               />
 
               <div className="flex items-center justify-between">
                 <input
                   type="text"
-                  {...register("name")}
+                  {...register('name')}
                   placeholder="Enter board name"
                   className="w-3/4 rounded-md border-2 border-neutral-500/20 bg-transparent p-1 font-alt text-lg font-semibold text-neutral-400/80 outline-0 transition focus:border-neutral-500/50 group-hover:text-neutral-300/80"
                 />
@@ -113,5 +116,5 @@ export default function NewBoardForm({ setBoards }: any) {
         </div>
       </div>
     </div>
-  );
+  )
 }

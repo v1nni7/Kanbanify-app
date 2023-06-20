@@ -1,9 +1,11 @@
-import Navbar from "@/components/Navbar";
-import Sidebar from "@/components/Sidebar";
+import { ReactNode } from 'react'
+
+import Navbar from '@/components/Navbar'
+import Sidebar from '@/components/Sidebar'
 
 type WorkspaceLayoutProps = {
-  children: React.ReactNode;
-};
+  children: ReactNode
+}
 
 export default function WorkspaceLayout({ children }: WorkspaceLayoutProps) {
   return (
@@ -17,5 +19,5 @@ export default function WorkspaceLayout({ children }: WorkspaceLayoutProps) {
         </div>
       </div>
     </>
-  );
+  )
 }

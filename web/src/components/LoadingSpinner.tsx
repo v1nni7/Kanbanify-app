@@ -12,14 +12,12 @@ export default function LoadingSpinner({
   strokeWidth = 4,
 }: LoadingSpinnerProps) {
   return (
-    <div className="flex h-full w-full items-center justify-center">
-      <Oval
-        height={width}
-        width={height}
-        strokeWidth={strokeWidth || 4}
-        color="#ffffff"
-        secondaryColor="#ffffff"
-      />
-    </div>
+    <Oval
+      height={width}
+      width={height}
+      strokeWidth={strokeWidth || 4}
+      color="#ffffff"
+      secondaryColor="#ffffff"
+    />
   )
 }
