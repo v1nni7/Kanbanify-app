@@ -7,6 +7,10 @@ module.exports = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        sans: 'var(--font-poppins)',
+        alt: 'var(--font-lexend-deca)',
+      },
       keyframes: {
         'open-notification': {
           '0%': { transform: 'translateX(300px)', opacity: 0 },
@@ -17,10 +21,6 @@ module.exports = {
         'open-notification': 'open-notification 0.5s ease-in-out',
         'open-notification-reverse':
           'open-notification 0.5s ease-in-out reverse',
-      },
-      fontFamily: {
-        sans: 'var(--font-roboto)',
-        alt: 'var(--font-lexend-deca)',
       },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',

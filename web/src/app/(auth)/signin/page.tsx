@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { SubmitHandler, useForm } from 'react-hook-form'
-import { BiEnvelope, BiLock } from 'react-icons/bi'
+import { BiEnvelope, BiLock, BiX } from 'react-icons/bi'
 import { signIn } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 
@@ -15,6 +15,7 @@ import {
 import PrimaryButton from '@/components/_Buttons/PrimaryButton'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { signInSchema } from '@/schemas/authSchemas'
+import { useState } from 'react'
 
 type FieldValues = {
   email: string
@@ -26,7 +27,9 @@ export default function Signin() {
   const { handleSubmit, register, formState } = useForm<FieldValues>({
     resolver: yupResolver(signInSchema),
   })
+
   const { isSubmitting, errors } = formState
+  const [error, setError] = useState<string | null>(null)
 
   const onSubmit: SubmitHandler<FieldValues> = async ({ email, password }) => {
     try {
@@ -37,7 +40,8 @@ export default function Signin() {
         callbackUrl: '/boards',
       })
 
-      if (!response?.ok) {
+      if (response?.error) {
+        setError('Invalid credentials')
         return
       }
 
@@ -57,6 +61,15 @@ export default function Signin() {
           onSubmit={handleSubmit(onSubmit)}
           className="flex w-full flex-col gap-4"
         >
+          {error && (
+            <div className="flex items-center justify-between rounded-lg bg-red-400 p-2 text-center font-alt text-lg font-bold text-neutral-50">
+              {error}
+
+              <button onClick={() => setError(null)}>
+                <BiX className="text-3xl" />
+              </button>
+            </div>
+          )}
           <FormGroup>
             <FormControl
               id="email"

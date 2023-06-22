@@ -1,4 +1,4 @@
-import Task from "./Task";
+import Task from './Task'
 
 export default function InnerListTask({ tasks, index }: any) {
   return tasks.map((task: any, index: number) => (

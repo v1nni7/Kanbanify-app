@@ -1,31 +1,33 @@
-"use client"
+'use client'
 
-import { BiX } from "react-icons/bi";
-import { SubmitHandler, useForm } from "react-hook-form";
-import { useCallback, useContext, useEffect } from "react";
-import { IoAddOutline } from "react-icons/io5";
-import { DragDropContext, Droppable } from "react-beautiful-dnd";
-import { KanbanContext } from "@/context/KanbanContext";
-import { createColumn, getBoard } from "@/services/board";
-import useToggleClickOutside from "@/hooks/useToggleClickOutside";
-import InnerListColumn from "./InnerListColumn";
+import { BiX } from 'react-icons/bi'
+import { SubmitHandler, useForm } from 'react-hook-form'
+import { useCallback, useContext, useEffect } from 'react'
+import { DragDropContext, Droppable } from 'react-beautiful-dnd'
+
+import { KanbanContext } from '@/context/KanbanContext'
+import { createColumn, getBoard } from '@/services/board'
+import useToggleClickOutside from '@/hooks/useToggleClickOutside'
+import InnerListColumn from './InnerListColumn'
+import FormCreateColumn from '../_Form/FormCreateColumn'
 
 type FieldValues = {
-  title: string;
-};
+  title: string
+}
 
 export default function Kanban({ boardURL }: { boardURL: string }) {
-  const [isOpen, toggle, element] = useToggleClickOutside(false);
-  const { handleSubmit, register } = useForm<FieldValues>();
-  const { kanban, setKanban, handleDragEnd, setBoardURL } = useContext(KanbanContext);
+  const [isOpen, toggle, element] = useToggleClickOutside(false)
+  const { handleSubmit, register } = useForm<FieldValues>()
+  const { kanban, setKanban, handleDragEnd, setBoardURL } =
+    useContext(KanbanContext)
 
   const onSubmit: SubmitHandler<FieldValues> = useCallback(
     async ({ title }) => {
       try {
-        const { status, data } = await createColumn(title, boardURL);
+        const { status, data } = await createColumn(title, boardURL)
 
         if (status !== 201) {
-          throw new Error("Error to get kanban board");
+          throw new Error('Error to get kanban board')
         }
 
         const newKanban = {
@@ -39,48 +41,40 @@ export default function Kanban({ boardURL }: { boardURL: string }) {
             },
           },
           columnOrder: [...kanban.columnOrder, data.id],
-        };
+        }
 
-        setKanban(newKanban);
+        setKanban(newKanban)
 
-        toggle();
+        toggle()
       } catch (error) {
-        console.log(error);
+        console.log(error)
       }
     },
-    [boardURL]
-  );
+    [boardURL, kanban, setKanban, toggle],
+  )
 
   const loadingBoard = async () => {
     try {
-      const { status, data } = await getBoard(boardURL);
+      const { status, data } = await getBoard(boardURL)
 
       if (status !== 200) {
-        throw new Error("Error to get kanban board");
+        throw new Error('Error to get kanban board')
       }
 
-      setBoardURL(boardURL);
-      setKanban(data.content);
+      setBoardURL(boardURL)
+      setKanban(data.content)
     } catch (error) {
-      console.log(error);
+      console.log(error)
     }
-  };
+  }
 
   useEffect(() => {
-    loadingBoard();
-  }, []);
+    loadingBoard()
+  }, [])
 
   return (
     <>
       <div className="mb-4 flex">
-        <button
-          onClick={() => toggle()}
-          className="flex items-center rounded-lg bg-neutral-700 p-2 text-lg font-bold text-neutral-400 transition-colors hover:bg-neutral-700/60 focus:bg-neutral-700/60"
-        >
-          <IoAddOutline className="text-2xl" onClick={toggle} />
-          New Column
-        </button>
-
         {isOpen && (
           <div className="absolute left-0 top-0 z-20 flex h-full w-full items-center justify-center bg-neutral-700/50">
             <div ref={element} className="w-96 gap-4 rounded-lg bg-neutral-800">
@@ -103,7 +97,7 @@ export default function Kanban({ boardURL }: { boardURL: string }) {
                       id="title"
                       type="text"
                       placeholder="New Column"
-                      {...register("title")}
+                      {...register('title')}
                       className="rounded-md bg-neutral-700 p-2 text-lg font-bold  text-neutral-400 placeholder-neutral-500 outline-none transition-colors focus:bg-neutral-700/60"
                     />
                   </div>
@@ -144,7 +138,7 @@ export default function Kanban({ boardURL }: { boardURL: string }) {
             >
               {kanban &&
                 kanban.columnOrder?.map((columnId: string, index: number) => {
-                  const column = kanban.columns[columnId];
+                  const column = kanban.columns[columnId]
 
                   return (
                     <InnerListColumn
@@ -154,14 +148,20 @@ export default function Kanban({ boardURL }: { boardURL: string }) {
                       column={column}
                       index={index}
                     />
-                  );
+                  )
                 })}
 
               {placeholder}
+
+              <div className="inline-block h-full scroll-m-2 whitespace-nowrap align-top">
+                <div className="mr-2 w-[300px] rounded-md bg-neutral-800 p-2">
+                  <FormCreateColumn boardURL={boardURL} />
+                </div>
+              </div>
             </div>
           )}
         </Droppable>
       </DragDropContext>
     </>
-  );
+  )
 }

@@ -1,33 +1,19 @@
 'use client'
 
-import { SubmitHandler, useForm } from 'react-hook-form'
+import { BiX } from 'react-icons/bi'
 import { useLayoutEffect, useState } from 'react'
-import { IoImagesOutline } from 'react-icons/io5'
 
-import LoadingSpinner from '@/components/LoadingSpinner'
 import BoardCard from '@/components/Boards'
+import LoadingSpinner from '@/components/LoadingSpinner'
+import FormCreateBoard from '@/components/_Form/FormCreateBoard'
+import useToggleClickOutside from '@/hooks/useToggleClickOutside'
 import { getAllBoards } from '@/services/board'
 import { Board } from '@/types/board-data'
-import useToggleClickOutside from '@/hooks/useToggleClickOutside'
-import useFilePreview from '@/hooks/useFilePreview'
-import Image from 'next/image'
-import PrimaryButton from '@/components/_Buttons/PrimaryButton'
-
-type FieldValues = {
-  name: string
-  media: FileList
-}
 
 export default function Boards() {
   const [isDropdownOpen, toggleDropdownOpen, dropdown, buttonCreate] =
     useToggleClickOutside(false)
   const [boards, setBoards] = useState<Board[] | null>(null)
-  const { handleSubmit, register, watch } = useForm<FieldValues>()
-
-  const file = watch('media')
-  const [preview] = useFilePreview(file)
-
-  const onSubmit: SubmitHandler<FieldValues> = async ({ media, name }) => {}
 
   const loadingBoards = async () => {
     try {
@@ -68,48 +54,20 @@ export default function Boards() {
                 ref={dropdown}
               >
                 <div className="flex flex-col">
-                  <h2 className="border-b border-neutral-600 p-2 text-center font-alt font-bold text-neutral-400">
-                    Create board
-                  </h2>
+                  <div className="flex w-full items-center  justify-between border-b border-neutral-600 p-2">
+                    <h2 className="font-alt font-bold text-neutral-400">
+                      Create board
+                    </h2>
 
-                  <form
-                    onSubmit={handleSubmit(onSubmit)}
-                    className="flex w-full flex-col justify-center gap-4 px-2 py-4"
-                  >
-                    <input
-                      type="text"
-                      autoComplete="off"
-                      {...register('name')}
-                      placeholder="Board name"
-                      className="h-12 rounded-lg bg-neutral-600 p-2 text-lg text-neutral-300 outline-none transition placeholder:text-neutral-500 focus:bg-neutral-600/70"
-                    />
-                    <input
-                      hidden
-                      id="media"
-                      type="file"
-                      {...register('media')}
-                    />
-                    <label
-                      htmlFor="media"
-                      className="opacity-1 flex h-36 cursor-pointer items-center justify-center rounded-lg border border-dashed border-neutral-500/50 transition hover:opacity-50"
+                    <button
+                      onClick={() => toggleDropdownOpen()}
+                      className="rounded-lg p-1 text-2xl text-neutral-400 transition hover:bg-neutral-500/20"
                     >
-                      {preview ? (
-                        <Image
-                          width={180}
-                          height={180}
-                          src={preview}
-                          className="h-full w-full rounded-lg"
-                          alt=""
-                        />
-                      ) : (
-                        <IoImagesOutline className="text-4xl text-neutral-500" />
-                      )}
-                    </label>
+                      <BiX />
+                    </button>
+                  </div>
 
-                    <PrimaryButton type="button" size="md" disabled={false}>
-                      Submit
-                    </PrimaryButton>
-                  </form>
+                  <FormCreateBoard setBoards={setBoards} />
                 </div>
               </div>
             </div>
