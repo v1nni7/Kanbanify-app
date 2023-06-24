@@ -9,6 +9,7 @@ type TaskProps = {
   task: {
     id: string
     title: string
+    coverURL: string
     description: string
     checklists: [
       {
@@ -42,7 +43,7 @@ export default function Task({ task, index }: TaskProps) {
             ref={innerRef}
           >
             <div className="h-full rounded-md bg-neutral-700 p-2 group-active:rotate-2 group-active:bg-neutral-700/80">
-              <h1 className="text-base text-neutral-400">{task.title}</h1>
+              <h1 className="text-sm text-neutral-400">{task.title}</h1>
             </div>
           </div>
         )}

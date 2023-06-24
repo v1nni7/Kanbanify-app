@@ -1,6 +1,6 @@
 'use client'
 
-import { createContext, useCallback, useState } from 'react'
+import { ReactNode, createContext, useCallback, useState } from 'react'
 import {
   updateColumnOrder,
   updateTaskOrder,
@@ -8,7 +8,7 @@ import {
 } from '@/services/board'
 
 type BoardContextProviderProps = {
-  children: React.ReactNode
+  children: ReactNode
 }
 
 export const KanbanContext = createContext({} as any)
