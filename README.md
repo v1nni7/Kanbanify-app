@@ -3,7 +3,7 @@
     <img src="https://media.discordapp.net/attachments/1013165623188148234/1102752388495978516/kanban.png" width="256px" />
   </a>
   
-  <h2 align="center">React Kanban</h2>
+  <h2 align="center">Kanbanify App</h2>
 </p>
 
 ### 📌 Sobre
