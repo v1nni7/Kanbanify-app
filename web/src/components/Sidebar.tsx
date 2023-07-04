@@ -1,9 +1,11 @@
 export default function Sidebar() {
   return (
     <div className="bg-neutral-700">
-      <h2 className="animate-pulse p-2 text-center font-alt text-2xl font-semibold text-violet-500">
-        My Kanban
-      </h2>
+      <div className="flex justify-center p-2">
+        <h2 className="rounded-s-md rounded-tr-md bg-gradient-to-r from-indigo-500 to-indigo-700 p-2 text-3xl">
+          Kanbanify
+        </h2>
+      </div>
     </div>
-  );
+  )
 }

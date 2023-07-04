@@ -42,9 +42,9 @@ export default function Boards() {
               <button
                 ref={buttonCreate}
                 onClick={() => toggleDropdownOpen()}
-                className="rounded-lg bg-neutral-600/50 p-2 font-alt text-neutral-400 transition hover:bg-neutral-500/20"
+                className="rounded-md bg-neutral-600/50 p-2 font-alt text-neutral-400 transition hover:bg-neutral-500/20"
               >
-                Create
+                Criar quadro
               </button>
 
               <div

@@ -47,7 +47,7 @@ export default function Signup() {
     <section className="flex h-full w-full items-center justify-center">
       <div className="flex w-80 flex-col gap-4">
         <h2 className="text-center font-alt text-2xl text-neutral-300">
-          Sign Up
+          Cadastro
         </h2>
 
         <form
@@ -58,7 +58,7 @@ export default function Signup() {
             <FormControl
               id="username"
               type="text"
-              placeholder="Username"
+              placeholder="Usuário"
               register={register('username')}
             />
             <FormLabel htmlFor="username">
@@ -71,7 +71,7 @@ export default function Signup() {
             <FormControl
               id="email"
               type="text"
-              placeholder="Email"
+              placeholder="E-mail"
               register={register('email')}
             />
             <FormLabel htmlFor="email">
@@ -84,7 +84,7 @@ export default function Signup() {
             <FormControl
               id="password"
               type="password"
-              placeholder="Password"
+              placeholder="Senha"
               register={register('password')}
             />
             <FormLabel htmlFor="password">
@@ -97,7 +97,7 @@ export default function Signup() {
             <FormControl
               id="confirmPassword"
               type="password"
-              placeholder="Confirm Password"
+              placeholder="Confirmar senha"
               register={register('confirmPassword')}
             />
             <FormLabel htmlFor="confirmPassword">
@@ -107,12 +107,12 @@ export default function Signup() {
           </FormGroup>
 
           <PrimaryButton type="submit" size="lg" disabled={isSubmitting}>
-            Create Account
+            Criar conta
           </PrimaryButton>
 
           <div className="text-center">
             <Link href="/signin" className="text-indigo-500 hover:underline">
-              Already have an account?
+              Já possui uma conta? Faça login
             </Link>
           </div>
         </form>

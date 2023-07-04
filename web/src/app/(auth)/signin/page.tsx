@@ -55,7 +55,7 @@ export default function Signin() {
     <section className="flex h-full w-full items-center justify-center">
       <div className="flex w-80 flex-col gap-4">
         <h2 className="text-center font-alt text-2xl text-neutral-300">
-          Login
+          Entrar
         </h2>
         <form
           onSubmit={handleSubmit(onSubmit)}
@@ -75,7 +75,7 @@ export default function Signin() {
               id="email"
               type="text"
               autoComplete="off"
-              placeholder="Email"
+              placeholder="E-mail"
               register={register('email')}
             />
             <FormLabel htmlFor="email">
@@ -89,7 +89,7 @@ export default function Signin() {
               id="password"
               type="password"
               autoComplete="off"
-              placeholder="Password"
+              placeholder="Senha"
               register={register('password')}
             />
             <FormLabel htmlFor="password">
@@ -99,12 +99,12 @@ export default function Signin() {
           </FormGroup>
 
           <PrimaryButton size="lg" type="submit" disabled={isSubmitting}>
-            Submit
+            Enviar
           </PrimaryButton>
 
           <div className="text-center">
             <Link href="/signup" className="text-indigo-500 hover:underline">
-              {"Don't"} have an account?
+              Não tem uma conta? Cadastre-se
             </Link>
           </div>
         </form>

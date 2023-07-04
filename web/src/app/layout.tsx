@@ -30,7 +30,7 @@ export default function RootLayout({ children }: IProps) {
   return (
     <html lang="en">
       <body
-        className={`font-poppins bg-neutral-900 font-medium ${poppins.variable} ${lexendDeca.variable} font-sans`}
+        className={`font-poppins bg-neutral-900 font-medium text-neutral-300 ${poppins.variable} ${lexendDeca.variable} font-sans`}
       >
         <Providers>
           <section className="mx-auto flex h-screen w-5/6">

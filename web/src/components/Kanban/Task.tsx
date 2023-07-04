@@ -2,9 +2,6 @@
 
 import { Draggable } from 'react-beautiful-dnd'
 
-import ModalTask from '@/components/ModalTask'
-import useToggleClickOutside from '@/hooks/useToggleClickOutside'
-
 type TaskProps = {
   task: {
     id: string
@@ -29,14 +26,12 @@ type TaskProps = {
 }
 
 export default function Task({ task, index }: TaskProps) {
-  const [show, toggleShow, element] = useToggleClickOutside(false)
-
   return (
     <>
       <Draggable draggableId={task.id} index={index}>
         {({ dragHandleProps, draggableProps, innerRef }) => (
           <div
-            onClick={() => toggleShow()}
+            /* onClick={() => toggleShow()} */
             className="group mb-2"
             {...draggableProps}
             {...dragHandleProps}
@@ -49,7 +44,7 @@ export default function Task({ task, index }: TaskProps) {
         )}
       </Draggable>
 
-      <ModalTask task={task} show={show} element={element} width="large" />
+      {/* <ModalTask task={task} show={show} element={element} width="large" /> */}
     </>
   )
 }
