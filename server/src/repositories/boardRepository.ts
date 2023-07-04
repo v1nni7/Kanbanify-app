@@ -1,5 +1,5 @@
 import { boardCollection } from "@/config/mongo";
-import { Db, ObjectId } from "mongodb";
+import { ObjectId } from "mongodb";
 
 export type Board = {
   _id?: ObjectId;
@@ -77,6 +77,20 @@ function updateBoard(content, boardURL: string) {
   );
 }
 
+function updateColumnTitle(title: string, columnId: string, boardURL: string) {
+  return boardCollection.updateOne(
+    {
+      url: boardURL,
+    },
+    {
+      $set: {
+        [`content.columns.${columnId}.title`]: title,
+      },
+    }
+  );
+}
+
+
 function updateColumnOrder(newColumnOrder, boardURL: string) {
   return boardCollection.updateOne(
     { url: boardURL },
@@ -115,6 +129,7 @@ export default {
   createColumnInBoard,
   createTaskInColumn,
   updateBoard,
+  updateColumnTitle,
   updateTaskOrder,
   updateColumnOrder,
   updateTaskToNewColumn,

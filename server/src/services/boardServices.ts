@@ -112,6 +112,17 @@ async function updateBoard(content, boardURL: string) {
   await boardRepository.updateBoard(content, boardURL);
 }
 
+type UpdateColumnParams = {
+  title: string;
+  columnId: string;
+}
+
+async function updateColumnTitle({title, columnId}: UpdateColumnParams, boardURL: string) {
+  await boardRepository.updateColumnTitle(title, columnId, boardURL);
+
+  return
+}
+
 async function updateTaskOrder(body, boardURL) {
   await boardRepository.updateTaskOrder(body, boardURL);
 
@@ -137,6 +148,7 @@ export default {
   createColumn,
   createTask,
   updateBoard,
+  updateColumnTitle,
   updateTaskOrder,
   updateColumnOrder,
   updateTaskToNewColumn,

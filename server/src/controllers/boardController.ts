@@ -78,6 +78,19 @@ async function updateBoard(req: Request, res: Response) {
   }
 }
 
+async function updateColumnTitle(req: Request, res: Response) {
+  try {
+    const { body} = req;
+    const { boardURL } = req.params;
+
+    await boardServices.updateColumnTitle(body, boardURL);
+
+    res.status(200).json({ message: "Column title updated successfully" });
+  } catch (error) { 
+    console.log(error)
+  }
+}
+
 async function updateTaskOrder(req: Request, res: Response) {
   try {
     const { body } = req;
@@ -124,6 +137,7 @@ export default {
   createColumn,
   createTask,
   updateBoard,
+  updateColumnTitle,
   updateTaskOrder,
   updateColumnOrder,
   updateTaskToNewColumn,
