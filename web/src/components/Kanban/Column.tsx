@@ -1,33 +1,53 @@
 'use client'
 
-import { useRef } from 'react'
+import { useCallback, useContext } from 'react'
 import { Draggable, Droppable } from 'react-beautiful-dnd'
-import {
-  IoAddOutline,
-  IoCheckmarkSharp,
-  IoCreateOutline,
-} from 'react-icons/io5'
+import { IoAddOutline, IoCheckmarkSharp } from 'react-icons/io5'
 
+import { KanbanContext } from '@/context/KanbanContext'
 import useToggleClickOutside from '@/hooks/useToggleClickOutside'
 
 import Footer from './Footer'
 import InnerListTask from './InnerListTask'
 import FormCreateTask from '../_Form/FormCreateTask'
 import { SubmitHandler, useForm } from 'react-hook-form'
+import { updateColumnTitle } from '@/services/board'
 
 interface FieldValues {
   title: string
 }
 
 export default function Column({ column, tasks, index, boardURL }: any) {
+  const { setKanban } = useContext(KanbanContext)
   const { handleSubmit, register, watch } = useForm<FieldValues>()
   const [isOpen, toggle, element, button] = useToggleClickOutside(false)
 
-  const showButton = column.title !== watch('title')
+  const changedInput = watch('title') ? watch('title') !== column.title : false
 
-  const onSubmit: SubmitHandler<FieldValues> = (data) => {
-    console.log(data)
-  }
+  const onSubmit: SubmitHandler<FieldValues> = useCallback(
+    async (data) => {
+      try {
+        if (!changedInput) {
+          return
+        }
+
+        const body = { ...data, columnId: column.id }
+
+        await updateColumnTitle(body, boardURL)
+
+        setKanban((prev: any) => {
+          const newKanban = { ...prev }
+
+          newKanban.columns[column.id].title = data.title
+
+          return newKanban
+        })
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    [boardURL, column.id, setKanban, changedInput],
+  )
 
   return (
     <Draggable draggableId={column.id} index={index}>
@@ -53,7 +73,7 @@ export default function Column({ column, tasks, index, boardURL }: any) {
                       className="w-full rounded-md border-2 border-transparent bg-transparent p-1 text-zinc-400 outline-none transition-all duration-300 focus:border-zinc-500 focus:bg-zinc-400/10"
                     />
 
-                    {showButton && (
+                    {changedInput && (
                       <button
                         type="submit"
                         className="animate-fade-in rounded-md bg-indigo-500 p-1"

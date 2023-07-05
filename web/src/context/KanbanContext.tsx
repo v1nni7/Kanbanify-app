@@ -39,11 +39,7 @@ export default function KanbanContextProvider({
     try {
       const newColumnOrder = content.columnOrder
 
-      const response = await updateColumnOrder(newColumnOrder, boardURL)
-
-      if (response.status === 200) {
-        console.log(response)
-      }
+      await updateColumnOrder(newColumnOrder, boardURL)
     } catch (error) {
       console.log(error)
     }

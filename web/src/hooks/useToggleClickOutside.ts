@@ -8,12 +8,12 @@ export default function useToggleClickOutside(
   boolean,
   () => void,
   RefObject<HTMLElement> | any,
-  RefObject<HTMLButtonElement>,
+  RefObject<HTMLElement> | any,
 ] {
   const [value, setValue] = useState(defaultValue)
 
   const elementRef = useRef<HTMLElement>(null)
-  const buttonRef = useRef<HTMLButtonElement>(null)
+  const buttonRef = useRef<HTMLElement>(null)
 
   const toggle = () => {
     setValue(!value)
