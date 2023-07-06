@@ -72,3 +72,11 @@ export async function upsertTaskDescription(
 ) {
   return await api.post(`/boards/task/description/${boardURL}`, body)
 }
+
+export async function upsertTaskImageURL(body: any, boardURL: string) {
+  return await api.post(`/boards/task/image/${boardURL}`, body)
+}
+
+export async function updateTaskTitle(body: any, boardURL: string) {
+  return await api.put(`/boards/task/title/${boardURL}`, body)
+}

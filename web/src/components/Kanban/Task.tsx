@@ -1,17 +1,23 @@
 'use client'
 
 import Image from 'next/image'
-import { useCallback, useContext } from 'react'
+import { useCallback, useContext, useEffect } from 'react'
 import { Draggable } from 'react-beautiful-dnd'
-import { IoCamera, IoEnter } from 'react-icons/io5'
+import { IoCamera, IoCheckmarkSharp, IoClose } from 'react-icons/io5'
+import { FaAngleDoubleRight } from 'react-icons/fa'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { HiOutlineBars3BottomLeft, HiWindow } from 'react-icons/hi2'
 
-import useToggleClickOutside from '@/hooks/useToggleClickOutside'
-import { upsertTaskDescription } from '@/services/board'
-import PrimaryButton from '../_Buttons/PrimaryButton'
-
 import { KanbanContext } from '@/context/KanbanContext'
+import useFilePreview from '@/hooks/useFilePreview'
+import useToggleClickOutside from '@/hooks/useToggleClickOutside'
+import {
+  updateTaskTitle,
+  uploadImage,
+  upsertTaskDescription,
+  upsertTaskImageURL,
+} from '@/services/board'
+import PrimaryButton from '../_Buttons/PrimaryButton'
 
 type TaskProps = {
   task: {
@@ -25,40 +31,109 @@ type TaskProps = {
   boardURL: string
 }
 
-type DescriptionFieldValues = {
-  description: string
+type FieldValues = {
+  title?: string
+  coverMedia?: string
+  description?: string
 }
 
 export default function Task({ task, index, boardURL }: TaskProps) {
   const { setKanban } = useContext(KanbanContext)
   const [show, toggleShow, element, button] = useToggleClickOutside(false)
-  const { handleSubmit, register, watch } = useForm<DescriptionFieldValues>()
+  const { handleSubmit, register, watch } = useForm<FieldValues>()
 
-  const onSubmitDescription: SubmitHandler<DescriptionFieldValues> =
-    useCallback(
-      async (data) => {
-        try {
-          await upsertTaskDescription(
-            {
-              ...data,
-              taskId: task.id,
-            },
-            boardURL,
-          )
+  const [preview, setPreview] = useFilePreview(watch('coverMedia'))
 
-          setKanban((prev: any) => {
-            const newKanban = { ...prev }
+  const setPreviewNull = useCallback(() => {
+    if (show) {
+      return
+    }
+    setPreview(null)
+  }, [show, setPreview])
 
-            newKanban.tasks[task.id].description = data.description
+  const changedTitle = watch('title')
+  const changedDescription = watch('description')
 
-            return newKanban
-          })
-        } catch (error) {
-          console.log(error)
+  const onSubmitCoverURL: SubmitHandler<FieldValues> = useCallback(
+    async ({ coverMedia }) => {
+      try {
+        if (!coverMedia) return
+
+        const formData = new FormData()
+
+        let coverURL: string | null = null
+
+        if (coverMedia?.length > 0) {
+          formData.append('media', coverMedia[0])
+          const response = await uploadImage(formData)
+
+          coverURL = response.data
         }
-      },
-      [boardURL, setKanban, task.id],
-    )
+
+        await upsertTaskImageURL({ taskId: task.id, coverURL }, boardURL)
+
+        setKanban((prev: any) => {
+          const newKanban = { ...prev }
+
+          newKanban.tasks[task.id].coverURL = coverURL
+
+          return newKanban
+        })
+        setPreview(null)
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    [],
+  )
+
+  const onSubmitTitle: SubmitHandler<FieldValues> = useCallback(
+    async (data) => {
+      try {
+        await updateTaskTitle({ title: data.title, taskId: task.id }, boardURL)
+
+        setKanban((prev: any) => {
+          const newKanban = { ...prev }
+
+          newKanban.tasks[task.id].title = data.title
+
+          return newKanban
+        })
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    [boardURL, setKanban, task.id],
+  )
+
+  const onSubmitDescription: SubmitHandler<FieldValues> = useCallback(
+    async (data) => {
+      try {
+        await upsertTaskDescription(
+          {
+            taskId: task.id,
+            description: data.description,
+          },
+          boardURL,
+        )
+
+        setKanban((prev: any) => {
+          const newKanban = { ...prev }
+
+          newKanban.tasks[task.id].description = data.description
+
+          return newKanban
+        })
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    [boardURL, setKanban, task.id],
+  )
+
+  useEffect(() => {
+    setPreviewNull()
+  }, [setPreviewNull])
 
   return (
     <>
@@ -84,65 +159,107 @@ export default function Task({ task, index, boardURL }: TaskProps) {
       <div
         ref={element}
         className={`absolute right-0 top-0 z-20 h-full w-[600px] bg-neutral-600 transition-all ${
-          show ? 'translate-x-0' : 'translate-x-[600px]'
+          show ? 'opacity-1 translate-x-0' : 'translate-x-[600px] opacity-0'
         }`}
       >
         <div className="relative w-full">
-          <button
-            onClick={() => toggleShow()}
-            className="absolute left-2 top-2 text-4xl text-indigo-200 transition-colors hover:text-indigo-200/60"
-          >
-            <IoEnter />
-          </button>
+          <div className="absolute left-2 top-2 flex items-center justify-center rounded-md bg-neutral-700/60">
+            <button
+              onClick={() => toggleShow()}
+              className="text-4xl text-neutral-400 transition-colors hover:text-neutral-400/60"
+            >
+              <FaAngleDoubleRight />
+            </button>
+          </div>
 
-          <input id="coverURL" type="file" hidden />
+          <form onSubmit={handleSubmit(onSubmitCoverURL)}>
+            <input
+              id={`coverURL-${task.id}`}
+              {...register('coverMedia')}
+              type="file"
+              hidden
+            />
 
-          {task?.coverURL ? (
-            <>
-              <Image
-                width={600}
-                height={600}
-                src={task.coverURL}
-                alt=""
-                className="max-h-64 object-cover"
-              />
+            {task?.coverURL || preview ? (
+              <>
+                <Image
+                  width={600}
+                  height={600}
+                  src={preview || task.coverURL}
+                  alt=""
+                  className="max-h-64 object-cover"
+                />
 
-              <label
-                htmlFor="coverURL"
-                className="absolute bottom-4 right-4 flex cursor-pointer items-center gap-2 rounded-md bg-neutral-600/80 p-1 transition-colors hover:bg-neutral-500/60"
-              >
-                <IoCamera className="text-xl" />
-                Alterar capa
+                <div className="absolute bottom-2 right-2 flex items-center justify-center gap-2">
+                  {preview && (
+                    <>
+                      <button
+                        type="submit"
+                        className="rounded-md bg-indigo-500 p-1 text-xl transition-colors hover:bg-indigo-500/80"
+                      >
+                        <IoCheckmarkSharp />
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => setPreview(null)}
+                        className="rounded-md bg-red-500 p-1 text-xl transition-colors hover:bg-red-500/80"
+                      >
+                        <IoClose />
+                      </button>
+                    </>
+                  )}
+                  <label
+                    tabIndex={0}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault()
+                        e.currentTarget.click()
+                      }
+                    }}
+                    htmlFor={`coverURL-${task.id}`}
+                    className="flex h-7 cursor-pointer items-center gap-2 rounded-md bg-neutral-600/80 p-1 transition-colors hover:bg-neutral-500/60"
+                  >
+                    <IoCamera className="text-xl" />
+                    Alterar capa
+                  </label>
+                </div>
+              </>
+            ) : (
+              <label htmlFor={`coverURL-${task.id}`}>
+                <div className="flex h-64 w-full cursor-pointer items-center justify-center bg-neutral-700 transition-colors hover:bg-neutral-700/60">
+                  <IoCamera className="text-4xl text-neutral-400" />
+                </div>
               </label>
-            </>
-          ) : (
-            <label htmlFor="coverURL">
-              <div className="flex h-64 w-full cursor-pointer items-center justify-center bg-neutral-700 transition-colors hover:bg-neutral-700/60">
-                <IoCamera className="text-4xl text-neutral-400" />
-              </div>
-            </label>
-          )}
+            )}
+          </form>
         </div>
 
         <div className="p-2">
-          <div className="mb-16 flex items-start gap-2">
+          <div className="mb-12 flex items-start gap-2">
             <HiWindow className="text-4xl text-neutral-400" />
 
-            <form className="flex w-full flex-col items-start gap-2">
+            <form
+              onSubmit={handleSubmit(onSubmitTitle)}
+              className="flex w-full flex-col items-start gap-2"
+            >
               <textarea
-                rows={task.title.length > 50 ? 2 : 1}
+                {...register('title')}
                 defaultValue={task.title}
-                className="peer w-full resize-none rounded-md border border-transparent bg-transparent p-2 outline-none transition-colors focus:border-neutral-500 focus:bg-neutral-700/60"
+                rows={task.title.length > 50 ? 2 : 1}
+                className="w-full resize-none rounded-md border border-transparent bg-transparent p-2 outline-none transition-colors focus:border-neutral-500 focus:bg-neutral-700/60"
               />
 
-              <PrimaryButton
-                size="sm"
-                type="button"
-                className="hidden animate-fade-in px-4 peer-focus:block"
-                disabled={false}
-              >
-                Salvar
-              </PrimaryButton>
+              {changedTitle !== task.title && (
+                <PrimaryButton
+                  size="sm"
+                  type="submit"
+                  className="animate-fade-in px-4"
+                  disabled={false}
+                >
+                  Salvar
+                </PrimaryButton>
+              )}
             </form>
           </div>
 
@@ -161,16 +278,18 @@ export default function Task({ task, index, boardURL }: TaskProps) {
                 className="w-full resize-none rounded-md border border-transparent bg-neutral-700/60 p-2 outline-none transition-colors placeholder:text-neutral-400 focus:border-neutral-500"
               />
 
-              {watch('description') && (
-                <PrimaryButton
-                  size="sm"
-                  type="submit"
-                  className="animate-fade-in px-4"
-                  disabled={false}
-                >
-                  Salvar
-                </PrimaryButton>
-              )}
+              {changedDescription &&
+                changedDescription !== task.description &&
+                changedDescription?.length > 0 && (
+                  <PrimaryButton
+                    size="sm"
+                    type="submit"
+                    className="animate-fade-in px-4"
+                    disabled={false}
+                  >
+                    Salvar
+                  </PrimaryButton>
+                )}
             </form>
           </div>
 

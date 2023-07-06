@@ -1,10 +1,10 @@
 import Image from 'next/image'
+import { useRouter } from 'next/navigation'
 import { IoImagesOutline } from 'react-icons/io5'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import useFilePreview from '@/hooks/useFilePreview'
 import { createBoard, uploadImage } from '@/services/board'
 import PrimaryButton from '../_Buttons/PrimaryButton'
-import { useRouter } from 'next/navigation'
 
 interface FieldValues {
   name: string
