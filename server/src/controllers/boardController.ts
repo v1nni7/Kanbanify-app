@@ -143,6 +143,19 @@ async function updateOrCreateTaskDescription(req: Request, res: Response) {
   }
 }
 
+async function updateTaskTitle(req: Request, res: Response) {
+  try {
+    const { body } = req;
+    const { boardURL } = req.params;
+
+    await boardServices.updateTaskTitle(body, boardURL);
+
+    res.status(200).json({ message: "Task title updated successfully" });
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 export default {
   createBoard,
   getBoards,
@@ -154,5 +167,6 @@ export default {
   updateTaskOrder,
   updateColumnOrder,
   updateTaskToNewColumn,
-  updateOrCreateTaskDescription
+  updateOrCreateTaskDescription,
+  updateTaskTitle,
 };

@@ -90,6 +90,19 @@ function updateColumnTitle(title: string, columnId: string, boardURL: string) {
   );
 }
 
+function updateTaskTitle(title: string, taskId: string, boardURL: string) {
+  return boardCollection.updateOne(
+    {
+      url: boardURL,
+    },
+    {
+      $set: {
+        [`content.tasks.${taskId}.title`]: title,
+      },
+    }
+  )
+}
+
 function upsertTaskDescription(description: string, taskId: string, boardURL: string) {
   return boardCollection.updateOne(
     {
@@ -103,7 +116,6 @@ function upsertTaskDescription(description: string, taskId: string, boardURL: st
     { upsert: true }
   )
 }
-
 
 function updateColumnOrder(newColumnOrder, boardURL: string) {
   return boardCollection.updateOne(
@@ -143,6 +155,7 @@ export default {
   createColumnInBoard,
   createTaskInColumn,
   updateBoard,
+  updateTaskTitle,
   updateColumnTitle,
   updateTaskOrder,
   updateColumnOrder,
