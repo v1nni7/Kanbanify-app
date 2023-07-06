@@ -116,7 +116,7 @@ export default function Column({ column, tasks, index, boardURL }: any) {
                         />
                       </div>
 
-                      <InnerListTask tasks={tasks} />
+                      <InnerListTask tasks={tasks} boardURL={boardURL} />
 
                       {placeholder}
                     </div>

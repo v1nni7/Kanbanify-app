@@ -65,3 +65,10 @@ export async function updateTaskToNewColumn(
 ) {
   return await api.put(`/boards/task/column/${boardURL}`, updateTaskData)
 }
+
+export async function upsertTaskDescription(
+  body: any,
+  boardURL: string | null,
+) {
+  return await api.post(`/boards/task/description/${boardURL}`, body)
+}

@@ -1,12 +1,17 @@
 'use client'
 
+import Image from 'next/image'
+import { useCallback, useContext } from 'react'
 import { Draggable } from 'react-beautiful-dnd'
-import { HiOutlineBars3BottomLeft, HiWindow } from 'react-icons/hi2'
 import { IoCamera, IoEnter } from 'react-icons/io5'
+import { SubmitHandler, useForm } from 'react-hook-form'
+import { HiOutlineBars3BottomLeft, HiWindow } from 'react-icons/hi2'
 
 import useToggleClickOutside from '@/hooks/useToggleClickOutside'
-import Image from 'next/image'
+import { upsertTaskDescription } from '@/services/board'
 import PrimaryButton from '../_Buttons/PrimaryButton'
+
+import { KanbanContext } from '@/context/KanbanContext'
 
 type TaskProps = {
   task: {
@@ -17,10 +22,43 @@ type TaskProps = {
     checklistsIds: string[]
   }
   index: number
+  boardURL: string
 }
 
-export default function Task({ task, index }: TaskProps) {
+type DescriptionFieldValues = {
+  description: string
+}
+
+export default function Task({ task, index, boardURL }: TaskProps) {
+  const { setKanban } = useContext(KanbanContext)
   const [show, toggleShow, element, button] = useToggleClickOutside(false)
+  const { handleSubmit, register, watch } = useForm<DescriptionFieldValues>()
+
+  const onSubmitDescription: SubmitHandler<DescriptionFieldValues> =
+    useCallback(
+      async (data) => {
+        try {
+          await upsertTaskDescription(
+            {
+              ...data,
+              taskId: task.id,
+            },
+            boardURL,
+          )
+
+          setKanban((prev: any) => {
+            const newKanban = { ...prev }
+
+            newKanban.tasks[task.id].description = data.description
+
+            return newKanban
+          })
+        } catch (error) {
+          console.log(error)
+        }
+      },
+      [boardURL, setKanban, task.id],
+    )
 
   return (
     <>
@@ -111,22 +149,28 @@ export default function Task({ task, index }: TaskProps) {
           <div className="mb-4 flex items-start gap-2">
             <HiOutlineBars3BottomLeft className="text-4xl text-neutral-400" />
 
-            <form className="flex w-full flex-col items-start gap-2">
+            <form
+              onSubmit={handleSubmit(onSubmitDescription)}
+              className="flex w-full flex-col items-start gap-2"
+            >
               <textarea
                 rows={4}
+                {...register('description')}
                 defaultValue={task.description}
                 placeholder="Adicione uma descrição"
-                className="peer w-full resize-none rounded-md border border-transparent bg-neutral-700/60 p-2 outline-none transition-colors placeholder:text-neutral-400 focus:border-neutral-500"
+                className="w-full resize-none rounded-md border border-transparent bg-neutral-700/60 p-2 outline-none transition-colors placeholder:text-neutral-400 focus:border-neutral-500"
               />
 
-              <PrimaryButton
-                size="sm"
-                type="button"
-                className="hidden animate-fade-in px-4 peer-focus:block"
-                disabled={false}
-              >
-                Salvar
-              </PrimaryButton>
+              {watch('description') && (
+                <PrimaryButton
+                  size="sm"
+                  type="submit"
+                  className="animate-fade-in px-4"
+                  disabled={false}
+                >
+                  Salvar
+                </PrimaryButton>
+              )}
             </form>
           </div>
 
