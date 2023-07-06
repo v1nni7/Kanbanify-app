@@ -1,18 +1,18 @@
-import { randomUUID } from "node:crypto";
-import boardRepository, { Board } from "@/repositories/boardRepository";
+import { randomUUID } from 'node:crypto'
+import boardRepository from '@/repositories/boardRepository'
 
 type Body = {
-  name: string;
-  userId: number;
-  background: string;
-};
+  name: string
+  userId: number
+  background: string
+}
 
 async function createBoard(body: Body) {
-  const newBoard = createBoardData({ ...body });
+  const newBoard = createBoardData({ ...body })
 
-  boardRepository.createBoard(newBoard);
+  boardRepository.createBoard(newBoard)
 
-  return newBoard;
+  return newBoard
 }
 
 function createBoardData({ name, userId, background }: Body) {
@@ -26,29 +26,29 @@ function createBoardData({ name, userId, background }: Body) {
       columns: {},
       columnOrder: [],
     },
-  };
+  }
 
-  return newBoardData;
+  return newBoardData
 }
 
 async function getBoardsByUserId(userId: number) {
-  return boardRepository.findBoardByUserId(userId);
+  return boardRepository.findBoardByUserId(userId)
 }
 
 async function getBoardByURL(boardURL: string) {
-  return await boardRepository.findBoardByURL(boardURL);
+  return await boardRepository.findBoardByURL(boardURL)
 }
 
 async function createColumn(body, boardURL: string) {
-  const isBoardAlreadyCreated = await boardRepository.findBoardByURL(boardURL);
+  const isBoardAlreadyCreated = await boardRepository.findBoardByURL(boardURL)
 
   if (!isBoardAlreadyCreated) {
-    throw new Error("Board not found");
+    throw new Error('Board not found')
   }
 
-  const columnId = randomUUID();
+  const columnId = randomUUID()
 
-  const { content } = isBoardAlreadyCreated;
+  const { content } = isBoardAlreadyCreated
 
   const newContent = {
     ...content,
@@ -61,23 +61,23 @@ async function createColumn(body, boardURL: string) {
       },
     },
     columnOrder: [...content.columnOrder, columnId],
-  };
+  }
 
-  await boardRepository.createColumnInBoard(newContent, boardURL);
+  await boardRepository.createColumnInBoard(newContent, boardURL)
 
-  return newContent.columns[columnId];
+  return newContent.columns[columnId]
 }
 
 async function createTask(body, boardURL: string, columnId: any) {
-  const isBoardAlreadyCreated = await boardRepository.findBoardByURL(boardURL);
+  const isBoardAlreadyCreated = await boardRepository.findBoardByURL(boardURL)
 
   if (!isBoardAlreadyCreated) {
-    throw new Error("Board not found");
+    throw new Error('Board not found')
   }
 
-  const taskId = randomUUID();
+  const taskId = randomUUID()
 
-  const { content } = isBoardAlreadyCreated;
+  const { content } = isBoardAlreadyCreated
 
   const newContent = {
     ...content,
@@ -95,50 +95,45 @@ async function createTask(body, boardURL: string, columnId: any) {
         taskIds: [...content.columns[columnId].taskIds, taskId],
       },
     },
-  };
+  }
 
-  await boardRepository.createTaskInColumn(newContent, boardURL);
+  await boardRepository.createTaskInColumn(newContent, boardURL)
 
-  return newContent.tasks[taskId];
+  return newContent.tasks[taskId]
 }
 
 async function updateBoard(content, boardURL: string) {
-  const isBoardAlreadyCreated = await boardRepository.findBoardByURL(boardURL);
+  const isBoardAlreadyCreated = await boardRepository.findBoardByURL(boardURL)
 
   if (!isBoardAlreadyCreated) {
-    throw new Error("Board not found");
+    throw new Error('Board not found')
   }
 
-  await boardRepository.updateBoard(content, boardURL);
+  await boardRepository.updateBoard(content, boardURL)
 }
 
 type UpdateColumnParams = {
-  title: string;
-  columnId: string;
+  title: string
+  columnId: string
 }
 
-async function updateColumnTitle({title, columnId}: UpdateColumnParams, boardURL: string) {
-  await boardRepository.updateColumnTitle(title, columnId, boardURL);
-
-  return
+async function updateColumnTitle(
+  { title, columnId }: UpdateColumnParams,
+  boardURL: string,
+) {
+  await boardRepository.updateColumnTitle(title, columnId, boardURL)
 }
 
 async function updateTaskOrder(body, boardURL) {
-  await boardRepository.updateTaskOrder(body, boardURL);
-
-  return;
+  await boardRepository.updateTaskOrder(body, boardURL)
 }
 
 async function updateColumnOrder(newColumnOrder, boardURL) {
-  await boardRepository.updateColumnOrder(newColumnOrder, boardURL);
-
-  return;
+  await boardRepository.updateColumnOrder(newColumnOrder, boardURL)
 }
 
 async function updateTaskToNewColumn(content, boardURL) {
-  await boardRepository.updateTaskToNewColumn(content, boardURL);
-
-  return;
+  await boardRepository.updateTaskToNewColumn(content, boardURL)
 }
 
 type UpsertParams = {
@@ -146,10 +141,11 @@ type UpsertParams = {
   description: string
 }
 
-async function updateOrCreateTaskDescription({taskId, description}: UpsertParams, boardURL: string) {
-  await boardRepository.upsertTaskDescription(description, taskId, boardURL);
-
-  return;
+async function updateOrCreateTaskDescription(
+  { taskId, description }: UpsertParams,
+  boardURL: string,
+) {
+  await boardRepository.upsertTaskDescription(description, taskId, boardURL)
 }
 
 type UpdateTitleParams = {
@@ -157,10 +153,11 @@ type UpdateTitleParams = {
   taskId: string
 }
 
-async function updateTaskTitle({title, taskId}: UpdateTitleParams, boardURL: string) {
-  await boardRepository.updateTaskTitle(title, taskId, boardURL);
-
-  return;
+async function updateTaskTitle(
+  { title, taskId }: UpdateTitleParams,
+  boardURL: string,
+) {
+  await boardRepository.updateTaskTitle(title, taskId, boardURL)
 }
 
 type UpdateCoverParams = {
@@ -168,10 +165,11 @@ type UpdateCoverParams = {
   coverURL: string
 }
 
-async function upsertTaskImage({coverURL, taskId}:UpdateCoverParams, boardURL: string) {
-  await boardRepository.upsertTaskImage(coverURL, taskId, boardURL);
-
-  return;
+async function upsertTaskImage(
+  { coverURL, taskId }: UpdateCoverParams,
+  boardURL: string,
+) {
+  await boardRepository.upsertTaskImage(coverURL, taskId, boardURL)
 }
 
 export default {
@@ -187,5 +185,5 @@ export default {
   updateTaskToNewColumn,
   updateOrCreateTaskDescription,
   updateTaskTitle,
-  upsertTaskImage
-};
+  upsertTaskImage,
+}

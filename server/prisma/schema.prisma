@@ -12,57 +12,15 @@ datasource db {
 }
 
 model Users {
-  id        Int      @id @default(autoincrement())
+  id        String   @id @default(uuid())
   email     String   @unique
   firstName String?
   lastName  String?
   password  String
   username  String   @unique
   photo     String?
-  boards    Boards[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@map("users")
-}
-
-model Boards {
-  id         Int       @id @default(autoincrement())
-  userId     Int?
-  safeUrl    String    @unique
-  name       String
-  background String
-  columns    Columns[]
-  Users      Users?    @relation(fields: [userId], references: [id])
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
-
-  @@map("boards")
-}
-
-model Columns {
-  id        Int      @id @default(autoincrement())
-  order     Int
-  boardId   String
-  title     String
-  uuid      String   @unique
-  taskIds   Tasks[]
-  Boards    Boards?  @relation(fields: [boardId], references: [safeUrl])
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@map("columns")
-}
-
-model Tasks {
-  id        Int      @id @default(autoincrement())
-  order     Int
-  columnId  String
-  title     String
-  uuid      String   @unique
-  Columns   Columns? @relation(fields: [columnId], references: [uuid])
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@map("tasks")
 }

@@ -1,12 +1,12 @@
-import { prisma } from "@/config/database";
+import { prisma } from '@/config/database'
 
 type UserDataType = {
-  email: string;
-  password: string;
-  username: string;
-};
+  email: string
+  password: string
+  username: string
+}
 
-function getUser(userId: number) {
+function getUser(userId: string) {
   return prisma.users.findUnique({
     where: {
       id: userId,
@@ -18,7 +18,7 @@ function getUser(userId: number) {
       lastName: true,
       photo: true,
     },
-  });
+  })
 }
 
 function findByEmail(email: string) {
@@ -26,7 +26,7 @@ function findByEmail(email: string) {
     where: {
       email,
     },
-  });
+  })
 }
 
 function findByUsername(username: string) {
@@ -34,13 +34,13 @@ function findByUsername(username: string) {
     where: {
       username,
     },
-  });
+  })
 }
 
 function createUser(userData: UserDataType) {
   return prisma.users.create({
     data: userData,
-  });
+  })
 }
 
-export default { findByEmail, findByUsername, createUser, getUser };
+export default { findByEmail, findByUsername, createUser, getUser }

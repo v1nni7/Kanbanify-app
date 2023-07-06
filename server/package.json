@@ -31,6 +31,7 @@
     "uuid": "^9.0.0"
   },
   "devDependencies": {
+    "@rocketseat/eslint-config": "^1.2.0",
     "@faker-js/faker": "^8.0.2",
     "@types/bcrypt": "^5.0.0",
     "@types/cors": "^2.8.12",
