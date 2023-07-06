@@ -163,6 +163,17 @@ async function updateTaskTitle({title, taskId}: UpdateTitleParams, boardURL: str
   return;
 }
 
+type UpdateCoverParams = {
+  taskId: string
+  coverURL: string
+}
+
+async function upsertTaskImage({coverURL, taskId}:UpdateCoverParams, boardURL: string) {
+  await boardRepository.upsertTaskImage(coverURL, taskId, boardURL);
+
+  return;
+}
+
 export default {
   createBoard,
   getBoardsByUserId,
@@ -175,5 +186,6 @@ export default {
   updateColumnOrder,
   updateTaskToNewColumn,
   updateOrCreateTaskDescription,
-  updateTaskTitle
+  updateTaskTitle,
+  upsertTaskImage
 };

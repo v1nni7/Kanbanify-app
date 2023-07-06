@@ -148,6 +148,20 @@ function updateTaskToNewColumn(
   );
 }
 
+function upsertTaskImage(coverURL: string,taskId: string, boardURL) {
+  return boardCollection.updateOne(
+    {
+      url: boardURL,
+    },
+    {
+      $set: {
+        [`content.tasks.${taskId}.coverURL`]: coverURL,
+      }
+    },
+    { upsert: true }
+  )
+}
+
 export default {
   createBoard,
   findBoardByUserId,
@@ -160,5 +174,6 @@ export default {
   updateTaskOrder,
   updateColumnOrder,
   updateTaskToNewColumn,
-  upsertTaskDescription
+  upsertTaskDescription,
+  upsertTaskImage
 };

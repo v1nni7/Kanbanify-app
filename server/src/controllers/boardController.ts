@@ -156,6 +156,19 @@ async function updateTaskTitle(req: Request, res: Response) {
   }
 }
 
+async function upsertTaskImage(req: Request, res: Response) {
+  try {
+    const {body} = req;
+    const {boardURL} = req.params;
+
+    await boardServices.upsertTaskImage(body, boardURL);
+
+    res.status(200).json({message: "Task image updated successfully"});
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 export default {
   createBoard,
   getBoards,
@@ -169,4 +182,5 @@ export default {
   updateTaskToNewColumn,
   updateOrCreateTaskDescription,
   updateTaskTitle,
+  upsertTaskImage
 };

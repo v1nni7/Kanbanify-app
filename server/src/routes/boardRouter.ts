@@ -11,6 +11,7 @@ boardRouter
   .post("/", boardController.createBoard)
   .post("/column/:boardURL", boardController.createColumn)
   .post("/task/:boardURL", boardController.createTask)
+  .post("/task/image/:boardURL", boardController.upsertTaskImage)
   .post("/task/description/:boardURL", boardController.updateOrCreateTaskDescription)
   .put("/:boardURL", boardController.updateBoard)
   .put("/task/title/:boardURL", boardController.updateTaskTitle)
