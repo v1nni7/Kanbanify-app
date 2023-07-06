@@ -55,8 +55,12 @@ $ npm run dev
 ### 🔬 Próximos passos
 
 [] Refatorar todo o código do projeto Front-end / Back-end
+
 [] Permitir que os proprietários do quadro adicionem membros
-[] Permitir que usuários solicitem acesso aos quadros atraves de links compartilhados
+
+[] Permitir que usuários solicitem acesso aos quadros atraves de links 
+compartilhados
+
 [] Fazer deploy da versão BETA do projeto
 
 
