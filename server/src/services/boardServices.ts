@@ -141,6 +141,17 @@ async function updateTaskToNewColumn(content, boardURL) {
   return;
 }
 
+type UpsertParams = {
+  taskId: string
+  description: string
+}
+
+async function updateOrCreateTaskDescription({taskId, description}: UpsertParams, boardURL: string) {
+  await boardRepository.upsertTaskDescription(description, taskId, boardURL);
+
+  return;
+}
+
 export default {
   createBoard,
   getBoardsByUserId,
@@ -152,4 +163,5 @@ export default {
   updateTaskOrder,
   updateColumnOrder,
   updateTaskToNewColumn,
+  updateOrCreateTaskDescription
 };

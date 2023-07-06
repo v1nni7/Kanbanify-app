@@ -90,6 +90,20 @@ function updateColumnTitle(title: string, columnId: string, boardURL: string) {
   );
 }
 
+function upsertTaskDescription(description: string, taskId: string, boardURL: string) {
+  return boardCollection.updateOne(
+    {
+      url: boardURL,
+    },
+    {
+      $set: {
+        [`content.tasks.${taskId}.description`]: description,
+      }
+    },
+    { upsert: true }
+  )
+}
+
 
 function updateColumnOrder(newColumnOrder, boardURL: string) {
   return boardCollection.updateOne(
@@ -133,4 +147,5 @@ export default {
   updateTaskOrder,
   updateColumnOrder,
   updateTaskToNewColumn,
+  upsertTaskDescription
 };

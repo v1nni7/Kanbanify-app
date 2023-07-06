@@ -12,6 +12,7 @@ boardRouter
   .get("/:boardURL", boardController.getBoardContent)
   .post("/column/:boardURL", boardController.createColumn)
   .post("/task/:boardURL", boardController.createTask)
+  .post("/task/description/:boardURL", boardController.updateOrCreateTaskDescription)
   .put("/column/:boardURL", boardController.updateColumnTitle)
   .put("/taskOrder/:boardURL", boardController.updateTaskOrder)
   .put("/columnOrder/:boardURL", boardController.updateColumnOrder)
