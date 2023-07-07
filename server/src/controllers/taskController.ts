@@ -11,8 +11,6 @@ async function createTask(req: Request, res: Response) {
 
     return res.status(201).json({ ...newTask })
   } catch (error) {
-    console.log(error)
-
     if (error.status && error.message) {
       return res.status(error.status).send(error.message)
     }
@@ -21,4 +19,22 @@ async function createTask(req: Request, res: Response) {
   }
 }
 
-export default { createTask }
+async function upsertDescription(req: Request, res: Response) {
+  try {
+    const { body } = req
+    const { userId } = res.locals
+    const { boardURL } = req.params
+
+    await taskService.upsertDescription({ ...body, boardURL }, userId)
+
+    return res.sendStatus(200)
+  } catch (error) {
+    if (error.status && error.message) {
+      return res.status(error.status).send(error.message)
+    }
+
+    return res.status(500).send('Internal server error')
+  }
+}
+
+export default { createTask, upsertDescription }

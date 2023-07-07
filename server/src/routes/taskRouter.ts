@@ -7,5 +7,6 @@ const taskRouter = Router()
 taskRouter
   .all('*', validateTokenMiddleware)
   .post('/:boardURL', taskController.createTask)
+  .post('/description/:boardURL', taskController.upsertDescription)
 
 export default taskRouter

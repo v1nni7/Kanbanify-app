@@ -13,6 +13,12 @@ export type UpdateTaskOrderParams = {
   boardURL: string
 }
 
+export type UpsertDescriptionParams = {
+  taskId: string
+  boardURL: string
+  description: string
+}
+
 function createTask({ title, taskId, columnId, boardURL }: CreateTaskParams) {
   return boardCollection.updateOne(
     { url: boardURL },
@@ -31,4 +37,20 @@ function createTask({ title, taskId, columnId, boardURL }: CreateTaskParams) {
   )
 }
 
-export default { createTask }
+function upsertDescription({
+  description,
+  taskId,
+  boardURL,
+}: UpsertDescriptionParams) {
+  return boardCollection.updateOne(
+    { url: boardURL },
+    {
+      $set: {
+        [`content.tasks.${taskId}.description`]: description,
+      },
+    },
+    { upsert: true },
+  )
+}
+
+export default { createTask, upsertDescription }
