@@ -6,7 +6,7 @@ export type CreateColumnParams = {
   boardURL: string
 }
 
-export type UpdateOrderParams = {
+export type UpdateColumnOrderParams = {
   boardURL: string
   columnOrder: string[]
 }
@@ -40,7 +40,7 @@ function updateTitle({ title, columnId, boardURL }: CreateColumnParams) {
   )
 }
 
-function updateOrder({ columnOrder, boardURL }: UpdateOrderParams) {
+function updateOrder({ columnOrder, boardURL }: UpdateColumnOrderParams) {
   return boardCollection.updateOne(
     {
       url: boardURL,

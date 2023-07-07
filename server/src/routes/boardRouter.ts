@@ -9,7 +9,6 @@ boardRouter
   .get('/', boardController.getBoards)
   .get('/:boardURL', boardController.getBoardContent)
   .post('/', boardController.createBoard)
-  .post('/task/:boardURL', boardController.createTask)
   .post('/task/image/:boardURL', boardController.upsertTaskImage)
   .post(
     '/task/description/:boardURL',

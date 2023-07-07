@@ -164,13 +164,6 @@ function upsertTaskImage(coverURL: string, taskId: string, boardURL) {
 
 // ------------------------
 
-async function findUserInBoard(userId: string, boardURL: string) {
-  return boardCollection.findOne({
-    url: boardURL,
-    userId,
-  })
-}
-
 async function findBoardByURL(boardURL: string) {
   return boardCollection.findOne({
     url: boardURL,
@@ -190,6 +183,5 @@ export default {
   updateTaskToNewColumn,
   upsertTaskDescription,
   upsertTaskImage,
-  findUserInBoard,
   findBoardByURL,
 }

@@ -46,10 +46,11 @@ async function updateOrder(req: Request, res: Response) {
     const { userId } = res.locals
     const { boardURL } = req.params
 
-    await columnService.updateOrder({ ...body, boardURL }, userId)
+    await columnService.updateOrder({ columnOrder: body, boardURL }, userId)
 
     res.sendStatus(200)
   } catch (error) {
+    // console.log(error)
     if (error.status && error.message) {
       return res.status(error.status).send(error.message)
     }
