@@ -1,19 +1,6 @@
 import { Request, Response } from 'express'
 import boardServices from '@/services/boardServices'
 
-async function createBoard(req: Request, res: Response) {
-  try {
-    const { body } = req
-    const { userId } = res.locals
-
-    const newBoard = await boardServices.createBoard({ ...body, userId })
-
-    res.status(201).json({ ...newBoard })
-  } catch (error) {
-    console.log(error)
-  }
-}
-
 async function getBoards(req: Request, res: Response) {
   try {
     const { userId } = res.locals
@@ -38,149 +25,17 @@ async function getBoardContent(req: Request, res: Response) {
   }
 }
 
-async function createColumn(req: Request, res: Response) {
+async function createBoard(req: Request, res: Response) {
   try {
     const { body } = req
-    const { boardURL } = req.params
+    const { userId } = res.locals
 
-    const column = await boardServices.createColumn(body, boardURL)
+    const newBoard = await boardServices.createBoard({ ...body, userId })
 
-    res.status(201).json(column)
+    res.status(201).json({ ...newBoard })
   } catch (error) {
     console.log(error)
   }
 }
 
-async function createTask(req: Request, res: Response) {
-  try {
-    const { body } = req
-    const { columnId } = req.query
-    const { boardURL } = req.params
-
-    const task = await boardServices.createTask(body, boardURL, columnId)
-
-    res.status(201).json(task)
-  } catch (error) {
-    console.log(error)
-  }
-}
-
-async function updateBoard(req: Request, res: Response) {
-  try {
-    const { body } = req
-    const { boardURL } = req.params
-
-    await boardServices.updateBoard(body, boardURL)
-
-    res.status(200).json({ message: 'Board updated successfully' })
-  } catch (error) {
-    console.log(error)
-  }
-}
-
-async function updateColumnTitle(req: Request, res: Response) {
-  try {
-    const { body } = req
-    const { boardURL } = req.params
-
-    await boardServices.updateColumnTitle(body, boardURL)
-
-    res.status(200).json({ message: 'Column title updated successfully' })
-  } catch (error) {
-    console.log(error)
-  }
-}
-
-async function updateTaskOrder(req: Request, res: Response) {
-  try {
-    const { body } = req
-    const { boardURL } = req.params
-
-    await boardServices.updateTaskOrder(body, boardURL)
-
-    res.status(200).json({ message: 'Task order updated successfully' })
-  } catch (error) {
-    console.log(error)
-  }
-}
-
-async function updateColumnOrder(req: Request, res: Response) {
-  try {
-    const { body } = req
-    const { boardURL } = req.params
-
-    await boardServices.updateColumnOrder(body, boardURL)
-
-    res.status(200).json({ message: 'Column order updated successfully' })
-  } catch (error) {
-    console.log(error)
-  }
-}
-
-async function updateTaskToNewColumn(req: Request, res: Response) {
-  try {
-    const { body } = req
-    const { boardURL } = req.params
-
-    await boardServices.updateTaskToNewColumn(body, boardURL)
-
-    res.status(200).json({ message: 'Task moved successfully' })
-  } catch (error) {
-    console.log(error)
-  }
-}
-
-async function updateOrCreateTaskDescription(req: Request, res: Response) {
-  try {
-    const { body } = req
-    const { boardURL } = req.params
-
-    await boardServices.updateOrCreateTaskDescription(body, boardURL)
-
-    res.status(200).json({ message: 'Task description updated successfully' })
-  } catch (error) {
-    console.log(error)
-  }
-}
-
-async function updateTaskTitle(req: Request, res: Response) {
-  try {
-    const { body } = req
-    const { boardURL } = req.params
-
-    await boardServices.updateTaskTitle(body, boardURL)
-
-    res.status(200).json({ message: 'Task title updated successfully' })
-  } catch (error) {
-    console.log(error)
-  }
-}
-
-async function upsertTaskImage(req: Request, res: Response) {
-  try {
-    const { body } = req
-    const { boardURL } = req.params
-
-    await boardServices.upsertTaskImage(body, boardURL)
-
-    res.status(200).json({ message: 'Task image updated successfully' })
-  } catch (error) {
-    console.log(error)
-  }
-}
-
-export default {
-  createBoard,
-  getBoards,
-  getBoardContent,
-  createColumn,
-  createTask,
-  updateBoard,
-  updateColumnTitle,
-  updateTaskOrder,
-  updateColumnOrder,
-  updateTaskToNewColumn,
-  updateOrCreateTaskDescription,
-  updateTaskTitle,
-  upsertTaskImage,
-}
+export default { getBoards, getBoardContent, createBoard }
