@@ -30,18 +30,18 @@ export default function FormCreateColumn({ boardURL }: FormCreateColumnProps) {
       }
 
       setKanban(
-        (prevState: any) =>
+        (prev: any) =>
           ({
-            ...prevState,
+            ...prev,
             columns: {
-              ...prevState.columns,
+              ...prev.columns,
               [response.data.id]: {
                 id: response.data.id,
                 title: response.data.title,
                 taskIds: [],
               },
             },
-            columnOrder: [...prevState.columnOrder, response.data.id],
+            columnOrder: [...prev.columnOrder, response.data.id],
           } as any),
       )
 

@@ -4,7 +4,7 @@ import { useCallback, useContext, useEffect } from 'react'
 import { DragDropContext, Droppable } from 'react-beautiful-dnd'
 
 import { KanbanContext } from '@/context/KanbanContext'
-import { getBoard } from '@/services/board'
+import { getBoardByURL } from '@/services/board'
 
 import InnerListColumn from './InnerListColumn'
 import FormCreateColumn from '../_Form/FormCreateColumn'
@@ -15,7 +15,7 @@ export default function Kanban({ boardURL }: { boardURL: string }) {
 
   const loadingBoard = useCallback(async () => {
     try {
-      const { status, data } = await getBoard(boardURL)
+      const { status, data } = await getBoardByURL(boardURL)
 
       if (status !== 200) {
         throw new Error('Error to get kanban board')

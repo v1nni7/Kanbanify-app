@@ -138,14 +138,14 @@ export default function KanbanContextProvider({
       }
 
       setKanban(newState)
-      const sourceColumnId = source.droppableId
-      const destinationColumnId = destination.droppableId
+      const sourceId = source.droppableId
+      const destinationId = destination.droppableId
 
       const content = {
         taskId: draggableId,
-        sourceColumnId,
-        destinationColumnId,
-        newTaskOrder: finishTaskIds,
+        sourceId,
+        destinationId,
+        taskOrder: finishTaskIds,
       }
       handleUpdateTaskToNewColumn(content, true)
     },

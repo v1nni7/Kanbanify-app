@@ -35,26 +35,23 @@ export default function FormCreateTask({
 
       const { data } = response
 
-      setKanban(
-        (prev: any) =>
-          ({
-            ...prev,
-            tasks: {
-              ...prev.tasks,
-              [data.id]: {
-                id: data.id,
-                title: data.title,
-              },
-            },
-            columns: {
-              ...prev.columns,
-              [columnId]: {
-                ...prev.columns[columnId],
-                taskIds: [...prev.columns[columnId].taskIds, data.id],
-              },
-            },
-          } as any),
-      )
+      setKanban((prev: any) => ({
+        ...prev,
+        tasks: {
+          ...prev.tasks,
+          [data.id]: {
+            id: data.id,
+            title: data.title,
+          },
+        },
+        columns: {
+          ...prev.columns,
+          [columnId]: {
+            ...prev.columns[columnId],
+            taskIds: [...prev.columns[columnId].taskIds, data.id],
+          },
+        },
+      }))
 
       reset()
     } catch (error) {

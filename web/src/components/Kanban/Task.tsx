@@ -246,7 +246,7 @@ export default function Task({ task, index, boardURL }: TaskProps) {
               <textarea
                 {...register('title')}
                 defaultValue={task.title}
-                rows={task.title.length > 50 ? 2 : 1}
+                rows={task.title?.length > 50 ? 2 : 1}
                 className="w-full resize-none rounded-md border border-transparent bg-transparent p-2 outline-none transition-colors focus:border-neutral-500 focus:bg-neutral-700/60"
               />
 

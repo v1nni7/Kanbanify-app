@@ -7,7 +7,7 @@ import BoardCard from '@/components/Boards'
 import LoadingSpinner from '@/components/LoadingSpinner'
 import FormCreateBoard from '@/components/_Form/FormCreateBoard'
 import useToggleClickOutside from '@/hooks/useToggleClickOutside'
-import { getAllBoards } from '@/services/board'
+import { getBoards } from '@/services/board'
 import { Board } from '@/types/board-data'
 
 export default function Boards() {
@@ -17,7 +17,7 @@ export default function Boards() {
 
   const loadingBoards = async () => {
     try {
-      const response = await getAllBoards()
+      const response = await getBoards()
 
       if (response.status !== 200) {
         return
