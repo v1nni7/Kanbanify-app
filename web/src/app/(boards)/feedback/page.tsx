@@ -76,7 +76,7 @@ export default function Feedback() {
               <input type="text" defaultValue={category || ''} hidden />
 
               <div
-                className={`absolute z-30 mt-4 w-full overflow-hidden rounded-md bg-neutral-600 p-2 transition-all ${
+                className={`absolute z-30 mt-4 w-full overflow-hidden rounded-md bg-neutral-700 p-2 transition-all ${
                   dropdownOpen ? 'opacity-1 max-h-96' : 'max-h-0 opacity-0'
                 }`}
                 ref={element}
@@ -152,13 +152,17 @@ export default function Feedback() {
             Mensagem
           </label>
 
-          <TextAreaEditor />
+          {/* <TextAreaEditor /> */}
 
-          {/* <textarea
+          <textarea
             id="message"
-            className="w-full rounded-md border-2 border-transparent bg-neutral-600 px-2 py-4 outline-none transition-colors focus:border-2 focus:border-indigo-400"
-          /> */}
+            rows={12}
+            className="w-full resize-none rounded-md border-2 border-transparent bg-neutral-600 px-2 py-4 outline-none transition-colors focus:border-2 focus:border-indigo-400"
+          />
         </div>
+        <button className="self-end rounded-md bg-indigo-500 px-12 py-4 transition-colors hover:bg-indigo-500/80 focus:bg-indigo-500/80">
+          Enviar
+        </button>
       </form>
     </main>
   )
