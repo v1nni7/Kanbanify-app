@@ -11,16 +11,33 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Users {
-  id        String   @id @default(uuid())
-  email     String   @unique
+model User {
+  id        String     @id @default(uuid())
+  email     String     @unique
   firstName String?
   lastName  String?
   password  String
-  username  String   @unique
+  username  String     @unique
   photo     String?
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  Feedback  Feedback[]
+
+  @@map("users")
+}
+
+model Feedback {
+  id        String   @id @default(uuid())
+  username  String
+  email     String
+  subject   String
+  message   String
+  category  String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@map("users")
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  @@map("feedbacks")
 }

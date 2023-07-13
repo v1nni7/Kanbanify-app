@@ -1,20 +1,20 @@
-import { Router } from "express";
-import userController from "@/controllers/userController";
-import { signInSchema, signUpSchema } from "@/schema/userSchema";
-import validateSchemaMiddleware from "@/middlewares/validateSchemaMiddleware";
+import { Router } from 'express'
+import userController from '@/controllers/userController'
+import { signInSchema, signUpSchema } from '@/schema/userSchema'
+import validateSchemaMiddleware from '@/middlewares/validateSchemaMiddleware'
 
-const userRouter = Router();
+const userRouter = Router()
 
 userRouter
   .post(
-    "/sign-up",
+    '/sign-up',
     validateSchemaMiddleware(signUpSchema),
-    userController.signUp
+    userController.signUp,
   )
   .post(
-    "/sign-in",
+    '/sign-in',
     validateSchemaMiddleware(signInSchema),
-    userController.signIn
-  );
+    userController.signIn,
+  )
 
-export default userRouter;
+export default userRouter

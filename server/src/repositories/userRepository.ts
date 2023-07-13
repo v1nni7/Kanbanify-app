@@ -7,7 +7,7 @@ type UserDataType = {
 }
 
 function getUser(userId: string) {
-  return prisma.users.findUnique({
+  return prisma.user.findUnique({
     where: {
       id: userId,
     },
@@ -21,8 +21,16 @@ function getUser(userId: string) {
   })
 }
 
+function findById(userId: string) {
+  return prisma.user.findUnique({
+    where: {
+      id: userId,
+    },
+  })
+}
+
 function findByEmail(email: string) {
-  return prisma.users.findUnique({
+  return prisma.user.findUnique({
     where: {
       email,
     },
@@ -30,7 +38,7 @@ function findByEmail(email: string) {
 }
 
 function findByUsername(username: string) {
-  return prisma.users.findUnique({
+  return prisma.user.findUnique({
     where: {
       username,
     },
@@ -38,9 +46,15 @@ function findByUsername(username: string) {
 }
 
 function createUser(userData: UserDataType) {
-  return prisma.users.create({
+  return prisma.user.create({
     data: userData,
   })
 }
 
-export default { findByEmail, findByUsername, createUser, getUser }
+export default {
+  findById,
+  findByEmail,
+  findByUsername,
+  createUser,
+  getUser,
+}
