@@ -64,3 +64,7 @@ export async function createTask(
 ) {
   return await api.post(`/tasks/${boardURL}`, { title, columnId })
 }
+
+export async function createFeedback(body: any) {
+  return await api.post('/feedback', body)
+}
