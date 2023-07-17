@@ -1,6 +1,4 @@
 import React, { Ref, PropsWithChildren } from 'react'
-import ReactDOM from 'react-dom'
-import css from 'styled-jsx/css'
 
 interface BaseProps {
   className: string
@@ -21,7 +19,7 @@ export const Button = React.forwardRef(function Button(
       reversed: boolean
     } & BaseProps
   >,
-  ref: Ref<OrNull<HTMLSpanElement>>,
+  ref: Ref<OrNull<HTMLSpanElement>> | any,
 ) {
   return (
     <span
