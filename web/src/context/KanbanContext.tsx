@@ -19,31 +19,34 @@ export default function KanbanContextProvider({
   const [kanban, setKanban] = useState<any>(null)
   const [boardURL, setBoardURL] = useState<string>('')
 
-  const handleUpdateTaskToNewColumn = async (
-    content: any,
-    differentColumn = false,
-  ) => {
-    try {
-      if (differentColumn) {
-        await updateTaskToNewColumn(content, boardURL)
-        return
+  const handleUpdateTaskToNewColumn = useCallback(
+    async (content: any, differentColumn = false) => {
+      try {
+        if (differentColumn) {
+          await updateTaskToNewColumn(content, boardURL)
+          return
+        }
+
+        await updateTaskOrder(content, boardURL)
+      } catch (error) {
+        console.log(error)
       }
+    },
+    [boardURL],
+  )
 
-      await updateTaskOrder(content, boardURL)
-    } catch (error) {
-      console.log(error)
-    }
-  }
+  const handleUpdateColumnOrder = useCallback(
+    async (content: any) => {
+      try {
+        const newColumnOrder = content.columnOrder
 
-  const handleUpdateColumnOrder = async (content: any) => {
-    try {
-      const newColumnOrder = content.columnOrder
-
-      await updateColumnOrder(newColumnOrder, boardURL)
-    } catch (error) {
-      console.log(error)
-    }
-  }
+        await updateColumnOrder(newColumnOrder, boardURL)
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    [boardURL],
+  )
 
   const handleUpdateBoard = () => {
     console.log('Função inativa')
@@ -149,7 +152,7 @@ export default function KanbanContextProvider({
       }
       handleUpdateTaskToNewColumn(content, true)
     },
-    [kanban],
+    [kanban, handleUpdateTaskToNewColumn, handleUpdateColumnOrder],
   )
 
   return (

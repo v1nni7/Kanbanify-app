@@ -11,6 +11,7 @@ export default function useFilePreview(file: any) {
         setImageSource(preview)
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [file])
 
   return [imageSource, setImageSource]

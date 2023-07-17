@@ -40,12 +40,13 @@ export default function Signin() {
         callbackUrl: '/boards',
       })
 
+      console.log(response)
+
       if (response?.error) {
         setError('Invalid credentials')
-        return
       }
 
-      router.push('/boards')
+      router.push(response?.url || '/boards')
     } catch (error) {
       console.log(error)
     }

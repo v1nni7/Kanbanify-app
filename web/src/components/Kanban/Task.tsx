@@ -84,7 +84,7 @@ export default function Task({ task, index, boardURL }: TaskProps) {
         console.log(error)
       }
     },
-    [],
+    [task.id, boardURL, setKanban, setPreview],
   )
 
   const onSubmitTitle: SubmitHandler<FieldValues> = useCallback(

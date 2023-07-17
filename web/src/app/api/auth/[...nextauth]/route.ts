@@ -1,8 +1,8 @@
-import NextAuth, { NextAuthOptions } from 'next-auth'
+import NextAuth from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import { api } from '@/services/api'
 
-const authOptions: NextAuthOptions = {
+const authOptions = {
   providers: [
     CredentialsProvider({
       name: 'Credentials',
@@ -35,7 +35,7 @@ const authOptions: NextAuthOptions = {
   },
 
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user }: any) {
       return { ...token, ...user }
     },
 
@@ -47,5 +47,6 @@ const authOptions: NextAuthOptions = {
   },
 }
 
+// @ts-ignore
 const handler = NextAuth(authOptions)
 export { handler as GET, handler as POST }

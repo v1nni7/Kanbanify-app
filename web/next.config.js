@@ -4,9 +4,12 @@ const nextConfig = {
     appDir: true,
   },
   images: {
-    domains: ['cdn.discordapp.com', 'localhost'],
+    domains: [
+      'cdn.discordapp.com',
+      'localhost',
+      'kanbanify-backend.onrender.com',
+    ],
   },
-  ignoreBuildErrors: true,
 }
 
 module.exports = nextConfig
