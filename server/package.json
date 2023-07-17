@@ -2,9 +2,9 @@
   "name": "organization-app-backend",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/server.js",
   "scripts": {
-    "build": "tsc",
+    "build": " tsc --project tsconfig.json && tscpaths -p tsconfig.json -s ./src -o ./dist",
     "start": "node dist/server.js",
     "dev": "nodemon -r tsconfig-paths/register src/server.ts",
     "dev:migrate": "npx prisma migrate dev && npm run dev",
@@ -31,8 +31,8 @@
     "uuid": "^9.0.0"
   },
   "devDependencies": {
-    "@rocketseat/eslint-config": "^1.2.0",
     "@faker-js/faker": "^8.0.2",
+    "@rocketseat/eslint-config": "^1.2.0",
     "@types/bcrypt": "^5.0.0",
     "@types/cors": "^2.8.12",
     "@types/express": "^4.17.13",
@@ -49,6 +49,8 @@
     "ts-jest": "^29.1.0",
     "ts-node": "^10.9.1",
     "ts-node-dev": "^2.0.0",
+    "tsc-alias": "^1.8.7",
+    "tscpaths": "^0.0.9",
     "typescript": "^4.8.2"
   }
 }
