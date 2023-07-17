@@ -10,7 +10,6 @@ import useToggleClickOutside from '@/hooks/useToggleClickOutside'
 // eslint-disable-next-line
 import TextAreaEditor from '@/components/TextAreaEditor'
 import { createFeedback } from '@/services/board'
-import { data } from 'autoprefixer'
 
 type FieldValues = {
   email: string
