@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useMemo } from 'react'
 import { withHistory } from 'slate-history'
 import {
   Descendant,
@@ -155,6 +155,7 @@ function isBlockActive(editor: any, format: any, blockType = 'type') {
       match: (n) =>
         !Editor.isEditor(n) &&
         SlateElement.isElement(n) &&
+        // @ts-ignore
         n[blockType] === format,
     }),
   )
@@ -174,6 +175,7 @@ function toggleBlock(editor: any, format: string) {
     match: (n) =>
       !Editor.isEditor(n) &&
       SlateElement.isElement(n) &&
+      // @ts-ignore
       LIST_TYPES.includes(n.type) &&
       !TEXT_ALIGN_TYPES.includes(format),
     split: true,
@@ -183,10 +185,12 @@ function toggleBlock(editor: any, format: string) {
 
   if (TEXT_ALIGN_TYPES.includes(format)) {
     newProperties = {
+      // @ts-ignore
       align: isActive ? undefined : format,
     }
   } else {
     newProperties = {
+      // @ts-ignore
       type: isActive ? 'paragraph' : isList ? 'list-item' : format,
     }
   }
@@ -288,6 +292,7 @@ function Element({ attributes, children, element }: any) {
 
 const initialValue: Descendant[] = [
   {
+    // @ts-ignore
     type: 'paragraph',
     align: 'center',
     children: [
