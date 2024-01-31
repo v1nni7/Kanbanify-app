@@ -19,6 +19,8 @@ export default function Boards() {
     try {
       const response = await getBoards()
 
+      console.log(response.data)
+
       if (response.status !== 200) {
         return
       }
@@ -35,7 +37,7 @@ export default function Boards() {
 
   return (
     <>
-      <section className="relative h-full w-full overflow-hidden bg-neutral-600/20 p-4">
+      <section className="relative h-full w-full bg-neutral-600/20 p-4">
         {boards ? (
           <>
             <div className="relative mb-4">

@@ -104,7 +104,7 @@ export default function Column({ column, tasks, index, boardURL }: any) {
                       ref={innerRef}
                     >
                       <div
-                        className={`mb-2 overflow-hidden rounded-md transition-all ${
+                        className={`mb-2 rounded-md transition-all ${
                           isOpen ? 'h-[100px]' : 'h-0'
                         }`}
                         ref={element}

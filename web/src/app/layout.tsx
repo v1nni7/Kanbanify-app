@@ -3,7 +3,7 @@ import './globals.css'
 import { ReactNode } from 'react'
 import { Poppins, Lexend_Deca as LexendDeca } from 'next/font/google'
 
-import Providers from './Providers'
+import Providers from './providers'
 
 const lexendDeca = LexendDeca({
   subsets: ['latin'],
@@ -28,17 +28,11 @@ export const metadata = {
 
 export default function RootLayout({ children }: IProps) {
   return (
-    <html lang="en">
+    <html lang="pt-br">
       <body
-        className={`font-poppins bg-neutral-900 font-medium text-neutral-300 ${poppins.variable} ${lexendDeca.variable} font-sans`}
+        className={`font-poppins bg-gray-100 text-gray-950 dark:bg-gray-900 dark:text-gray-300 ${poppins.variable} ${lexendDeca.variable} font-sans`}
       >
-        <Providers>
-          <section className="mx-auto flex h-screen w-5/6">
-            <div className="animate-fade relative my-8 w-full overflow-hidden rounded-lg bg-neutral-800 shadow">
-              {children}
-            </div>
-          </section>
-        </Providers>
+        <Providers>{children}</Providers>
       </body>
     </html>
   )

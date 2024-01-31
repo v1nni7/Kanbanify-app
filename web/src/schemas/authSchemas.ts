@@ -1,15 +1,12 @@
-import { object, ref, string } from 'yup'
+import z from 'zod'
 
-export const signUpSchema = object({
-  confirmPassword: string()
-    .oneOf([ref('password'), 'Passwords must match'], 'Passwords must match')
-    .required('Confirm you password'),
-  password: string().required('Password is required'),
-  email: string().email('Email must be a valid').required('Email is required'),
-  username: string().required('Username is required'),
+export const signUpSchema = z.object({
+  email: z.string().email({ message: 'Insira um endereço e-mail' }),
 })
 
-export const signInSchema = object({
-  password: string().required('Password is required'),
-  email: string().email('Email must be a valid').required('Email is required'),
+export type SignUpData = z.infer<typeof signUpSchema>
+
+export const signInSchema = z.object({
+  password: z.string(),
+  email: z.string().email({ message: 'Email must be a valid' }),
 })
