@@ -1,57 +1,59 @@
 'use client'
 
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
-import { setCookie } from 'nookies'
-import { Oval } from 'react-loader-spinner'
 import { SubmitHandler, useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
+import { Oval } from 'react-loader-spinner'
+import { FaCircleExclamation } from 'react-icons/fa6'
 
 import { Input } from '@/components/ui/input'
-import { SigninData, signInSchema } from '@/schemas/authSchemas'
-import { FaCircleExclamation } from 'react-icons/fa6'
 import { Button } from '@/components/ui/button'
-import { api } from '@/services/api'
+import { finishSignupSchema, FinishSignupSchema } from '@/schemas/authSchemas'
+import { zodResolver } from '@hookform/resolvers/zod'
 
-export default function Login() {
-  const router = useRouter()
-
+export default function Finish() {
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<SigninData>({
-    resolver: zodResolver(signInSchema),
+  } = useForm<FinishSignupSchema>({
+    resolver: zodResolver(finishSignupSchema),
   })
 
-  const onSubmit: SubmitHandler<SigninData> = async (data) => {
-    try {
-      const response = await api.post('/user/sign-in', data)
-
-      setCookie(undefined, 'token', response.data.token, null)
-
-      router.push('/boards')
-    } catch (error) {
-      console.log(error)
-    }
-  }
+  const onSubmit: SubmitHandler<FinishSignupSchema> = async () => {}
 
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-        <h2 className="text-center font-bold">Acesse sua conta</h2>
+        <h2 className="text-center font-bold">Finalize seu cadastro</h2>
 
         <div className="space-y-1">
           <Input
             type="text"
-            placeholder="E-mail"
-            {...register('email')}
+            placeholder="Nome"
+            {...register('name')}
             disabled={isSubmitting}
           />
-          {errors.email && (
+
+          {errors.name && (
             <p className="ml-1 flex items-center gap-1 text-xs text-red-400">
               <FaCircleExclamation />
-              {errors.email.message}
+              {errors.name.message}
+            </p>
+          )}
+        </div>
+
+        <div className="space-y-1">
+          <Input
+            type="text"
+            placeholder="Usuário"
+            {...register('username')}
+            disabled={isSubmitting}
+          />
+
+          {errors.username && (
+            <p className="ml-1 flex items-center gap-1 text-xs text-red-400">
+              <FaCircleExclamation />
+              {errors.username.message}
             </p>
           )}
         </div>
@@ -63,22 +65,16 @@ export default function Login() {
             {...register('password')}
             disabled={isSubmitting}
           />
+
           {errors.password && (
             <p className="ml-1 flex items-center gap-1 text-xs text-red-400">
               <FaCircleExclamation />
               {errors.password.message}
             </p>
           )}
-
-          <Link
-            href="/"
-            className="mt-6 block px-0.5 font-normal hover:underline"
-          >
-            Esqueceu a senha?
-          </Link>
         </div>
 
-        <Button disabled={isSubmitting}>
+        <Button type="submit" disabled={isSubmitting}>
           {isSubmitting ? (
             <Oval
               width={24}
@@ -88,17 +84,14 @@ export default function Login() {
               secondaryColor="#ffffff"
             />
           ) : (
-            'Acessar'
+            'Finalizar cadastro'
           )}
         </Button>
       </form>
 
       <div className="flex justify-center">
-        <Link
-          href="/signup"
-          className="mt-10 block font-normal hover:underline"
-        >
-          Não possui uma conta?
+        <Link href="/login" className="mt-10 block font-normal hover:underline">
+          Já possui uma conta?
         </Link>
       </div>
     </>

@@ -1,22 +1,12 @@
 'use client'
 
-import Image from 'next/image'
-import { useSession } from 'next-auth/react'
-import { IoMdSettings, IoMdNotifications } from 'react-icons/io'
 import { usePathname, useRouter } from 'next/navigation'
+import { IoMdSettings, IoMdNotifications } from 'react-icons/io'
 import { IoArrowBackOutline } from 'react-icons/io5'
 
 export default function Navbar() {
   const router = useRouter()
   const pathname = usePathname()
-
-  const { data: session } = useSession()
-
-  let user = null
-
-  if (session) {
-    user = session.user
-  }
 
   return (
     <nav className="flex items-center justify-end gap-4 px-8 py-2">
@@ -41,7 +31,7 @@ export default function Navbar() {
         <IoMdSettings className="group-hover:animate-[spin_2s_linear]" />
       </button>
 
-      {user?.photo && (
+      {/* {user?.photo && (
         <Image
           width={300}
           height={300}
@@ -49,7 +39,7 @@ export default function Navbar() {
           alt=""
           className="h-12 w-12 rounded-full object-cover"
         />
-      )}
+      )} */}
     </nav>
   )
 }

@@ -1,7 +1,6 @@
 'use client'
 
 import { useCallback, useEffect, useState } from 'react'
-import { useSession } from 'next-auth/react'
 import { IoCaretDownOutline } from 'react-icons/io5'
 import { SubmitHandler, useForm } from 'react-hook-form'
 
@@ -24,14 +23,6 @@ export default function Feedback() {
   const [dropdownOpen, toggleOpen, element, button] =
     useToggleClickOutside(false)
 
-  const { data: session } = useSession()
-
-  let user: any = null
-
-  if (session) {
-    user = session.user
-  }
-
   const { handleSubmit, register, setValue } = useForm<FieldValues>()
 
   const onSubmit: SubmitHandler<FieldValues> = useCallback(
@@ -46,13 +37,6 @@ export default function Feedback() {
     },
     [category],
   )
-
-  useEffect(() => {
-    if (user) {
-      setValue('email', user.email)
-      setValue('username', user.username)
-    }
-  }, [user, setValue])
 
   return (
     <main className="h-full w-full bg-neutral-600/20 px-8 py-4">
@@ -73,7 +57,7 @@ export default function Feedback() {
         </div>
       ) : (
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6">
-          <div className="grid w-full grid-cols-2 gap-6">
+          {/* <div className="grid w-full grid-cols-2 gap-6">
             <div className="flex flex-col">
               <label htmlFor="username" className="text-md mb-2">
                 Usuário
@@ -190,7 +174,7 @@ export default function Feedback() {
                 className="rounded-md border-2 border-transparent bg-neutral-600 px-2 py-4 outline-none transition-colors focus:border-2 focus:border-indigo-400 disabled:bg-neutral-500"
               />
             </div>
-          </div>
+          </div> */}
           <div className="flex w-full flex-col">
             <label htmlFor="message" className="text-md mb-2">
               Mensagem

@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { getSession } from 'next-auth/react'
+import { parseCookies } from 'nookies'
 
 export default function getAPIClient() {
   const api = axios.create({
@@ -7,10 +7,10 @@ export default function getAPIClient() {
   })
 
   api.interceptors.request.use(async (config) => {
-    const session = await getSession()
+    const { token } = parseCookies()
 
-    if (session?.user.token) {
-      config.headers.Authorization = `Bearer ${session?.user.token}`
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`
     }
 
     return config

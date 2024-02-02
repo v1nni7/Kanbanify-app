@@ -1,122 +1,73 @@
 'use client'
 
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
-import { yupResolver } from '@hookform/resolvers/yup'
+import { Oval } from 'react-loader-spinner'
 import { SubmitHandler, useForm } from 'react-hook-form'
-import { BiEnvelope, BiLock, BiLockOpen, BiUser } from 'react-icons/bi'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { FaCircleExclamation } from 'react-icons/fa6'
 
-import {
-  FormGroup,
-  FormControl,
-  FormLabel,
-  FormTooltip,
-} from '@/components/AuthForm'
-import PrimaryButton from '@/components/_Buttons/PrimaryButton'
-import { signUpRequest } from '@/services/user'
-import { signUpSchema } from '@/schemas/authSchemas'
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
+import { SignUpData, signUpSchema } from '@/schemas/authSchemas'
+import { api } from '@/services/api'
 
-type FieldValues = {
-  email: string
-  username: string
-  password: string
-  confirmPassword: string
-}
-
-export default function Signup() {
-  const router = useRouter()
-
-  const { handleSubmit, register, formState } = useForm<FieldValues>({
-    resolver: yupResolver(signUpSchema),
+export default function SignupForm() {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<SignUpData>({
+    resolver: zodResolver(signUpSchema),
   })
-  const { isSubmitting, errors } = formState
 
-  const onSubmit: SubmitHandler<FieldValues> = async (data) => {
+  const onSubmit: SubmitHandler<SignUpData> = async (data) => {
     try {
-      const response = await signUpRequest(data)
+      const response = await api.post('/user/sign-up/email', data)
 
-      if (response.status === 201) {
-        router.push('/signin')
-      }
-    } catch (error: any) {
-      console.log(error)
-    }
+      console.log(response.data)
+    } catch (error) {}
   }
 
   return (
-    <section className="flex h-full w-full items-center justify-center">
-      <div className="flex w-80 flex-col gap-4">
-        <h2 className="text-center font-alt text-2xl text-neutral-300">
-          Cadastro
-        </h2>
+    <>
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        <h2 className="text-center font-bold">Registre-se para continuar</h2>
 
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          className="flex w-full flex-col gap-4"
-        >
-          <FormGroup>
-            <FormControl
-              id="username"
-              type="text"
-              placeholder="Usuário"
-              register={register('username')}
+        <div className="space-y-1">
+          <Input
+            type="text"
+            placeholder="E-mail"
+            {...register('email')}
+            disabled={isSubmitting}
+          />
+          {errors.email && (
+            <p className="ml-1 flex items-center gap-1 text-xs text-red-400">
+              <FaCircleExclamation />
+              {errors.email.message}
+            </p>
+          )}
+        </div>
+
+        <Button type="submit" disabled={isSubmitting}>
+          {isSubmitting ? (
+            <Oval
+              width={24}
+              height={24}
+              strokeWidth={4}
+              color="#ffffff"
+              secondaryColor="#ffffff"
             />
-            <FormLabel htmlFor="username">
-              <BiUser />
-            </FormLabel>
-            <FormTooltip errors={errors.username} />
-          </FormGroup>
+          ) : (
+            'Criar conta'
+          )}
+        </Button>
+      </form>
 
-          <FormGroup>
-            <FormControl
-              id="email"
-              type="text"
-              placeholder="E-mail"
-              register={register('email')}
-            />
-            <FormLabel htmlFor="email">
-              <BiEnvelope />
-            </FormLabel>
-            <FormTooltip errors={errors.email} />
-          </FormGroup>
-
-          <FormGroup>
-            <FormControl
-              id="password"
-              type="password"
-              placeholder="Senha"
-              register={register('password')}
-            />
-            <FormLabel htmlFor="password">
-              <BiLockOpen />
-            </FormLabel>
-            <FormTooltip errors={errors.password} />
-          </FormGroup>
-
-          <FormGroup>
-            <FormControl
-              id="confirmPassword"
-              type="password"
-              placeholder="Confirmar senha"
-              register={register('confirmPassword')}
-            />
-            <FormLabel htmlFor="confirmPassword">
-              <BiLock />
-            </FormLabel>
-            <FormTooltip errors={errors.confirmPassword} />
-          </FormGroup>
-
-          <PrimaryButton type="submit" size="lg" disabled={isSubmitting}>
-            Criar conta
-          </PrimaryButton>
-
-          <div className="text-center">
-            <Link href="/signin" className="text-indigo-500 hover:underline">
-              Já possui uma conta? Faça login
-            </Link>
-          </div>
-        </form>
+      <div className="flex justify-center">
+        <Link href="/login" className="mt-10 block font-normal hover:underline">
+          Já possui uma conta?
+        </Link>
       </div>
-    </section>
+    </>
   )
 }
